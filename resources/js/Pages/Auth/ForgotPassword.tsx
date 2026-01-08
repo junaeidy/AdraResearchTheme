@@ -2,18 +2,42 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 export default function ForgotPassword({ status }: { status?: string }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm({
         email: '',
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+    const { getToken } = useRecaptcha();
+    const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
 
-        post(route('password.email'));
+    const submit: FormEventHandler = async (e) => {
+        e.preventDefault();
+        setRecaptchaError(null);
+
+        try {
+            const recaptcha_token = await getToken('forgot_password');
+
+            // Transform data sebelum dikirim
+            transform((data) => ({
+                ...data,
+                recaptcha_token,
+            }));
+
+            // Submit menggunakan post dari useForm
+            post(route('password.email'), {
+                preserveScroll: true,
+                onFinish: () => {
+                    // Reset transform
+                    transform(() => data);
+                },
+            });
+        } catch (error) {
+            setRecaptchaError(error instanceof Error ? error.message : 'reCAPTCHA error occurred');
+        }
     };
 
     return (
@@ -29,6 +53,24 @@ export default function ForgotPassword({ status }: { status?: string }) {
             {status && (
                 <div className="mb-4 text-sm font-medium text-green-600 dark:text-green-400">
                     {status}
+                </div>
+            )}
+
+            {errors.throttle && (
+                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                    {errors.throttle}
+                </div>
+            )}
+
+            {errors.recaptcha_token && (
+                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                    {errors.recaptcha_token}
+                </div>
+            )}
+
+            {recaptchaError && (
+                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                    {recaptchaError}
                 </div>
             )}
 

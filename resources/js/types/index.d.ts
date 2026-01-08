@@ -13,5 +13,8 @@ export type PageProps<
     auth: {
         user: User;
     };
+    recaptcha?: {
+        siteKey: string;
+    };
     ziggy: Config & { location: string };
 };

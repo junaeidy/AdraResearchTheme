@@ -14,9 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
-        //
+        $middleware->alias([
+            'recaptcha' => \App\Http\Middleware\VerifyRecaptcha::class,
+            'throttle.inertia' => \App\Http\Middleware\ThrottleRequestsWithInertia::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -3,28 +3,69 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, transform } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
     });
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
+    const { getToken } = useRecaptcha();
+    const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
 
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
-        });
+    const submit: FormEventHandler = async (e) => {
+        e.preventDefault();
+        setRecaptchaError(null);
+
+        try {
+            const recaptcha_token = await getToken('register');
+
+            // Transform data sebelum dikirim
+            transform((data) => ({
+                ...data,
+                recaptcha_token,
+            }));
+
+            // Submit menggunakan post dari useForm
+            post(route('register'), {
+                preserveScroll: true,
+                onFinish: () => {
+                    reset('password', 'password_confirmation');
+                    // Reset transform
+                    transform(() => data);
+                },
+            });
+        } catch (error) {
+            setRecaptchaError(error instanceof Error ? error.message : 'reCAPTCHA error occurred');
+        }
     };
 
     return (
         <GuestLayout>
             <Head title="Register" />
+
+            {errors.throttle && (
+                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                    {errors.throttle}
+                </div>
+            )}
+
+            {errors.recaptcha_token && (
+                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                    {errors.recaptcha_token}
+                </div>
+            )}
+
+            {recaptchaError && (
+                <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
+                    {recaptchaError}
+                </div>
+            )}
 
             <form onSubmit={submit}>
                 <div>
