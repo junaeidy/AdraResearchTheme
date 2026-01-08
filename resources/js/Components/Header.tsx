@@ -5,7 +5,7 @@ import { useCartStore } from '@/stores/cartStore';
 
 interface HeaderProps {
     user?: User;
-    currentPage?: 'home' | 'shop';
+    currentPage?: 'home' | 'shop' | 'checkout';
 }
 
 export default function Header({ user, currentPage = 'home' }: HeaderProps) {

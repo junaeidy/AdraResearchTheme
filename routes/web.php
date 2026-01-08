@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
@@ -52,6 +53,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // 🔒 Checkout routes with rate limiting
+    Route::prefix('checkout')->name('checkout.')->middleware('cart.not.empty')->group(function () {
+        Route::get('/', [CheckoutController::class, 'index'])->name('index');
+        Route::get('/billing', [CheckoutController::class, 'billing'])->name('billing');
+        
+        // Rate limit billing submission
+        Route::post('/billing', [CheckoutController::class, 'storeBilling'])
+            ->middleware('throttle:10,1') // 10 per minute
+            ->name('billing.store');
+        
+        Route::get('/review', [CheckoutController::class, 'review'])
+            ->middleware('billing.info')
+            ->name('review');
+        
+        // Strict rate limit on order creation (prevent spam)
+        Route::post('/order', [CheckoutController::class, 'store'])
+            ->middleware(['throttle:5,1', 'billing.info']) // 5 orders per minute max
+            ->name('order.store');
+    });
 });
 
 // Admin routes

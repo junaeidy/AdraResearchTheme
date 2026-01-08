@@ -61,6 +61,9 @@ export interface User {
     email: string;
     role: 'admin' | 'customer';
     avatar?: string;
+    phone?: string;
+    organization?: string;
+    country?: string;
     created_at: string;
     updated_at: string;
 }

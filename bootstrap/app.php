@@ -21,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'recaptcha' => \App\Http\Middleware\VerifyRecaptcha::class,
             'throttle.inertia' => \App\Http\Middleware\ThrottleRequestsWithInertia::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'cart.not.empty' => \App\Http\Middleware\EnsureCartNotEmpty::class,
+            'billing.info' => \App\Http\Middleware\EnsureBillingInfo::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
