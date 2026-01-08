@@ -5,6 +5,7 @@ import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
 import { useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef } from 'react';
+import toast from 'react-hot-toast';
 
 export default function UpdatePasswordForm({
     className = '',
@@ -33,16 +34,21 @@ export default function UpdatePasswordForm({
 
         put(route('password.update'), {
             preserveScroll: true,
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                reset();
+                toast.success('Password updated successfully.');
+            },
             onError: (errors) => {
                 if (errors.password) {
                     reset('password', 'password_confirmation');
                     passwordInput.current?.focus();
-                }
-
-                if (errors.current_password) {
+                    toast.error('New password does not meet requirements.');
+                } else if (errors.current_password) {
                     reset('current_password');
                     currentPasswordInput.current?.focus();
+                    toast.error('Current password is incorrect.');
+                } else {
+                    toast.error('An error occurred while updating password.');
                 }
             },
         });

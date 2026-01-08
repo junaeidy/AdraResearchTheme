@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'recaptcha' => \App\Http\Middleware\VerifyRecaptcha::class,
             'throttle.inertia' => \App\Http\Middleware\ThrottleRequestsWithInertia::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

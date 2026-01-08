@@ -5,6 +5,7 @@ import TextInput from '@/Components/TextInput';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
+import toast from 'react-hot-toast';
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,
@@ -26,7 +27,20 @@ export default function UpdateProfileInformation({
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        patch(route('profile.update'), {
+            onSuccess: () => {
+                toast.success('Profile updated successfully.');
+            },
+            onError: (errors) => {
+                if (errors.email) {
+                    toast.error('Email is already taken or invalid.');
+                } else if (errors.name) {
+                    toast.error('Name is invalid.');
+                } else {
+                    toast.error('An error occurred while updating profile.');
+                }
+            },
+        });
     };
 
     return (

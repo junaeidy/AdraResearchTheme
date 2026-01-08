@@ -6,6 +6,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import { useForm } from '@inertiajs/react';
 import { FormEventHandler, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function DeleteUserForm({
     className = '',
@@ -36,8 +37,18 @@ export default function DeleteUserForm({
 
         destroy(route('profile.destroy'), {
             preserveScroll: true,
-            onSuccess: () => closeModal(),
-            onError: () => passwordInput.current?.focus(),
+            onSuccess: () => {
+                closeModal();
+                toast.success('Account deleted successfully.');
+            },
+            onError: (errors) => {
+                passwordInput.current?.focus();
+                if (errors.password) {
+                    toast.error('Password is incorrect.');
+                } else {
+                    toast.error('An error occurred while deleting account.');
+                }
+            },
             onFinish: () => reset(),
         });
     };
