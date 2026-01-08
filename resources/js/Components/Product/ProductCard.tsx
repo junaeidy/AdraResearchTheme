@@ -9,6 +9,11 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     const hasDiscount = product.sale_price && product.sale_price < product.price;
+    
+    // Calculate starting price with lowest license multiplier (single-journal = 0.7)
+    const basePrice = product.sale_price || product.price;
+    const lowestMultiplier = product.license_scope === 'journal' ? 0.7 : 1.0; // single-journal or single-site
+    const startingPrice = basePrice * lowestMultiplier;
 
     return (
         <Link
@@ -95,18 +100,19 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {/* Price */}
                 <div className="flex items-center justify-between">
                     <div>
+                        <div className="text-xs text-gray-500 mb-1">Starting from</div>
                         {hasDiscount ? (
                             <>
                                 <div className="text-lg font-bold text-blue-600">
-                                    {formatRupiah(product.sale_price!)}
+                                    {formatRupiah(startingPrice)}
                                 </div>
                                 <div className="text-sm text-gray-500 line-through">
-                                    {formatRupiah(product.price)}
+                                    {formatRupiah(product.price * lowestMultiplier)}
                                 </div>
                             </>
                         ) : (
                             <div className="text-lg font-bold text-blue-600">
-                                {formatRupiah(product.price)}
+                                {formatRupiah(startingPrice)}
                             </div>
                         )}
                     </div>

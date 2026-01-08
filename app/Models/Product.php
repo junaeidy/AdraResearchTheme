@@ -43,6 +43,11 @@ class Product extends Model
         'sale_price' => 'decimal:2',
     ];
 
+    protected $appends = [
+        'average_rating',
+        'review_count',
+    ];
+
     protected static function boot()
     {
         parent::boot();
@@ -104,5 +109,38 @@ class Product extends Model
     public function getReviewCountAttribute()
     {
         return $this->reviews()->count();
+    }
+
+    /**
+     * Get the price for a specific license type and duration.
+     * 
+     * @param string $licenseType The license type (single-site, single-journal, etc.)
+     * @param string $licenseDuration The duration (1-year, 2-years, lifetime)
+     * @return float The calculated price
+     */
+    public function getPriceForLicense(string $licenseType, string $licenseDuration): float
+    {
+        $basePrice = $this->sale_price ?? $this->price;
+
+        // License type multipliers
+        $typeMultipliers = [
+            'single-site' => 1.0,
+            'single-journal' => 0.7,
+            'multi-site' => 2.5,
+            'multi-journal' => 2.0,
+            'unlimited' => 4.0,
+        ];
+
+        // Duration multipliers
+        $durationMultipliers = [
+            '1-year' => 1.0,
+            '2-years' => 1.8,  // 10% discount
+            'lifetime' => 2.5, // ~3x annual
+        ];
+
+        $typeMultiplier = $typeMultipliers[$licenseType] ?? 1.0;
+        $durationMultiplier = $durationMultipliers[$licenseDuration] ?? 1.0;
+
+        return round($basePrice * $typeMultiplier * $durationMultiplier, 2);
     }
 }

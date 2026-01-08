@@ -17,7 +17,7 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [screenshots, setScreenshots] = useState<File[]>([]);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm({
         name: product.name || '',
         product_type: product.product_type || 'plugin',
         category_id: product.category_id?.toString() || '',
@@ -39,33 +39,36 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        
-        // Append all text fields
-        Object.entries(data).forEach(([key, value]) => {
-            if (value !== null && value !== undefined && value !== '') {
-                formData.append(key, value.toString());
+        transform((data) => {
+            const formData = new FormData();
+            
+            // Append all text fields
+            Object.entries(data).forEach(([key, value]) => {
+                if (value !== null && value !== undefined && value !== '') {
+                    formData.append(key, value.toString());
+                }
+            });
+
+            // Append main image if changed
+            if (mainImage) {
+                formData.append('image', mainImage);
             }
-        });
 
-        // Append main image if changed
-        if (mainImage) {
-            formData.append('image', mainImage);
-        }
+            // Append screenshots if added
+            screenshots.forEach((file, index) => {
+                formData.append(`screenshots[${index}]`, file);
+            });
 
-        // Append screenshots if added
-        screenshots.forEach((file, index) => {
-            formData.append(`screenshots[${index}]`, file);
+            return formData;
         });
 
         post(route('admin.products.update', product.id), {
-            data: formData,
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Product updated successfully.');
             },
-            onError: (errors) => {
+            onError: (errors: any) => {
                 if (errors.name) {
                     toast.error('Product name already exists or is invalid.');
                 } else if (errors.price) {
@@ -267,7 +270,7 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
                                 onImageSelect={setMainImage}
                                 onImageRemove={() => setMainImage(null)}
                                 currentImage={product.image || undefined}
-                                error={errors.image}
+                                error={(errors as any).image}
                             />
 
                             <MultipleImageUploader

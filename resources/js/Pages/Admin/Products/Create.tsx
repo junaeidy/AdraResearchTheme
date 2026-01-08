@@ -17,7 +17,7 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [screenshots, setScreenshots] = useState<File[]>([]);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm({
         name: '',
         product_type: 'plugin' as 'plugin' | 'theme',
         category_id: '',
@@ -38,33 +38,36 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        
-        // Append all text fields
-        Object.entries(data).forEach(([key, value]) => {
-            if (value !== null && value !== undefined && value !== '') {
-                formData.append(key, value.toString());
+        transform((data) => {
+            const formData = new FormData();
+            
+            // Append all text fields
+            Object.entries(data).forEach(([key, value]) => {
+                if (value !== null && value !== undefined && value !== '') {
+                    formData.append(key, value.toString());
+                }
+            });
+
+            // Append main image
+            if (mainImage) {
+                formData.append('image', mainImage);
             }
-        });
 
-        // Append main image
-        if (mainImage) {
-            formData.append('image', mainImage);
-        }
+            // Append screenshots
+            screenshots.forEach((file, index) => {
+                formData.append(`screenshots[${index}]`, file);
+            });
 
-        // Append screenshots
-        screenshots.forEach((file, index) => {
-            formData.append(`screenshots[${index}]`, file);
+            return formData;
         });
 
         post(route('admin.products.store'), {
-            data: formData,
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
                 toast.success('Product created successfully.');
             },
-            onError: (errors) => {
+            onError: (errors: any) => {
                 if (errors.name) {
                     toast.error('Product name already exists or is invalid.');
                 } else if (errors.price) {
@@ -265,7 +268,7 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                                 label="Main Product Image"
                                 onImageSelect={setMainImage}
                                 onImageRemove={() => setMainImage(null)}
-                                error={errors.image}
+                                error={(errors as any).image}
                             />
 
                             <MultipleImageUploader

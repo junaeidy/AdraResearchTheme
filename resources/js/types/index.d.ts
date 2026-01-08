@@ -37,7 +37,7 @@ export interface Product {
     version: string;
     compatibility?: string;
     price: number;
-    sale_price?: number;
+    sale_price?: number | null;
     is_active: boolean;
     is_featured: boolean;
     image?: string;
@@ -46,6 +46,8 @@ export interface Product {
     screenshots?: string[];
     documentation_url?: string;
     changelog?: any;
+    average_rating: number;
+    review_count: number;
     created_at: string;
     updated_at: string;
 }

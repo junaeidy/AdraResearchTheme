@@ -49,15 +49,15 @@ export default function Register() {
         <GuestLayout>
             <Head title="Register" />
 
-            {errors.throttle && (
+            {(errors as any).throttle && (
                 <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
-                    {errors.throttle}
+                    {(errors as any).throttle}
                 </div>
             )}
 
-            {errors.recaptcha_token && (
+            {(errors as any).recaptcha_token && (
                 <div className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/50 dark:text-red-200">
-                    {errors.recaptcha_token}
+                    {(errors as any).recaptcha_token}
                 </div>
             )}
 

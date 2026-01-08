@@ -90,9 +90,46 @@ class ShopController extends Controller
             ->limit(4)
             ->get();
 
+        // License types configuration
+        $licenseTypes = $this->getLicenseTypesForProduct($product);
+
         return Inertia::render('Shop/Show', [
             'product' => $product,
             'relatedProducts' => $relatedProducts,
+            'licenseTypes' => $licenseTypes,
         ]);
+    }
+
+    /**
+     * Get license types configuration for a product.
+     */
+    private function getLicenseTypesForProduct($product): array
+    {
+        $isInstallationScope = $product->license_scope === 'installation';
+        
+        return [
+            [
+                'value' => $isInstallationScope ? 'single-site' : 'single-journal',
+                'label' => $isInstallationScope ? 'Single Site' : 'Single Journal',
+                'description' => $isInstallationScope 
+                    ? 'For one website installation' 
+                    : 'For one journal publication',
+                'max_activations' => 1,
+            ],
+            [
+                'value' => $isInstallationScope ? 'multi-site' : 'multi-journal',
+                'label' => $isInstallationScope ? 'Multi Site (5)' : 'Multi Journal (5)',
+                'description' => $isInstallationScope 
+                    ? 'For up to 5 website installations' 
+                    : 'For up to 5 journal publications',
+                'max_activations' => 5,
+            ],
+            [
+                'value' => 'unlimited',
+                'label' => 'Unlimited',
+                'description' => 'For unlimited installations',
+                'max_activations' => null,
+            ],
+        ];
     }
 }
