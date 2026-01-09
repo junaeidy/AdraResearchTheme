@@ -31,6 +31,8 @@ class Product extends Model
         'screenshots',
         'documentation_url',
         'changelog',
+        'rating_average',
+        'rating_count',
     ];
 
     protected $casts = [
@@ -41,11 +43,12 @@ class Product extends Model
         'is_featured' => 'boolean',
         'price' => 'decimal:2',
         'sale_price' => 'decimal:2',
+        'rating_average' => 'decimal:1',
+        'rating_count' => 'integer',
     ];
 
     protected $appends = [
-        'average_rating',
-        'review_count',
+        'effective_price',
     ];
 
     protected static function boot()
@@ -99,16 +102,6 @@ class Product extends Model
     public function getEffectivePriceAttribute()
     {
         return $this->sale_price ?? $this->price;
-    }
-
-    public function getAverageRatingAttribute()
-    {
-        return $this->reviews()->avg('rating') ?? 0;
-    }
-
-    public function getReviewCountAttribute()
-    {
-        return $this->reviews()->count();
     }
 
     /**

@@ -6,15 +6,19 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LicenseController as AdminLicenseController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Customer\LicenseController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,12 +56,8 @@ require __DIR__.'/auth.php';
 
 // Authenticated user routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        if (auth()->user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
-        return redirect()->route('account');
-    })->name('dashboard');
+    // Customer dashboard (new)
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
     // Account routes with /account prefix
     Route::prefix('account')->group(function () {
@@ -67,6 +67,11 @@ Route::middleware('auth')->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    // 📝 Reviews
+    Route::post('/products/{product:slug}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::patch('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
     // 🔒 Checkout routes with rate limiting
     Route::prefix('checkout')->name('checkout.')->middleware('cart.not.empty')->group(function () {
@@ -125,6 +130,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Category management
     Route::resource('categories', CategoryController::class);
+
+    // 👥 User management
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::post('/users/{user}/toggle-role', [UserController::class, 'toggleRole'])->name('users.toggle-role');
+
+    // 📝 Review management
+    Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
 
     // 🏦 Bank accounts management
     Route::resource('bank-accounts', BankAccountController::class)->except(['show']);

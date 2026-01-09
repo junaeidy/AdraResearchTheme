@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Rules\NoSqlInjection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ShopController extends Controller
@@ -84,7 +86,9 @@ class ShopController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
-            ->with(['category', 'reviews.user'])
+            ->with(['category', 'reviews' => function ($query) {
+                $query->with('user')->latest();
+            }])
             ->firstOrFail();
 
         $relatedProducts = Product::where('category_id', $product->category_id)
@@ -96,10 +100,26 @@ class ShopController extends Controller
         // License types configuration
         $licenseTypes = $this->getLicenseTypesForProduct($product);
 
+        // Check if user can review (purchased and hasn't reviewed yet)
+        $canReview = false;
+        if (Auth::check()) {
+            $hasPurchased = Order::where('user_id', Auth::id())
+                ->where('status', 'completed')
+                ->whereHas('items', function ($query) use ($product) {
+                    $query->where('product_id', $product->id);
+                })
+                ->exists();
+
+            $hasReviewed = $product->reviews()->where('user_id', Auth::id())->exists();
+            
+            $canReview = $hasPurchased && !$hasReviewed;
+        }
+
         return Inertia::render('Shop/Show', [
             'product' => $product,
             'relatedProducts' => $relatedProducts,
             'licenseTypes' => $licenseTypes,
+            'canReview' => $canReview,
         ]);
     }
 

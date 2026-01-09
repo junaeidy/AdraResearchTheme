@@ -33,6 +33,9 @@ export interface Product {
     changelog: ChangelogEntry[];
     average_rating: number;
     review_count: number;
+    rating_average: number;
+    rating_count: number;
+    reviews?: Review[];
     created_at: string;
     updated_at: string;
 }

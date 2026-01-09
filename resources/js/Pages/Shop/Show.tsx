@@ -7,6 +7,7 @@ import ProductInfo from '@/Components/Product/ProductInfo';
 import ProductPricing from '@/Components/Product/ProductPricing';
 import ProductTabs from '@/Components/Product/ProductTabs';
 import ProductCard from '@/Components/Product/ProductCard';
+import ReviewList from '@/Components/Review/ReviewList';
 
 interface Props {
     auth: {
@@ -15,9 +16,10 @@ interface Props {
     product: Product;
     relatedProducts: Product[];
     licenseTypes: LicenseTypeOption[];
+    canReview: boolean;
 }
 
-export default function Show({ auth, product, relatedProducts, licenseTypes }: Props) {
+export default function Show({ auth, product, relatedProducts, licenseTypes, canReview }: Props) {
     return (
         <>
             <Head title={product.name} />
@@ -81,6 +83,16 @@ export default function Show({ auth, product, relatedProducts, licenseTypes }: P
 
                     {/* Tabs Section */}
                     <ProductTabs product={product} />
+
+                    {/* Reviews Section */}
+                    <div className="mt-16">
+                        <ReviewList
+                            reviews={product.reviews || []}
+                            product={product}
+                            canReview={canReview}
+                            currentUserId={auth?.user?.id}
+                        />
+                    </div>
 
                     {/* Related Products */}
                     {relatedProducts && relatedProducts.length > 0 && (

@@ -12,6 +12,7 @@ import {
     Bars3Icon,
     XMarkIcon,
     KeyIcon,
+    ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -38,6 +39,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         { name: 'Licenses', href: '/admin/licenses', icon: KeyIcon },
         { name: 'Bank Accounts', href: '/admin/bank-accounts', icon: BanknotesIcon },
         { name: 'Users', href: '/admin/users', icon: UserGroupIcon },
+        { name: 'Reviews', href: '/admin/reviews', icon: ChatBubbleLeftRightIcon },
         { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
     ];
 

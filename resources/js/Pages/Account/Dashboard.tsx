@@ -1,0 +1,277 @@
+import { Head, Link } from '@inertiajs/react';
+import { PageProps } from '@/types';
+import { formatRupiah } from '@/utils/currency';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import StatCard from '@/Components/Dashboard/StatCard';
+import { 
+    KeyIcon, 
+    ClockIcon, 
+    ShoppingBagIcon, 
+    ExclamationTriangleIcon
+} from '@heroicons/react/24/outline';
+
+interface License {
+    id: number;
+    license_key: string;
+    status: string;
+    expires_at: string | null;
+    product: {
+        id: number;
+        name: string;
+        slug: string;
+    };
+}
+
+interface Order {
+    id: number;
+    order_number: string;
+    total_amount: number;
+    status: string;
+    payment_status: string;
+    created_at: string;
+    items: Array<{
+        product_name: string;
+    }>;
+}
+
+interface DashboardProps extends PageProps {
+    active_licenses: number;
+    expiring_soon: number;
+    total_orders: number;
+    pending_orders: number;
+    recent_licenses: License[];
+    recent_orders: Order[];
+}
+
+export default function CustomerDashboard({ 
+    auth, 
+    active_licenses,
+    expiring_soon,
+    total_orders,
+    pending_orders,
+    recent_licenses,
+    recent_orders
+}: DashboardProps) {
+    return (
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+            }
+        >
+            <Head title="Dashboard" />
+
+            <div className="max-w-7xl mx-auto">
+                {/* Welcome Card */}
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg p-8 mb-8 text-white">
+                    <h1 className="text-3xl font-bold mb-2">Welcome back, {auth.user.name}!</h1>
+                    <p className="text-blue-100 mb-6">Here's an overview of your account</p>
+                    <div className="flex flex-wrap gap-4">
+                        <Link 
+                            href="/account/licenses"
+                            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition backdrop-blur-sm"
+                        >
+                            View Licenses
+                        </Link>
+                        <Link 
+                            href="/account/orders"
+                            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition backdrop-blur-sm"
+                        >
+                            My Orders
+                        </Link>
+                        <Link 
+                            href="/account/downloads"
+                            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition backdrop-blur-sm"
+                        >
+                            Downloads
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <StatCard
+                        title="Active Licenses"
+                        value={active_licenses}
+                        icon={<KeyIcon className="w-6 h-6" />}
+                        color="green"
+                    />
+                    <StatCard
+                        title="Expiring Soon"
+                        value={expiring_soon}
+                        icon={<ClockIcon className="w-6 h-6" />}
+                        color="yellow"
+                    />
+                    <StatCard
+                        title="Total Orders"
+                        value={total_orders}
+                        icon={<ShoppingBagIcon className="w-6 h-6" />}
+                        color="blue"
+                    />
+                    <StatCard
+                        title="Pending Orders"
+                        value={pending_orders}
+                        icon={<ExclamationTriangleIcon className="w-6 h-6" />}
+                        color="red"
+                    />
+                </div>
+
+                {/* Warning for expiring licenses */}
+                {expiring_soon > 0 && (
+                    <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded">
+                        <div className="flex">
+                            <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400 mr-3" />
+                            <div>
+                                <p className="text-sm text-yellow-700">
+                                    You have <strong>{expiring_soon}</strong> license{expiring_soon > 1 ? 's' : ''} expiring within 30 days.
+                                    {' '}
+                                    <Link href="/account/licenses" className="font-medium underline hover:text-yellow-900">
+                                        Renew now
+                                    </Link>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    {/* Recent Licenses */}
+                    <div className="bg-white rounded-lg shadow">
+                        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-gray-900">Recent Licenses</h3>
+                            <Link 
+                                href="/account/licenses"
+                                className="text-sm text-blue-600 hover:text-blue-700"
+                            >
+                                View All →
+                            </Link>
+                        </div>
+                        <div className="p-6">
+                            {recent_licenses && recent_licenses.length > 0 ? (
+                                <div className="space-y-4">
+                                    {recent_licenses.map((license) => (
+                                        <div key={license.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition">
+                                            <div>
+                                                <div className="font-medium text-gray-900">{license.product.name}</div>
+                                                <div className="text-sm text-gray-500">
+                                                    Key: {license.license_key}
+                                                </div>
+                                                {license.expires_at && (
+                                                    <div className="text-xs text-gray-500 mt-1">
+                                                        Expires: {new Date(license.expires_at).toLocaleDateString()}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                license.status === 'active' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : license.status === 'expired'
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-gray-100 text-gray-800'
+                                            }`}>
+                                                {license.status}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-gray-500 text-center py-8">
+                                    No licenses yet. 
+                                    <Link href="/shop" className="text-blue-600 hover:text-blue-700 ml-1">
+                                        Browse products
+                                    </Link>
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Recent Orders */}
+                    <div className="bg-white rounded-lg shadow">
+                        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-gray-900">Recent Orders</h3>
+                            <Link 
+                                href="/account/orders"
+                                className="text-sm text-blue-600 hover:text-blue-700"
+                            >
+                                View All →
+                            </Link>
+                        </div>
+                        <div className="p-6">
+                            {recent_orders && recent_orders.length > 0 ? (
+                                <div className="space-y-4">
+                                    {recent_orders.map((order) => (
+                                        <Link 
+                                            key={order.id}
+                                            href={`/account/orders/${order.order_number}`}
+                                            className="block p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition"
+                                        >
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="font-medium text-gray-900">{order.order_number}</div>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                    order.payment_status === 'paid' 
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : order.payment_status === 'pending_verification'
+                                                        ? 'bg-yellow-100 text-yellow-800'
+                                                        : order.payment_status === 'rejected'
+                                                        ? 'bg-red-100 text-red-800'
+                                                        : 'bg-gray-100 text-gray-800'
+                                                }`}>
+                                                    {order.payment_status?.replace('_', ' ') || 'unpaid'}
+                                                </span>
+                                            </div>
+                                            <div className="text-sm text-gray-600">
+                                                {order.items[0]?.product_name}
+                                                {order.items.length > 1 && ` +${order.items.length - 1} more`}
+                                            </div>
+                                            <div className="flex items-center justify-between mt-2">
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {formatRupiah(order.total_amount)}
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    {new Date(order.created_at).toLocaleDateString()}
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-gray-500 text-center py-8">
+                                    No orders yet. 
+                                    <Link href="/shop" className="text-blue-600 hover:text-blue-700 ml-1">
+                                        Start shopping
+                                    </Link>
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Link 
+                        href="/shop"
+                        className="bg-white border-2 border-blue-600 text-blue-600 p-6 rounded-lg shadow hover:bg-blue-50 transition text-center"
+                    >
+                        <div className="text-lg font-semibold mb-2">Browse Products</div>
+                        <div className="text-sm text-gray-600">Explore our plugins and themes</div>
+                    </Link>
+
+                    <Link 
+                        href="/account/downloads"
+                        className="bg-white border-2 border-gray-300 text-gray-700 p-6 rounded-lg shadow hover:bg-gray-50 transition text-center"
+                    >
+                        <div className="text-lg font-semibold mb-2">Downloads</div>
+                        <div className="text-sm text-gray-600">Access your purchased products</div>
+                    </Link>
+
+                    <Link 
+                        href="/account/profile"
+                        className="bg-white border-2 border-gray-300 text-gray-700 p-6 rounded-lg shadow hover:bg-gray-50 transition text-center"
+                    >
+                        <div className="text-lg font-semibold mb-2">Account Settings</div>
+                        <div className="text-sm text-gray-600">Update your profile information</div>
+                    </Link>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
