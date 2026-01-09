@@ -16,6 +16,7 @@ interface AdminProductsEditProps extends PageProps {
 export default function AdminProductsEdit({ auth, product, categories }: AdminProductsEditProps) {
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [screenshots, setScreenshots] = useState<File[]>([]);
+    const [productFile, setProductFile] = useState<File | null>(null);
 
     const { data, setData, post, processing, errors, transform } = useForm({
         name: product.name || '',
@@ -30,7 +31,6 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
         sale_price: product.sale_price?.toString() || '',
         is_active: product.is_active ?? true,
         is_featured: product.is_featured ?? false,
-        download_url: product.download_url || '',
         demo_url: product.demo_url || '',
         documentation_url: product.documentation_url || '',
         _method: 'PUT',
@@ -52,6 +52,11 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
             // Append main image if changed
             if (mainImage) {
                 formData.append('image', mainImage);
+            }
+
+            // Append product file if changed
+            if (productFile) {
+                formData.append('product_file', productFile);
             }
 
             // Append screenshots if added
@@ -286,6 +291,56 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
                         </div>
                     </Card>
 
+                    {/* Product File */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Product File</CardTitle>
+                        </CardHeader>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Product File (.zip or .tar.gz)
+                                </label>
+                                {product.file_path && (
+                                    <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+                                        <p className="text-sm text-gray-600">
+                                            Current file: <span className="font-medium">{product.file_path}</span>
+                                        </p>
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    accept=".zip,.tar.gz"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            // Validate file size (100MB)
+                                            if (file.size > 100 * 1024 * 1024) {
+                                                toast.error('File size must not exceed 100MB');
+                                                e.target.value = '';
+                                                return;
+                                            }
+                                            setProductFile(file);
+                                        }
+                                    }}
+                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                />
+                                {productFile && (
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        New file: {productFile.name} ({(productFile.size / 1024 / 1024).toFixed(2)} MB)
+                                    </p>
+                                )}
+                                {(errors as any).product_file && (
+                                    <p className="mt-1 text-sm text-red-500">{(errors as any).product_file}</p>
+                                )}
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Upload a new file to replace the existing one. Leave empty to keep current file.
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
                     {/* Links */}
                     <Card>
                         <CardHeader>
@@ -293,14 +348,6 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
                         </CardHeader>
 
                         <div className="space-y-4">
-                            <Input
-                                label="Download URL"
-                                type="url"
-                                value={data.download_url}
-                                onChange={(e) => setData('download_url', e.target.value)}
-                                error={errors.download_url}
-                            />
-
                             <Input
                                 label="Demo URL"
                                 type="url"

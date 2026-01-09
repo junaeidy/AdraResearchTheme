@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Rules\NoSqlInjection;
+use App\Rules\ValidProductFile;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -69,6 +70,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // Convert boolean fields if they're sent as strings
+        $request->merge([
+            'is_active' => filter_var($request->input('is_active', true), FILTER_VALIDATE_BOOLEAN),
+            'is_featured' => filter_var($request->input('is_featured', false), FILTER_VALIDATE_BOOLEAN),
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', new NoSqlInjection()],
             'product_type' => 'required|in:plugin,theme',
@@ -84,7 +91,7 @@ class ProductController extends Controller
             'is_featured' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
             'screenshots.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
-            'download_url' => 'nullable|url|max:500',
+            'product_file' => ['required', 'file', new ValidProductFile()],
             'demo_url' => 'nullable|url|max:500',
             'documentation_url' => 'nullable|url|max:500',
         ]);
@@ -107,6 +114,25 @@ class ProductController extends Controller
                 );
             }
             $validated['screenshots'] = $screenshots;
+        }
+
+        // Upload product file (.zip or .tar.gz)
+        if ($request->hasFile('product_file')) {
+            $file = $request->file('product_file');
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            $version = $validated['version'];
+            
+            // Determine file extension
+            $extension = $file->getClientOriginalExtension();
+            if ($extension === 'gz' && str_ends_with($file->getClientOriginalName(), '.tar.gz')) {
+                $extension = 'tar.gz';
+            }
+            
+            // Store file: products/{slug}/{version}/{slug}-{version}.{ext}
+            $fileName = "{$slug}-{$version}.{$extension}";
+            $path = "products/{$slug}/{$version}";
+            
+            $validated['file_path'] = $file->storeAs($path, $fileName, 'private');
         }
 
         Product::create($validated);
@@ -145,6 +171,12 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // Convert boolean fields if they're sent as strings
+        $request->merge([
+            'is_active' => filter_var($request->input('is_active', $product->is_active), FILTER_VALIDATE_BOOLEAN),
+            'is_featured' => filter_var($request->input('is_featured', $product->is_featured), FILTER_VALIDATE_BOOLEAN),
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', new NoSqlInjection()],
             'product_type' => 'required|in:plugin,theme',
@@ -160,7 +192,7 @@ class ProductController extends Controller
             'is_featured' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
             'screenshots.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
-            'download_url' => 'nullable|url|max:500',
+            'product_file' => ['nullable', 'file', new ValidProductFile()],
             'demo_url' => 'nullable|url|max:500',
             'documentation_url' => 'nullable|url|max:500',
         ]);
@@ -197,6 +229,30 @@ class ProductController extends Controller
             $validated['screenshots'] = $screenshots;
         }
 
+        // Upload new product file if provided
+        if ($request->hasFile('product_file')) {
+            // Delete old product file
+            if ($product->file_path) {
+                Storage::disk('private')->delete($product->file_path);
+            }
+            
+            $file = $request->file('product_file');
+            $slug = \Illuminate\Support\Str::slug($validated['name']);
+            $version = $validated['version'];
+            
+            // Determine file extension
+            $extension = $file->getClientOriginalExtension();
+            if ($extension === 'gz' && str_ends_with($file->getClientOriginalName(), '.tar.gz')) {
+                $extension = 'tar.gz';
+            }
+            
+            // Store file: products/{slug}/{version}/{slug}-{version}.{ext}
+            $fileName = "{$slug}-{$version}.{$extension}";
+            $path = "products/{$slug}/{$version}";
+            
+            $validated['file_path'] = $file->storeAs($path, $fileName, 'private');
+        }
+
         $product->update($validated);
 
         return redirect()->route('admin.products.index')
@@ -217,6 +273,11 @@ class ProductController extends Controller
             foreach ($product->screenshots as $screenshot) {
                 Storage::disk('public')->delete($screenshot);
             }
+        }
+
+        // Delete product file
+        if ($product->file_path) {
+            Storage::disk('private')->delete($product->file_path);
         }
 
         $product->delete();

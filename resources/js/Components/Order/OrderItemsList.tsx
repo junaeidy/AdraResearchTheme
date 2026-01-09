@@ -1,4 +1,5 @@
 import { OrderItem } from '@/types';
+import { formatRupiah } from '@/utils/currency';
 import { Link } from '@inertiajs/react';
 
 interface OrderItemsListProps {
@@ -71,7 +72,7 @@ export default function OrderItemsList({ items, showLicenses = false }: OrderIte
                         
                         <div className="text-right flex-shrink-0">
                             <p className="text-lg font-semibold text-gray-900">
-                                Rp {item.price.toLocaleString('id-ID')}
+                                {formatRupiah(item.price)}
                             </p>
                             {item.quantity > 1 && (
                                 <p className="text-sm text-gray-500 mt-1">

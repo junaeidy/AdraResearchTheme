@@ -2,15 +2,16 @@
 
 namespace App\Mail;
 
-use App\Models\Order;
-use App\Models\PaymentProof;
+use App\Models\License;
+use App\Models\LicenseActivation;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PaymentProofReceived extends Mailable
+class LicenseActivated extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,8 +19,8 @@ class PaymentProofReceived extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public Order $order,
-        public PaymentProof $paymentProof
+        public License $license,
+        public LicenseActivation $activation
     ) {}
 
     /**
@@ -28,7 +29,7 @@ class PaymentProofReceived extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Payment Proof Received - Order #' . $this->order->order_number,
+            subject: 'License Activated on New Site',
         );
     }
 
@@ -38,12 +39,7 @@ class PaymentProofReceived extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.payment.proof-received',
-            with: [
-                'order' => $this->order,
-                'paymentProof' => $this->paymentProof,
-                'url' => route('admin.payment-verification.show', $this->order->order_number),
-            ],
+            markdown: 'emails.license-activated',
         );
     }
 

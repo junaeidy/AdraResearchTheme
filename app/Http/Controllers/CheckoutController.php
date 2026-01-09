@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Rules\NoSqlInjection;

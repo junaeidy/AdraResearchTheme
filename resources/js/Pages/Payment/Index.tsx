@@ -1,6 +1,7 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { BankAccount, Order, PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
+import Header from '@/Components/Header';
+import Footer from '@/Components/Footer';
 import BankAccountSelector from '@/Components/Payment/BankAccountSelector';
 import PaymentProofUploader from '@/Components/Payment/PaymentProofUploader';
 import TransferInstructions from '@/Components/Payment/TransferInstructions';
@@ -44,10 +45,13 @@ export default function PaymentIndex({ auth, order, bankAccounts }: Props) {
                         data.proof_image;
 
     return (
-        <AuthenticatedLayout>
+        <>
             <Head title={`Payment - Order #${order.order_number}`} />
+            
+            <div className="min-h-screen bg-gray-50">
+                <Header user={auth?.user} />
 
-            <div className="py-12">
+                <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-6">
@@ -266,6 +270,9 @@ export default function PaymentIndex({ auth, order, bankAccounts }: Props) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+
+            <Footer />
+        </div>
+        </>
     );
 }

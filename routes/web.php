@@ -3,16 +3,21 @@
 use App\Http\Controllers\Admin\BankAccountController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LicenseController as AdminLicenseController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Customer\LicenseController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -51,12 +56,17 @@ Route::middleware('auth')->group(function () {
         if (auth()->user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
-        return redirect()->route('home');
+        return redirect()->route('account');
     })->name('dashboard');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Account routes with /account prefix
+    Route::prefix('account')->group(function () {
+        Route::get('/', [AccountController::class, 'index'])->name('account');
+        
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 
     // 🔒 Checkout routes with rate limiting
     Route::prefix('checkout')->name('checkout.')->middleware('cart.not.empty')->group(function () {
@@ -88,11 +98,22 @@ Route::middleware('auth')->group(function () {
     });
 
     // 📦 Order tracking
-    Route::prefix('orders')->name('orders.')->group(function () {
+    Route::prefix('account/orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order:order_number}', [OrderController::class, 'show'])->name('show');
         Route::get('/{order:order_number}/payment-proof', [OrderController::class, 'paymentProofImage'])->name('payment-proof');
     });
+
+    // 🔑 License management
+    Route::prefix('account/licenses')->name('licenses.')->group(function () {
+        Route::get('/', [LicenseController::class, 'index'])->name('index');
+        Route::get('/{productSlug}', [LicenseController::class, 'show'])->name('show');
+        Route::post('/{productSlug}/deactivate', [LicenseController::class, 'deactivate'])->name('deactivate');
+    });
+
+    // 📥 Downloads
+    Route::get('/account/downloads', [DownloadController::class, 'index'])->name('downloads.index');
+    Route::get('/download/{product}', [DownloadController::class, 'download'])->name('download');
 });
 
 // Admin routes
@@ -119,5 +140,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{order:order_number}/image', [PaymentVerificationController::class, 'image'])->name('image');
         Route::post('/{order:order_number}/verify', [PaymentVerificationController::class, 'verify'])->name('verify');
         Route::post('/{order:order_number}/reject', [PaymentVerificationController::class, 'reject'])->name('reject');
+    });
+
+    // 🔑 License management
+    Route::prefix('licenses')->name('licenses.')->group(function () {
+        Route::get('/', [AdminLicenseController::class, 'index'])->name('index');
+        Route::get('/{license}', [AdminLicenseController::class, 'show'])->name('show');
+        Route::post('/{license}/extend', [AdminLicenseController::class, 'extend'])->name('extend');
+        Route::post('/{license}/revoke', [AdminLicenseController::class, 'revoke'])->name('revoke');
+        Route::post('/{license}/reset', [AdminLicenseController::class, 'resetActivations'])->name('reset');
     });
 });

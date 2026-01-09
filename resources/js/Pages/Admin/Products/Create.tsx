@@ -16,6 +16,7 @@ interface AdminProductsCreateProps extends PageProps {
 export default function AdminProductsCreate({ auth, categories }: AdminProductsCreateProps) {
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [screenshots, setScreenshots] = useState<File[]>([]);
+    const [productFile, setProductFile] = useState<File | null>(null);
 
     const { data, setData, post, processing, errors, transform } = useForm({
         name: '',
@@ -30,7 +31,6 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
         sale_price: '',
         is_active: true,
         is_featured: false,
-        download_url: '',
         demo_url: '',
         documentation_url: '',
     });
@@ -51,6 +51,11 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
             // Append main image
             if (mainImage) {
                 formData.append('image', mainImage);
+            }
+
+            // Append product file
+            if (productFile) {
+                formData.append('product_file', productFile);
             }
 
             // Append screenshots
@@ -281,6 +286,50 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                         </div>
                     </Card>
 
+                    {/* Product File */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Product File</CardTitle>
+                        </CardHeader>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Product File (.zip or .tar.gz) <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".zip,.tar.gz"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            // Validate file size (100MB)
+                                            if (file.size > 100 * 1024 * 1024) {
+                                                toast.error('File size must not exceed 100MB');
+                                                e.target.value = '';
+                                                return;
+                                            }
+                                            setProductFile(file);
+                                        }
+                                    }}
+                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                    required
+                                />
+                                {productFile && (
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        Selected: {productFile.name} ({(productFile.size / 1024 / 1024).toFixed(2)} MB)
+                                    </p>
+                                )}
+                                {(errors as any).product_file && (
+                                    <p className="mt-1 text-sm text-red-500">{(errors as any).product_file}</p>
+                                )}
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Upload the plugin/theme file (.zip or .tar.gz). Max size: 100MB
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
                     {/* Links */}
                     <Card>
                         <CardHeader>
@@ -288,14 +337,6 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                         </CardHeader>
 
                         <div className="space-y-4">
-                            <Input
-                                label="Download URL"
-                                type="url"
-                                value={data.download_url}
-                                onChange={(e) => setData('download_url', e.target.value)}
-                                error={errors.download_url}
-                            />
-
                             <Input
                                 label="Demo URL"
                                 type="url"

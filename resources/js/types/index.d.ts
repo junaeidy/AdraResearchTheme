@@ -41,7 +41,7 @@ export interface Product {
     is_active: boolean;
     is_featured: boolean;
     image?: string;
-    download_url?: string;
+    file_path?: string;
     demo_url?: string;
     screenshots?: string[];
     documentation_url?: string;
@@ -58,7 +58,9 @@ export interface License {
     product_id: number;
     product?: Product;
     user_id: number;
+    user?: User;
     order_id?: number;
+    order?: Order;
     type: 'single-site' | 'single-journal' | 'multi-site' | 'multi-journal' | 'unlimited';
     duration: '1-year' | '2-years' | 'lifetime';
     scope: 'installation' | 'journal';
@@ -67,6 +69,39 @@ export interface License {
     status: 'pending' | 'active' | 'expired' | 'suspended';
     activated_at?: string;
     expires_at?: string;
+    activations?: LicenseActivation[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface LicenseActivation {
+    id: number;
+    license_id: number;
+    license?: License;
+    domain: string;
+    journal_path?: string;
+    full_identifier: string;
+    ip_address: string;
+    ojs_version: string;
+    user_agent?: string;
+    activated_at: string;
+    last_check_at: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Download {
+    id: number;
+    user_id: number;
+    user?: User;
+    product_id: number;
+    product?: Product;
+    license_id: number;
+    license?: License;
+    version: string;
+    file_path: string;
+    ip_address: string;
+    downloaded_at: string;
     created_at: string;
     updated_at: string;
 }

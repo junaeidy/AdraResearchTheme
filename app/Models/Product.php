@@ -26,7 +26,7 @@ class Product extends Model
         'is_active',
         'is_featured',
         'image',
-        'download_url',
+        'file_path',
         'demo_url',
         'screenshots',
         'documentation_url',

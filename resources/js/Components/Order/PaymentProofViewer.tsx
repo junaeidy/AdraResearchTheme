@@ -1,4 +1,5 @@
 import { PaymentProof } from '@/types';
+import { formatRupiah } from '@/utils/currency';
 import { useState } from 'react';
 
 interface PaymentProofViewerProps {
@@ -36,7 +37,7 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
                     <div>
                         <p className="text-gray-600">Transfer Amount</p>
                         <p className="font-medium text-gray-900 mt-1">
-                            Rp {paymentProof.transfer_amount.toLocaleString('id-ID')}
+                            {formatRupiah(paymentProof.transfer_amount)}
                         </p>
                     </div>
                     

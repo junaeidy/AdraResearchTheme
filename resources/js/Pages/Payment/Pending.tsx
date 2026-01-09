@@ -1,6 +1,7 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Order, PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
+import Header from '@/Components/Header';
+import Footer from '@/Components/Footer';
 
 interface Props extends PageProps {
     order: Order;
@@ -8,10 +9,13 @@ interface Props extends PageProps {
 
 export default function PaymentPending({ auth, order }: Props) {
     return (
-        <AuthenticatedLayout>
+        <>
             <Head title={`Payment Pending - Order #${order.order_number}`} />
+            
+            <div className="min-h-screen bg-gray-50">
+                <Header user={auth?.user} />
 
-            <div className="py-12">
+                <div className="py-12">
                 <div className="max-w-3xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                         {/* Success Header */}
@@ -176,6 +180,9 @@ export default function PaymentPending({ auth, order }: Props) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+
+            <Footer />
+        </div>
+        </>
     );
 }

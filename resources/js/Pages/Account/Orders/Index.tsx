@@ -1,7 +1,8 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Order, PageProps } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import AccountLayout from '@/Layouts/AccountLayout';
 import PaymentStatusBadge from '@/Components/Order/PaymentStatusBadge';
+import { formatRupiah } from '@/utils/currency';
 
 interface Props extends PageProps {
     orders: {
@@ -34,21 +35,9 @@ export default function OrdersIndex({ auth, orders }: Props) {
     };
 
     return (
-        <AuthenticatedLayout>
-            <Head title="My Orders" />
-
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    {/* Header */}
-                    <div className="mb-6">
-                        <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
-                        <p className="text-gray-600 mt-2">
-                            Track and manage your orders
-                        </p>
-                    </div>
-
-                    {/* Orders List */}
-                    {orders.data.length === 0 ? (
+        <AccountLayout title="My Orders" auth={auth}>
+            {/* Orders List */}
+            {orders.data.length === 0 ? (
                         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                             <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -111,7 +100,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                         </p>
                                                     </div>
                                                     <p className="font-semibold text-gray-900">
-                                                        Rp {item.price.toLocaleString('id-ID')}
+                                                        {formatRupiah(item.price)}
                                                     </p>
                                                 </div>
                                             ))}
@@ -127,7 +116,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                             <div>
                                                 <p className="text-sm text-gray-600">Total Amount</p>
                                                 <p className="text-xl font-bold text-gray-900">
-                                                    Rp {order.total_amount.toLocaleString('id-ID')}
+                                                    {formatRupiah(order.total_amount)}
                                                 </p>
                                             </div>
                                             
@@ -184,8 +173,6 @@ export default function OrdersIndex({ auth, orders }: Props) {
                             ))}
                         </div>
                     )}
-                </div>
-            </div>
-        </AuthenticatedLayout>
+        </AccountLayout>
     );
 }

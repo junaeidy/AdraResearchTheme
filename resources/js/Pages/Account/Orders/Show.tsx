@@ -1,28 +1,49 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Order, PageProps } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
+import Header from '@/Components/Header';
+import Footer from '@/Components/Footer';
 import OrderStatusTimeline from '@/Components/Order/OrderStatusTimeline';
 import OrderItemsList from '@/Components/Order/OrderItemsList';
 import PaymentProofViewer from '@/Components/Order/PaymentProofViewer';
 import PaymentStatusBadge from '@/Components/Order/PaymentStatusBadge';
 import { formatRupiah } from '@/utils/currency';
+import toast from 'react-hot-toast';
 
 interface Props extends PageProps {
     order: Order;
 }
 
 export default function OrderShow({ auth, order }: Props) {
+    const { flash } = usePage().props as any;
+    
     const canResubmitPayment = order.payment_status === 'rejected' || order.payment_status === 'unpaid';
     const showLicenses = order.status === 'completed';
     const paymentProofImageUrl = order.payment_proof 
         ? route('orders.payment-proof', order.order_number)
         : '';
 
-    return (
-        <AuthenticatedLayout>
-            <Head title={`Order #${order.order_number}`} />
+    // Handle flash messages
+    useEffect(() => {
+        if (flash?.success) {
+            toast.success(flash.success);
+        }
+        if (flash?.error) {
+            toast.error(flash.error);
+        }
+        if (flash?.info) {
+            toast(flash.info, { icon: 'ℹ️' });
+        }
+    }, [flash]);
 
-            <div className="py-12">
+    return (
+        <>
+            <Head title={`Order #${order.order_number}`} />
+            
+            <div className="min-h-screen bg-gray-50">
+                <Header user={auth?.user} />
+
+                <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-6">
@@ -231,6 +252,9 @@ export default function OrderShow({ auth, order }: Props) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+
+            <Footer />
+        </div>
+        </>
     );
 }

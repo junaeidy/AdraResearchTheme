@@ -11,6 +11,7 @@ import {
     ArrowLeftOnRectangleIcon,
     Bars3Icon,
     XMarkIcon,
+    KeyIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -34,6 +35,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         { name: 'Products', href: '/admin/products', icon: ShoppingBagIcon },
         { name: 'Categories', href: '/admin/categories', icon: TagIcon },
         { name: 'Orders & Payments', href: '/admin/payment-verification', icon: BanknotesIcon },
+        { name: 'Licenses', href: '/admin/licenses', icon: KeyIcon },
         { name: 'Bank Accounts', href: '/admin/bank-accounts', icon: BanknotesIcon },
         { name: 'Users', href: '/admin/users', icon: UserGroupIcon },
         { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
