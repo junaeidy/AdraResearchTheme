@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Product, ProductCategory, PageProps } from '@/types';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
@@ -59,9 +59,15 @@ export default function ShopIndex({ auth, products, categories, filters }: ShopI
                                 
                                 <select 
                                     className="px-4 py-2 border border-gray-300 rounded-lg"
-                                    defaultValue={filters.sort}
+                                    value={filters.sort || 'newest'}
                                     onChange={(e) => {
-                                        window.location.href = `/shop?sort=${e.target.value}`;
+                                        router.get('/shop', {
+                                            ...filters,
+                                            sort: e.target.value,
+                                        }, {
+                                            preserveState: true,
+                                            preserveScroll: true,
+                                        });
                                     }}
                                 >
                                     <option value="newest">Newest</option>

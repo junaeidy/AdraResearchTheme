@@ -95,8 +95,8 @@ export default function ProductFilter({ categories, filters }: ProductFilterProp
                                 <input
                                     type="radio"
                                     name="category"
-                                    value={category.id.toString()}
-                                    checked={selectedCategory === category.id.toString()}
+                                    value={category.slug}
+                                    checked={selectedCategory === category.slug}
                                     onChange={(e) => setSelectedCategory(e.target.value)}
                                     className="mr-2"
                                 />

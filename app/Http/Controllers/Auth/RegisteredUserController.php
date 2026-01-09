@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\CartService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -37,6 +39,9 @@ class RegisteredUserController extends Controller
             'recaptcha_token' => ['required', 'string'],
         ]);
 
+        // Store current session ID before registration
+        $oldSessionId = Session::getId();
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -46,6 +51,10 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        
+        // Merge guest cart with newly registered user
+        $cartService = app(CartService::class);
+        $cartService->mergeCarts($oldSessionId, $user->id);
 
         return redirect(route('dashboard', absolute: false));
     }

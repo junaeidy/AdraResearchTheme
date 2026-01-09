@@ -7,7 +7,7 @@ interface Step {
 }
 
 interface CheckoutStepsProps {
-    currentStep: 'cart' | 'login' | 'billing' | 'review' | 'payment';
+    currentStep: 'cart' | 'billing' | 'review' | 'payment';
 }
 
 export default function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
@@ -16,11 +16,6 @@ export default function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
             name: 'Cart',
             status: ['billing', 'review', 'payment'].includes(currentStep) ? 'completed' : 
                     currentStep === 'cart' ? 'current' : 'upcoming',
-        },
-        {
-            name: 'Login',
-            status: ['billing', 'review', 'payment'].includes(currentStep) ? 'completed' : 
-                    currentStep === 'login' ? 'current' : 'upcoming',
         },
         {
             name: 'Billing',

@@ -14,7 +14,7 @@ class ShopController extends Controller
     {
         // Validate and sanitize input
         $validated = $request->validate([
-            'category' => 'nullable|exists:product_categories,id',
+            'category' => 'nullable|exists:product_categories,slug',
             'type' => 'nullable|in:plugin,theme',
             'min_price' => 'nullable|numeric|min:0',
             'max_price' => 'nullable|numeric|min:0',
@@ -26,7 +26,10 @@ class ShopController extends Controller
 
         // Apply filters
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $category = ProductCategory::where('slug', $request->category)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
         }
 
         if ($request->filled('type')) {
