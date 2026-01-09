@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\BankAccountController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
@@ -73,6 +77,22 @@ Route::middleware('auth')->group(function () {
             ->middleware(['throttle:5,1', 'billing.info']) // 5 orders per minute max
             ->name('order.store');
     });
+
+    // 💳 Payment routes
+    Route::prefix('payment')->name('payment.')->group(function () {
+        Route::get('/{order:order_number}', [PaymentController::class, 'index'])->name('index');
+        Route::post('/{order:order_number}', [PaymentController::class, 'submit'])
+            ->middleware('throttle:10,1')
+            ->name('submit');
+        Route::get('/{order:order_number}/pending', [PaymentController::class, 'pending'])->name('pending');
+    });
+
+    // 📦 Order tracking
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/{order:order_number}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{order:order_number}/payment-proof', [OrderController::class, 'paymentProofImage'])->name('payment-proof');
+    });
 });
 
 // Admin routes
@@ -84,4 +104,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Category management
     Route::resource('categories', CategoryController::class);
+
+    // 🏦 Bank accounts management
+    Route::resource('bank-accounts', BankAccountController::class)->except(['show']);
+    Route::post('bank-accounts/{bankAccount}/toggle', [BankAccountController::class, 'toggleActive'])
+        ->name('bank-accounts.toggle');
+    Route::post('bank-accounts/{bankAccount}/update-with-file', [BankAccountController::class, 'update'])
+        ->name('bank-accounts.update-with-file');
+
+    // ✅ Payment verification
+    Route::prefix('payment-verification')->name('payment-verification.')->group(function () {
+        Route::get('/', [PaymentVerificationController::class, 'index'])->name('index');
+        Route::get('/{order:order_number}', [PaymentVerificationController::class, 'show'])->name('show');
+        Route::get('/{order:order_number}/image', [PaymentVerificationController::class, 'image'])->name('image');
+        Route::post('/{order:order_number}/verify', [PaymentVerificationController::class, 'verify'])->name('verify');
+        Route::post('/{order:order_number}/reject', [PaymentVerificationController::class, 'reject'])->name('reject');
+    });
 });

@@ -14,9 +14,10 @@ class OrderService
      *
      * @param User $user
      * @param array $billingInfo
+     * @param string|null $idempotencyKey
      * @return Order
      */
-    public function createFromCart(User $user, array $billingInfo): Order
+    public function createFromCart(User $user, array $billingInfo, ?string $idempotencyKey = null): Order
     {
         $cartService = app(CartService::class);
         $cartItems = $cartService->getCartItems();
@@ -32,6 +33,7 @@ class OrderService
         $order = Order::create([
             'user_id' => $user->id,
             'order_number' => $this->generateOrderNumber(),
+            'idempotency_key' => $idempotencyKey,
             'subtotal' => $subtotal,
             'tax' => 0,
             'discount' => 0,

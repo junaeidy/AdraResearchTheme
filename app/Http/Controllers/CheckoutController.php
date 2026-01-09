@@ -108,7 +108,22 @@ class CheckoutController extends Controller
         
         $validated = $request->validate([
             'terms_accepted' => 'required|accepted',
+            'idempotency_key' => 'nullable|string|max:64',
         ]);
+        
+        // 🔒 Generate or use provided idempotency key
+        $idempotencyKey = $validated['idempotency_key'] ?? hash('sha256', auth()->id() . session()->getId() . microtime(true));
+        
+        // 🔒 Check if order with this idempotency key already exists
+        $existingOrder = Order::where('idempotency_key', $idempotencyKey)
+            ->where('user_id', auth()->id())
+            ->first();
+        
+        if ($existingOrder) {
+            // Order already created, redirect to payment page
+            return redirect()->route('payment.index', $existingOrder->order_number)
+                ->with('info', 'Order has already been created.');
+        }
         
         // 🔒 Verify cart not empty (prevent race condition)
         if ($this->cartService->getCartCount() === 0) {
@@ -123,10 +138,11 @@ class CheckoutController extends Controller
         
         DB::beginTransaction();
         try {
-            // Create order
+            // Create order with idempotency key
             $order = $this->orderService->createFromCart(
                 auth()->user(),
-                session('billing_info')
+                session('billing_info'),
+                $idempotencyKey
             );
             
             // Clear cart
@@ -137,8 +153,8 @@ class CheckoutController extends Controller
             
             DB::commit();
             
-            // Redirect to payment page
-            return redirect()->route('payment.index', $order);
+            // Redirect to payment page using order_number
+            return redirect()->route('payment.index', $order->order_number);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Order creation failed: ' . $e->getMessage());

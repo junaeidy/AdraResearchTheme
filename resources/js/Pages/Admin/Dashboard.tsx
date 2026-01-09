@@ -80,7 +80,7 @@ export default function AdminDashboard({ auth, stats, recentOrders }: DashboardP
                                                     Total
                                                 </th>
                                                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                                                    Status
+                                                    Payment Status
                                                 </th>
                                                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                                                     Date
@@ -101,13 +101,15 @@ export default function AdminDashboard({ auth, stats, recentOrders }: DashboardP
                                                     </td>
                                                     <td className="px-4 py-3 text-sm">
                                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                            order.status === 'completed' 
+                                                            order.payment_status === 'paid' 
                                                                 ? 'bg-green-100 text-green-800'
-                                                                : order.status === 'pending'
+                                                                : order.payment_status === 'pending_verification'
                                                                 ? 'bg-yellow-100 text-yellow-800'
+                                                                : order.payment_status === 'rejected'
+                                                                ? 'bg-red-100 text-red-800'
                                                                 : 'bg-gray-100 text-gray-800'
                                                         }`}>
-                                                            {order.status}
+                                                            {order.payment_status?.replace('_', ' ') || 'unpaid'}
                                                         </span>
                                                     </td>
                                                     <td className="px-4 py-3 text-sm text-gray-500">

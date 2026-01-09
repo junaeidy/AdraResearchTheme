@@ -33,7 +33,8 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon },
         { name: 'Products', href: '/admin/products', icon: ShoppingBagIcon },
         { name: 'Categories', href: '/admin/categories', icon: TagIcon },
-        { name: 'Orders', href: '/admin/orders', icon: BanknotesIcon },
+        { name: 'Orders & Payments', href: '/admin/payment-verification', icon: BanknotesIcon },
+        { name: 'Bank Accounts', href: '/admin/bank-accounts', icon: BanknotesIcon },
         { name: 'Users', href: '/admin/users', icon: UserGroupIcon },
         { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
     ];

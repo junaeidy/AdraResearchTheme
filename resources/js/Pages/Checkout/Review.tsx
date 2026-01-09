@@ -28,6 +28,15 @@ export default function Review({ auth, items, billing, total }: Props) {
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState<any>({});
+    
+    // 🔒 Generate idempotency key once and reuse it
+    const [idempotencyKey] = useState(() => {
+        // Create a unique key based on user ID, session, and timestamp
+        const userId = auth?.user?.id || 'guest';
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(7);
+        return `${userId}-${timestamp}-${random}`;
+    });
 
     const handlePlaceOrder = (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,9 +47,10 @@ export default function Review({ auth, items, billing, total }: Props) {
 
         setIsSubmitting(true);
         
-        // Use Inertia router.post to send data
+        // Use Inertia router.post to send data with idempotency key
         router.post(route('checkout.order.store'), {
             terms_accepted: 1,
+            idempotency_key: idempotencyKey,
         }, {
             onSuccess: () => {
                 // Will redirect to payment page

@@ -56,6 +56,7 @@ export interface License {
     id: number;
     license_key: string;
     product_id: number;
+    product?: Product;
     user_id: number;
     order_id?: number;
     type: 'single-site' | 'single-journal' | 'multi-site' | 'multi-journal' | 'unlimited';
@@ -73,6 +74,7 @@ export interface License {
 export interface Order {
     id: number;
     user_id: number;
+    user?: User;
     order_number: string;
     subtotal: number;
     tax: number;
@@ -82,9 +84,13 @@ export interface Order {
     payment_status: 'unpaid' | 'pending_verification' | 'paid' | 'rejected';
     payment_method: string;
     bank_account_id?: number;
+    bank_account?: BankAccount;
     payment_deadline?: string;
     notes?: string;
     admin_notes?: string;
+    items?: OrderItem[];
+    payment_proof?: PaymentProof;
+    licenses?: License[];
     created_at: string;
     updated_at: string;
 }
@@ -93,6 +99,7 @@ export interface OrderItem {
     id: number;
     order_id: number;
     product_id: number;
+    product?: Product;
     product_name: string;
     product_version: string;
     license_type: string;
@@ -100,6 +107,24 @@ export interface OrderItem {
     price: number;
     quantity: number;
     subtotal: number;
+}
+
+export interface PaymentProof {
+    id: number;
+    order_id: number;
+    bank_name: string;
+    account_number: string;
+    account_name: string;
+    transfer_amount: number;
+    transfer_date: string;
+    proof_image: string;
+    notes?: string;
+    status: 'pending' | 'verified' | 'rejected';
+    verified_by?: number;
+    verified_at?: string;
+    rejection_reason?: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Review {
@@ -133,6 +158,11 @@ export type PageProps<
     };
     recaptcha?: {
         siteKey: string;
+    };
+    flash?: {
+        success?: string;
+        error?: string;
+        info?: string;
     };
     ziggy: Config & { location: string };
 };
