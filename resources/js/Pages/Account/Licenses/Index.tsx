@@ -87,7 +87,7 @@ export default function LicensesIndex({ auth, licenses }: Props) {
     return (
         <AccountLayout title="My Licenses" auth={auth}>
             {/* Filters */}
-                    <div className="mb-6 bg-white border border-gray-200 rounded-lg p-6">
+                    <div className="mb-6 bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl p-6 shadow-sm">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             {/* Filter Buttons */}
                             <div className="flex flex-wrap gap-2">
@@ -95,9 +95,9 @@ export default function LicensesIndex({ auth, licenses }: Props) {
                                     <button
                                         key={btn.value}
                                         onClick={() => setFilter(btn.value)}
-                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                                             filter === btn.value
-                                                ? 'bg-blue-600 text-white'
+                                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
                                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                     >
@@ -123,7 +123,7 @@ export default function LicensesIndex({ auth, licenses }: Props) {
 
                     {/* Licenses Grid */}
                     {filteredLicenses.length === 0 ? (
-                        <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
+                        <div className="bg-white rounded-2xl border-2 border-gray-100 p-12 text-center shadow-sm">
                             <svg
                                 className="mx-auto h-12 w-12 text-gray-400"
                                 fill="none"

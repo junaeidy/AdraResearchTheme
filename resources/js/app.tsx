@@ -37,8 +37,8 @@ createInertiaApp({
                     toastOptions={{
                         duration: 4000,
                         style: {
-                            background: '#363636',
-                            color: '#fff',
+                            background: '#FFFFFF',
+                            color: '#333333',
                         },
                         success: {
                             duration: 3000,
@@ -67,6 +67,7 @@ createInertiaApp({
         createRoot(el).render(<AppWithProvider />);
     },
     progress: {
-        color: '#4B5563',
+        color: '#3949AB',
+        showSpinner: true,
     },
 });

@@ -44,18 +44,25 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
     return (
         <AccountLayout title="My Account" auth={auth}>
             {/* Welcome Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                    Welcome back, {auth.user.name}!
-                </h2>
-                <p className="text-gray-600">
-                    Here's an overview of your account activity
-                </p>
-                {stats.total_spent > 0 && (
-                    <p className="text-sm text-gray-500 mt-2">
-                        Total spent: <span className="font-semibold text-gray-900">{formatRupiah(stats.total_spent)}</span>
-                    </p>
-                )}
+            <div className="bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl shadow-lg p-6 mb-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-md">
+                        {auth.user.name.split(' ').map(n=>n[0]).slice(0,2).join('')}
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                            Welcome back, {auth.user.name}!
+                        </h2>
+                        <p className="text-gray-600">
+                            Here's an overview of your account activity
+                        </p>
+                        {stats.total_spent > 0 && (
+                            <p className="text-sm text-gray-700 mt-2">
+                                Total spent: <span className="font-semibold text-gray-900">{formatRupiah(stats.total_spent)}</span>
+                            </p>
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* Stats Grid */}
@@ -64,28 +71,30 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
                     <Link
                         key={stat.name}
                         href={stat.href}
-                        className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                        className="bg-white rounded-2xl border-2 border-gray-100 p-6 hover:shadow-xl transition-transform transform hover:-translate-y-1"
                     >
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-4xl">{stat.icon}</span>
-                            <span className="text-3xl font-bold text-gray-900">
-                                {stat.value}
-                            </span>
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-md">
+                                    <span>{stat.icon}</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-bold text-gray-700">{stat.name}</h3>
+                                    <p className="text-xs text-gray-500">{stat.description}</p>
+                                </div>
+                            </div>
+                            <div className="text-3xl font-extrabold text-gray-900">{stat.value}</div>
                         </div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                            {stat.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">{stat.description}</p>
                     </Link>
                 ))}
             </div>
 
             {/* Recent Orders */}
             {recentOrders && recentOrders.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">Recent Orders</h3>
-                        <Link href="/account/orders" className="text-sm text-blue-600 hover:text-blue-800">
+                        <h3 className="text-[18px] font-bold text-gray-900">Recent Orders</h3>
+                        <Link href="/account/orders" className="text-sm text-blue-600 hover:text-blue-800 font-medium">
                             View all
                         </Link>
                     </div>
@@ -94,15 +103,15 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
                             <Link
                                 key={order.id}
                                 href={`/account/orders/${order.order_number}`}
-                                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                                className="flex items-center justify-between p-4 bg-blue-50 rounded-xl border border-blue-100 hover:shadow-md transition"
                             >
                                 <div>
-                                    <p className="font-medium text-gray-900">Order #{order.order_number}</p>
+                                    <p className="font-bold text-gray-900">Order #{order.order_number}</p>
                                     <p className="text-sm text-gray-600">
                                         {order.items?.length || 0} item(s) • {formatRupiah(order.total_amount)}
                                     </p>
                                 </div>
-                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                     order.status === 'completed' ? 'bg-green-100 text-green-800' :
                                     order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                     'bg-blue-100 text-blue-800'
@@ -117,10 +126,10 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
 
             {/* Active Licenses */}
             {activeLicenses && activeLicenses.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">Active Licenses</h3>
-                        <Link href="/account/licenses" className="text-sm text-blue-600 hover:text-blue-800">
+                        <h3 className="text-[18px] font-bold text-gray-900">Active Licenses</h3>
+                        <Link href="/account/licenses" className="text-sm text-blue-600 hover:text-blue-800 font-medium">
                             View all
                         </Link>
                     </div>
@@ -128,18 +137,18 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
                         {activeLicenses.slice(0, 3).map((license) => (
                             <div
                                 key={license.id}
-                                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+                                className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100 shadow-sm"
                             >
                                 <div className="flex items-center gap-4">
                                     {license.product?.image && (
                                         <img
                                             src={`/storage/${license.product.image}`}
                                             alt={license.product.name}
-                                            className="w-12 h-12 rounded object-cover"
+                                            className="w-14 h-14 rounded-xl object-cover border border-gray-100"
                                         />
                                     )}
                                     <div>
-                                        <p className="font-medium text-gray-900">{license.product?.name}</p>
+                                        <p className="font-bold text-gray-900">{license.product?.name}</p>
                                         <p className="text-sm text-gray-600">
                                             {license.type} • v{license.product?.version}
                                         </p>
@@ -158,31 +167,31 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
             )}
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-6">
+                <h3 className="text-[18px] font-bold text-gray-900 mb-4">Quick Actions</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Link
                         href="/shop"
-                        className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                        className="flex items-center p-4 bg-gradient-to-r from-white to-blue-50 rounded-xl border border-blue-100 hover:shadow-md transition"
                     >
-                        <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-xl">
+                        <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white text-xl">
                             🛍️
                         </div>
                         <div className="ml-4">
-                            <p className="font-medium text-gray-900">Browse Products</p>
+                            <p className="font-bold text-gray-900">Browse Products</p>
                             <p className="text-sm text-gray-600">Explore our catalog</p>
                         </div>
                     </Link>
                     
                     <Link
                         href="/account/profile"
-                        className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                        className="flex items-center p-4 bg-gradient-to-r from-white to-green-50 rounded-xl border border-green-100 hover:shadow-md transition"
                     >
-                        <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-xl">
+                        <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-400 rounded-xl flex items-center justify-center text-white text-xl">
                             ⚙️
                         </div>
                         <div className="ml-4">
-                            <p className="font-medium text-gray-900">Profile Settings</p>
+                            <p className="font-bold text-gray-900">Profile Settings</p>
                             <p className="text-sm text-gray-600">Update your information</p>
                         </div>
                     </Link>

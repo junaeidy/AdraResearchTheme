@@ -12,22 +12,22 @@ export default function Edit({
     return (
         <AccountLayout title="Profile" auth={auth}>
             <div className="space-y-6">
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
-                        <UpdateProfileInformationForm
-                            mustVerifyEmail={mustVerifyEmail}
-                            status={status}
-                            className="max-w-xl"
-                        />
-                    </div>
-
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
-                        <UpdatePasswordForm className="max-w-xl" />
-                    </div>
-
-                    <div className="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800">
-                        <DeleteUserForm className="max-w-xl" />
-                    </div>
+                <div className="bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl p-6 shadow-md">
+                    <UpdateProfileInformationForm
+                        mustVerifyEmail={mustVerifyEmail}
+                        status={status}
+                        className="max-w-xl"
+                    />
                 </div>
+
+                <div className="bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl p-6 shadow-md">
+                    <UpdatePasswordForm className="max-w-xl" />
+                </div>
+
+                <div className="bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl p-6 shadow-md">
+                    <DeleteUserForm className="max-w-xl" />
+                </div>
+            </div>
         </AccountLayout>
     );
 }

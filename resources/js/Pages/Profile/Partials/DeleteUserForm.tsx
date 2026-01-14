@@ -75,7 +75,7 @@ export default function DeleteUserForm({
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>
+            <DangerButton className="rounded-xl px-4 py-2" onClick={confirmUserDeletion}>
                 Delete Account
             </DangerButton>
 
@@ -108,7 +108,7 @@ export default function DeleteUserForm({
                             onChange={(e) =>
                                 setData('password', e.target.value)
                             }
-                            className="mt-1 block w-3/4"
+                            className="mt-2 block w-3/4 rounded-xl"
                             isFocused
                             placeholder="Password"
                         />

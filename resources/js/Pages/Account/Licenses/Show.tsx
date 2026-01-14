@@ -43,7 +43,7 @@ export default function LicenseShow({ auth, license }: Props) {
                     <div className="mb-6">
                         <Link
                             href={route('licenses.index')}
-                            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+                            className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 font-medium"
                         >
                             <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -53,10 +53,10 @@ export default function LicenseShow({ auth, license }: Props) {
                     </div>
 
                     {/* License Info Card */}
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
+                    <div className="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden mb-6 shadow-md">
                         {/* Product Image */}
                         {license.product?.image && (
-                            <div className="aspect-video bg-gray-100">
+                            <div className="aspect-video bg-gray-100 overflow-hidden rounded-t-2xl">
                                 <img 
                                     src={`/storage/${license.product.image}`} 
                                     alt={license.product.name}
@@ -87,7 +87,9 @@ export default function LicenseShow({ auth, license }: Props) {
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     License Key
                                 </label>
-                                <LicenseKeyDisplay licenseKey={license.license_key} />
+                                <div className="bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-xl p-4">
+                                    <LicenseKeyDisplay licenseKey={license.license_key} />
+                                </div>
                             </div>
 
                             {/* License Details */}
@@ -124,8 +126,8 @@ export default function LicenseShow({ auth, license }: Props) {
 
                             {/* Download Section */}
                             {canDownload && license.product && (
-                                <div className="border-t border-gray-200 pt-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Download Product</h3>
+                                <div className="border-t border-gray-100 pt-6">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4">Download Product</h3>
                                     <div className="flex items-center gap-4">
                                         <DownloadButton product={license.product} license={license} />
                                         <div className="text-sm text-gray-600">
@@ -136,8 +138,8 @@ export default function LicenseShow({ auth, license }: Props) {
                             )}
 
                             {!canDownload && (
-                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                                    <p className="text-sm text-red-800">
+                                <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4">
+                                    <p className="text-sm text-red-800 font-medium">
                                         {license.status !== 'active' 
                                             ? 'This license is not active. Please contact support.'
                                             : 'This license has expired. Please renew to continue downloads.'

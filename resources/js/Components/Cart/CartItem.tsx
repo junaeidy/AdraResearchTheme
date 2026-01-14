@@ -64,7 +64,7 @@ export default function CartItem({ item }: CartItemProps) {
 
     return (
         <div
-            className={`bg-white rounded-lg border border-gray-200 p-6 transition-opacity ${
+            className={`bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-lg transition-all duration-300 ${
                 isRemoving ? 'opacity-50' : ''
             }`}
         >
@@ -72,7 +72,7 @@ export default function CartItem({ item }: CartItemProps) {
                 {/* Product Image */}
                 <Link
                     href={`/shop/${item.product.slug}`}
-                    className="flex-shrink-0 w-32 h-32 bg-gray-100 rounded-lg overflow-hidden hover:opacity-75 transition-opacity"
+                    className="flex-shrink-0 w-36 h-36 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden hover:scale-105 transition-transform duration-300 shadow-md"
                 >
                     <img
                         src={item.product.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%23e2e8f0" width="400" height="400"/%3E%3Ctext fill="%2364748b" font-family="Arial" font-size="20" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EProduct%3C/text%3E%3C/svg%3E'}
@@ -83,22 +83,27 @@ export default function CartItem({ item }: CartItemProps) {
 
                 {/* Product Details */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start mb-3">
+                    <div className="flex justify-between items-start mb-4">
                         <div>
                             <Link
                                 href={`/shop/${item.product.slug}`}
-                                className="text-lg font-semibold text-gray-900 hover:text-blue-600"
+                                className="text-[19px] font-bold text-gray-900 hover:text-blue-600 transition-colors" style={{fontFamily: 'NexusSansWebPro'}}
                             >
                                 {item.product.name}
                             </Link>
-                            <p className="text-sm text-gray-500 mt-1">
-                                Version {item.product.version}
-                            </p>
+                            <div className="flex items-center gap-2 mt-2">
+                                <span className="inline-flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-[11px] font-bold px-2.5 py-1 rounded-full">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                                    </svg>
+                                    Version {item.product.version}
+                                </span>
+                            </div>
                         </div>
                         <button
                             onClick={handleRemove}
                             disabled={isRemoving}
-                            className="text-gray-400 hover:text-red-600 transition-colors disabled:opacity-50"
+                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 transition-all duration-200 disabled:opacity-50"
                             title="Remove item"
                         >
                             <svg
@@ -120,7 +125,7 @@ export default function CartItem({ item }: CartItemProps) {
                     <div className="grid md:grid-cols-3 gap-4">
                         {/* License Type */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-[13px] font-bold text-gray-900 mb-2">
                                 License Type
                             </label>
                             <select
@@ -129,7 +134,7 @@ export default function CartItem({ item }: CartItemProps) {
                                     handleLicenseTypeChange(e.target.value as LicenseType)
                                 }
                                 disabled={isUpdating}
-                                className="w-full border-gray-300 rounded-md text-sm disabled:opacity-50"
+                                className="w-full border-2 border-gray-300 rounded-xl text-[14px] py-2.5 px-3 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all disabled:opacity-50 font-medium"
                             >
                                 {licenseTypeOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
@@ -141,7 +146,7 @@ export default function CartItem({ item }: CartItemProps) {
 
                         {/* Duration */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-[13px] font-bold text-gray-900 mb-2">
                                 Duration
                             </label>
                             <select
@@ -150,7 +155,7 @@ export default function CartItem({ item }: CartItemProps) {
                                     handleDurationChange(e.target.value as LicenseDuration)
                                 }
                                 disabled={isUpdating}
-                                className="w-full border-gray-300 rounded-md text-sm disabled:opacity-50"
+                                className="w-full border-2 border-gray-300 rounded-xl text-[14px] py-2.5 px-3 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all disabled:opacity-50 font-medium"
                             >
                                 {durationOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
@@ -162,14 +167,14 @@ export default function CartItem({ item }: CartItemProps) {
 
                         {/* Quantity */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                            <label className="block text-[13px] font-bold text-gray-900 mb-2">
                                 Quantity
                             </label>
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => handleQuantityChange(item.quantity - 1)}
                                     disabled={item.quantity <= 1 || isUpdating}
-                                    className="px-3 py-1 border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-xl hover:border-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-300 disabled:hover:bg-transparent font-bold text-gray-700 transition-all duration-200"
                                 >
                                     -
                                 </button>
@@ -182,12 +187,12 @@ export default function CartItem({ item }: CartItemProps) {
                                         handleQuantityChange(parseInt(e.target.value) || 1)
                                     }
                                     disabled={isUpdating}
-                                    className="w-16 text-center border-t border-b border-gray-300 py-1 disabled:opacity-50"
+                                    className="w-16 text-center border-2 border-gray-300 rounded-xl py-2 font-bold text-[15px] focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all disabled:opacity-50"
                                 />
                                 <button
                                     onClick={() => handleQuantityChange(item.quantity + 1)}
                                     disabled={item.quantity >= 10 || isUpdating}
-                                    className="px-3 py-1 border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-xl hover:border-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-300 disabled:hover:bg-transparent font-bold text-gray-700 transition-all duration-200"
                                 >
                                     +
                                 </button>
@@ -196,17 +201,21 @@ export default function CartItem({ item }: CartItemProps) {
                     </div>
 
                     {/* Price */}
-                    <div className="mt-4 flex justify-between items-center">
-                        <div className="text-sm text-gray-600">
+                    <div className="mt-5 pt-4 border-t border-gray-200 flex justify-between items-center">
+                        <div className="text-[14px] text-gray-600 font-medium">
                             {formatRupiah(Number(item.price))} × {item.quantity}
                         </div>
-                        <div className="text-xl font-bold text-gray-900">
+                        <div className="text-[26px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                             {formatRupiah(Number(item.price) * item.quantity)}
                         </div>
                     </div>
 
                     {isUpdating && (
-                        <div className="mt-2 text-xs text-blue-600">
+                        <div className="mt-3 flex items-center gap-2 text-[13px] text-blue-600 font-semibold">
+                            <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
                             Updating...
                         </div>
                     )}

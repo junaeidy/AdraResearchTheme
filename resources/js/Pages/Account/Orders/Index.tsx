@@ -38,17 +38,17 @@ export default function OrdersIndex({ auth, orders }: Props) {
         <AccountLayout title="My Orders" auth={auth}>
             {/* Orders List */}
             {orders.data.length === 0 ? (
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+                        <div className="bg-white rounded-2xl shadow-sm border-2 border-gray-100 p-12 text-center">
                             <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
-                            <h3 className="mt-4 text-lg font-medium text-gray-900">No orders yet</h3>
+                            <h3 className="mt-4 text-lg font-semibold text-gray-900">No orders yet</h3>
                             <p className="mt-2 text-sm text-gray-500">
                                 Start shopping to see your orders here.
                             </p>
                             <Link
                                 href={route('shop.index')}
-                                className="mt-6 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                className="mt-6 inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                             >
                                 Browse Products
                             </Link>
@@ -56,11 +56,11 @@ export default function OrdersIndex({ auth, orders }: Props) {
                     ) : (
                         <div className="space-y-4">
                             {orders.data.map((order) => (
-                                <div key={order.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                                <div key={order.id} className="bg-white rounded-2xl shadow-sm border-2 border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
                                     <div className="p-6">
                                         <div className="flex items-start justify-between mb-4">
                                             <div>
-                                                <h3 className="text-lg font-semibold text-gray-900">
+                                                <h3 className="text-lg font-bold text-gray-900">
                                                     Order #{order.order_number}
                                                 </h3>
                                                 <p className="text-sm text-gray-500 mt-1">
@@ -74,7 +74,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                 </p>
                                             </div>
                                             
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 items-center">
                                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getOrderStatusColor(order.status)}`}>
                                                     {formatStatus(order.status)}
                                                 </span>
@@ -90,7 +90,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                         <img
                                                             src={`/storage/${item.product.image}`}
                                                             alt={item.product_name}
-                                                            className="w-12 h-12 object-cover rounded"
+                                                            className="w-12 h-12 object-cover rounded-xl border border-gray-100"
                                                         />
                                                     )}
                                                     <div className="flex-1">
@@ -112,7 +112,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                         </div>
 
                                         {/* Footer */}
-                                        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                                             <div>
                                                 <p className="text-sm text-gray-600">Total Amount</p>
                                                 <p className="text-xl font-bold text-gray-900">
@@ -124,7 +124,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                 {order.payment_status === 'unpaid' && (
                                                     <Link
                                                         href={route('payment.index', order.order_number)}
-                                                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                                        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                                                     >
                                                         Complete Payment
                                                     </Link>
@@ -133,7 +133,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                 {order.payment_status === 'rejected' && (
                                                     <Link
                                                         href={route('payment.index', order.order_number)}
-                                                        className="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                                                        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-500 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                                                     >
                                                         Resubmit Payment
                                                     </Link>
@@ -141,7 +141,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                 
                                                 <Link
                                                     href={route('orders.show', order.order_number)}
-                                                    className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                                    className="inline-flex items-center px-4 py-2 bg-white border-2 border-gray-200 text-gray-700 rounded-xl hover:shadow-sm transition"
                                                 >
                                                     View Details
                                                 </Link>

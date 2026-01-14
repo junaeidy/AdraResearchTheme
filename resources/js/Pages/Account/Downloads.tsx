@@ -53,7 +53,7 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                         <h2 className="text-xl font-semibold text-gray-900 mb-4">Available Products</h2>
                         
                         {products.length === 0 ? (
-                            <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
+                            <div className="bg-white rounded-2xl border-2 border-gray-100 p-12 text-center shadow-sm">
                                 <svg
                                     className="mx-auto h-12 w-12 text-gray-400"
                                     fill="none"
@@ -74,7 +74,7 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                 <div className="mt-6">
                                     <Link
                                         href={route('shop.index')}
-                                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                                     >
                                         Browse Products
                                     </Link>
@@ -83,10 +83,10 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {products.map((product: any) => (
-                                    <div key={product.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                                    <div key={product.id} className="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
                                         {/* Product Image */}
                                         {product.image && (
-                                            <div className="aspect-video bg-gray-100">
+                                            <div className="aspect-video bg-gray-100 overflow-hidden rounded-t-2xl">
                                                 <img
                                                     src={`/storage/${product.image}`}
                                                     alt={product.name}
@@ -127,7 +127,7 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                             {/* Download Button */}
                                             <button
                                                 onClick={() => handleDownload(product.id)}
-                                                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                                             >
                                                 <ArrowDownTrayIcon className="w-5 h-5" />
                                                 Download
@@ -143,7 +143,7 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                     {downloadHistory.length > 0 && (
                         <div>
                             <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Downloads</h2>
-                            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden shadow-sm">
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">

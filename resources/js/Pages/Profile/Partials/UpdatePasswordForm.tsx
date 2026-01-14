@@ -57,14 +57,17 @@ export default function UpdatePasswordForm({
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    Update Password
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Ensure your account is using a long, random password to stay
-                    secure.
-                </p>
+                <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-400 flex items-center justify-center text-white font-bold">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0-1.657-1.343-3-3-3S6 9.343 6 11v2h6v-2zM5 13v6h14v-6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 className="text-[20px] font-bold text-gray-900">Update Password</h2>
+                        <p className="mt-1 text-[14px] text-gray-600 font-medium">Ensure your account is using a long, random password to stay secure.</p>
+                    </div>
+                </div>
             </header>
 
             <form onSubmit={updatePassword} className="mt-6 space-y-6">
@@ -132,7 +135,7 @@ export default function UpdatePasswordForm({
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl px-5 py-2" disabled={processing}>Save</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}

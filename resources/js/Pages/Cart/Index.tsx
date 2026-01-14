@@ -32,14 +32,30 @@ export default function Index({ auth, items, total, count }: Props) {
         <>
             <Head title="Shopping Cart" />
             
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
                 <Header user={auth?.user} />
+
+            {/* Page Header */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center gap-3">
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 className="text-[40px] font-bold text-white" style={{fontFamily: 'NexusSansWebPro'}}>
+                                Shopping Cart
+                            </h1>
+                            <p className="text-[15px] text-blue-100 mt-1">Review your items and proceed to checkout</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-8">
-                        Shopping Cart
-                    </h1>
 
                     {items.length === 0 ? (
                         <CartEmpty />

@@ -27,61 +27,74 @@ const countryNames: Record<string, string> = {
 
 export default function BillingInfoCard({ billing }: BillingInfoCardProps) {
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Billing Information</h3>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-[20px] font-bold text-gray-900" style={{fontFamily: 'NexusSansWebPro'}}>Billing Information</h3>
+                </div>
                 <Link
                     href={route('checkout.billing')}
-                    className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                    className="inline-flex items-center gap-2 text-[14px] text-blue-600 hover:text-blue-700 font-bold transition-colors bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100"
                 >
-                    <PencilIcon className="w-4 h-4" />
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                     Edit
                 </Link>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 {/* Personal Info */}
-                <div>
-                    <p className="text-sm text-gray-500">Full Name</p>
-                    <p className="text-base text-gray-900 font-medium">{billing.name}</p>
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50/20 rounded-xl p-4">
+                    <p className="text-[13px] text-gray-600 font-semibold mb-1">Full Name</p>
+                    <p className="text-[16px] text-gray-900 font-bold">{billing.name}</p>
                 </div>
 
-                <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="text-base text-gray-900">{billing.email}</p>
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50/20 rounded-xl p-4">
+                    <p className="text-[13px] text-gray-600 font-semibold mb-1">Email</p>
+                    <p className="text-[15px] text-gray-900 font-medium">{billing.email}</p>
                 </div>
 
-                <div>
-                    <p className="text-sm text-gray-500">Phone</p>
-                    <p className="text-base text-gray-900">{billing.phone}</p>
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50/20 rounded-xl p-4">
+                    <p className="text-[13px] text-gray-600 font-semibold mb-1">Phone</p>
+                    <p className="text-[15px] text-gray-900 font-medium">{billing.phone}</p>
                 </div>
 
                 {billing.organization && (
-                    <div>
-                        <p className="text-sm text-gray-500">Organization</p>
-                        <p className="text-base text-gray-900">{billing.organization}</p>
+                    <div className="bg-gradient-to-r from-gray-50 to-blue-50/20 rounded-xl p-4">
+                        <p className="text-[13px] text-gray-600 font-semibold mb-1">Organization</p>
+                        <p className="text-[15px] text-gray-900 font-medium">{billing.organization}</p>
                     </div>
                 )}
 
                 {/* Address */}
                 <div className="pt-3 border-t border-gray-200">
-                    <p className="text-sm text-gray-500 mb-2">Address</p>
-                    <div className="text-base text-gray-900">
-                        <p>{billing.address}</p>
-                        <p>
-                            {billing.city}
-                            {billing.postal_code && `, ${billing.postal_code}`}
-                        </p>
-                        <p>{countryNames[billing.country] || billing.country}</p>
+                    <div className="bg-gradient-to-r from-gray-50 to-blue-50/20 rounded-xl p-4">
+                        <p className="text-[13px] text-gray-600 font-semibold mb-2">Address</p>
+                        <div className="text-[15px] text-gray-900 font-medium space-y-1">
+                            <p>{billing.address}</p>
+                            <p>
+                                {billing.city}
+                                {billing.postal_code && `, ${billing.postal_code}`}
+                            </p>
+                            <p>{countryNames[billing.country] || billing.country}</p>
+                        </div>
                     </div>
                 </div>
 
                 {billing.notes && (
                     <div className="pt-3 border-t border-gray-200">
-                        <p className="text-sm text-gray-500">Order Notes</p>
-                        <p className="text-base text-gray-900 whitespace-pre-wrap">
-                            {billing.notes}
-                        </p>
+                        <div className="bg-gradient-to-r from-gray-50 to-blue-50/20 rounded-xl p-4">
+                            <p className="text-[13px] text-gray-600 font-semibold mb-2">Order Notes</p>
+                            <p className="text-[15px] text-gray-900 font-medium whitespace-pre-wrap leading-relaxed">
+                                {billing.notes}
+                            </p>
+                        </div>
                     </div>
                 )}
             </div>
