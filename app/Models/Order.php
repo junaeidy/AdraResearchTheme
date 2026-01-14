@@ -27,10 +27,10 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'subtotal' => 'decimal:2',
-        'tax' => 'decimal:2',
-        'discount' => 'decimal:2',
-        'total_amount' => 'decimal:2',
+        'subtotal' => 'decimal:0',
+        'tax' => 'decimal:0',
+        'discount' => 'decimal:0',
+        'total_amount' => 'decimal:0',
         'payment_deadline' => 'datetime',
     ];
 

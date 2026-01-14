@@ -9,6 +9,7 @@ import Modal from '@/Components/Modal';
 import Button from '@/Components/Shared/Button';
 import Input from '@/Components/Shared/Input';
 import DeleteConfirmationModal from '@/Components/Shared/DeleteConfirmationModal';
+import ConfirmationModal from '@/Components/Shared/ConfirmationModal';
 import { formatRupiah } from '@/utils/currency';
 import toast from 'react-hot-toast';
 
@@ -20,6 +21,7 @@ export default function AdminLicenseShow({ auth, license }: Props) {
     const { flash } = usePage().props as any;
     const [isExtendModalOpen, setIsExtendModalOpen] = useState(false);
     const [isRevokeModalOpen, setIsRevokeModalOpen] = useState(false);
+    const [isUnsuspendModalOpen, setIsUnsuspendModalOpen] = useState(false);
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
     const { data: extendData, setData: setExtendData, post: postExtend, processing: extending, reset: resetExtend } = useForm({
@@ -50,6 +52,14 @@ export default function AdminLicenseShow({ auth, license }: Props) {
         router.post(route('admin.licenses.revoke', license.id), {}, {
             onSuccess: () => {
                 setIsRevokeModalOpen(false);
+            },
+        });
+    };
+
+    const handleUnsuspend = () => {
+        router.post(route('admin.licenses.unsuspend', license.id), {}, {
+            onSuccess: () => {
+                setIsUnsuspendModalOpen(false);
             },
         });
     };
@@ -148,13 +158,21 @@ export default function AdminLicenseShow({ auth, license }: Props) {
                             >
                                 Extend License
                             </Button>
-                            <Button
-                                onClick={() => setIsRevokeModalOpen(true)}
-                                disabled={license.status === 'suspended'}
-                                className="bg-orange-600 hover:bg-orange-700"
-                            >
-                                Suspend License
-                            </Button>
+                            {license.status === 'suspended' ? (
+                                <Button
+                                    onClick={() => setIsUnsuspendModalOpen(true)}
+                                    className="bg-green-600 hover:bg-green-700"
+                                >
+                                    Activate License
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={() => setIsRevokeModalOpen(true)}
+                                    className="bg-orange-600 hover:bg-orange-700"
+                                >
+                                    Suspend License
+                                </Button>
+                            )}
                             <Button
                                 onClick={() => setIsResetModalOpen(true)}
                                 disabled={license.activated_count === 0}
@@ -320,6 +338,18 @@ export default function AdminLicenseShow({ auth, license }: Props) {
                 onConfirm={handleRevoke}
                 title="Suspend License"
                 message="Are you sure you want to suspend this license? The customer will not be able to use it until reactivated."
+            />
+
+            {/* Unsuspend License Modal */}
+            <ConfirmationModal
+                show={isUnsuspendModalOpen}
+                onCancel={() => setIsUnsuspendModalOpen(false)}
+                onConfirm={handleUnsuspend}
+                title="Activate License"
+                message="Are you sure you want to activate this license? The customer will be able to use it again."
+                confirmText="Activate"
+                confirmButtonClass="bg-green-600 hover:bg-green-700"
+                type="success"
             />
 
             {/* Reset Activations Modal */}

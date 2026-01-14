@@ -2,6 +2,7 @@ import { Order, PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import { formatRupiah } from '@/utils/currency';
 
 interface Props extends PageProps {
     order: Order;
@@ -48,7 +49,7 @@ export default function PaymentPending({ auth, order }: Props) {
                                     <div>
                                         <p className="text-gray-600">Total Amount</p>
                                         <p className="font-semibold text-gray-900 mt-1">
-                                            Rp {order.total_amount.toLocaleString('id-ID')}
+                                            {formatRupiah(order.total_amount)}
                                         </p>
                                     </div>
                                 </div>
@@ -143,7 +144,7 @@ export default function PaymentPending({ auth, order }: Props) {
                                         <div>
                                             <p className="text-gray-600">Transfer Amount</p>
                                             <p className="font-medium text-gray-900 mt-1">
-                                                Rp {order.payment_proof.transfer_amount.toLocaleString('id-ID')}
+                                                {formatRupiah(order.payment_proof.transfer_amount)}
                                             </p>
                                         </div>
                                     </div>

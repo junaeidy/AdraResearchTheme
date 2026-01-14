@@ -56,6 +56,6 @@ class RegisteredUserController extends Controller
         $cartService = app(CartService::class);
         $cartService->mergeCarts($oldSessionId, $user->id);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('account', absolute: false));
     }
 }

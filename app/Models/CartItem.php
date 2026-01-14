@@ -21,7 +21,7 @@ class CartItem extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
+        'price' => 'decimal:0',
         'quantity' => 'integer',
     ];
 

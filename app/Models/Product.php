@@ -27,6 +27,7 @@ class Product extends Model
         'is_featured',
         'image',
         'file_path',
+        'original_filename',
         'demo_url',
         'screenshots',
         'documentation_url',
@@ -41,8 +42,8 @@ class Product extends Model
         'changelog' => 'array',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
-        'price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
+        'price' => 'decimal:0',
+        'sale_price' => 'decimal:0',
         'rating_average' => 'decimal:1',
         'rating_count' => 'integer',
     ];
@@ -134,6 +135,6 @@ class Product extends Model
         $typeMultiplier = $typeMultipliers[$licenseType] ?? 1.0;
         $durationMultiplier = $durationMultipliers[$licenseDuration] ?? 1.0;
 
-        return round($basePrice * $typeMultiplier * $durationMultiplier, 2);
+        return round($basePrice * $typeMultiplier * $durationMultiplier, 0);
     }
 }

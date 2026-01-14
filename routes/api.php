@@ -14,4 +14,6 @@ Route::prefix('licenses')->middleware(['throttle:10,1'])->group(function () {
     Route::post('/validate', [LicenseController::class, 'validateLicense']);
     Route::post('/deactivate', [LicenseController::class, 'deactivate']);
     Route::get('/{licenseKey}/info', [LicenseController::class, 'info']);
+    Route::post('/{licenseKey}/suspend', [LicenseController::class, 'suspend']);
+    Route::post('/{licenseKey}/unsuspend', [LicenseController::class, 'unsuspend']);
 });

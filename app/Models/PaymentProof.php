@@ -25,7 +25,7 @@ class PaymentProof extends Model
     ];
 
     protected $casts = [
-        'transfer_amount' => 'decimal:2',
+        'transfer_amount' => 'decimal:0',
         'transfer_date' => 'date',
         'verified_at' => 'datetime',
     ];

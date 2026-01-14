@@ -78,10 +78,12 @@ class DownloadController extends Controller
             'downloaded_at' => now(),
         ]);
         
-        // Download file from private storage
+        // Download file from private storage with original filename
+        $downloadFilename = $product->original_filename ?? basename($product->file_path);
+        
         return Storage::disk('private')->download(
             $product->file_path,
-            basename($product->file_path)
+            $downloadFilename
         );
     }
 }

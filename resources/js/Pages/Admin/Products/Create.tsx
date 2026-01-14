@@ -244,7 +244,7 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                                     onChange={(e) => setData('price', e.target.value)}
                                     error={errors.price}
                                     min="0"
-                                    step="0.01"
+                                    step="1"
                                     required
                                 />
 
@@ -255,7 +255,7 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                                     onChange={(e) => setData('sale_price', e.target.value)}
                                     error={errors.sale_price}
                                     min="0"
-                                    step="0.01"
+                                    step="1"
                                     helperText="Leave empty if no discount"
                                 />
                             </div>

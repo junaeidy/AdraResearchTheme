@@ -15,18 +15,31 @@ class LicenseController extends Controller
     {
         $validated = $request->validate([
             'license_key' => 'required|string',
+            'product_slug' => 'required|string',
             'domain' => 'required|string',
             'journal_path' => 'nullable|string',
             'ojs_version' => 'required|string',
         ]);
         
-        $license = License::where('license_key', $validated['license_key'])->first();
+        $license = License::where('license_key', $validated['license_key'])
+            ->with('product')
+            ->first();
         
         if (!$license) {
             return response()->json([
                 'valid' => false,
                 'message' => 'Invalid license key.',
             ], 404);
+        }
+        
+        // CRITICAL: Check if license is for the correct product
+        if ($license->product->slug !== $validated['product_slug']) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'This license key is not valid for this product. License is for: ' . $license->product->name,
+                'licensed_product' => $license->product->name,
+                'requested_product' => $validated['product_slug'],
+            ], 403);
         }
         
         // Check if active
@@ -45,18 +58,44 @@ class LicenseController extends Controller
             ], 403);
         }
         
-        // Generate identifier
-        $identifier = $validated['domain'] . ($validated['journal_path'] ?? '');
+        // CRITICAL: Validate scope (installation vs journal)
+        if ($license->scope === 'journal') {
+            // Journal-scoped license MUST have journal_path
+            if (empty($validated['journal_path'])) {
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'This is a journal-specific license. Please provide journal_path.',
+                    'license_scope' => 'journal',
+                ], 400);
+            }
+            // Generate identifier with journal path
+            $identifier = $validated['domain'] . '/' . ltrim($validated['journal_path'], '/');
+        } else {
+            // Installation-scoped license: use domain only, ignore journal_path
+            $identifier = $validated['domain'];
+        }
         
-        // Check if already activated on this site
+        // Set activated_at dan expires_at pada aktivasi pertama kali
+        if ($license->activated_at === null) {
+            $licenseService = app(\App\Services\LicenseService::class);
+            $license->update([
+                'activated_at' => now(),
+                'expires_at' => $licenseService->calculateExpiryDate($license->duration),
+            ]);
+        }
+        
+        // Check if already activated on this site/journal
         $existingActivation = $license->activations()
             ->where('full_identifier', $identifier)
             ->first();
         
         if ($existingActivation) {
+            $locationMsg = $license->scope === 'journal' 
+                ? 'this journal' 
+                : 'this site';
             return response()->json([
                 'valid' => true,
-                'message' => 'License already activated on this site.',
+                'message' => "License already activated on {$locationMsg}.",
                 'license' => $this->formatLicenseResponse($license),
                 'activation' => $existingActivation,
             ]);
@@ -102,24 +141,54 @@ class LicenseController extends Controller
     {
         $validated = $request->validate([
             'license_key' => 'required|string',
+            'product_slug' => 'required|string',
             'domain' => 'required|string',
             'journal_path' => 'nullable|string',
         ]);
         
-        $license = License::where('license_key', $validated['license_key'])->first();
+        $license = License::where('license_key', $validated['license_key'])
+            ->with('product')
+            ->first();
         
         if (!$license) {
             return response()->json(['valid' => false, 'message' => 'Invalid license key.'], 404);
         }
         
-        $identifier = $validated['domain'] . ($validated['journal_path'] ?? '');
+        // CRITICAL: Check if license is for the correct product
+        if ($license->product->slug !== $validated['product_slug']) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'This license key is not valid for this product.',
+                'licensed_product' => $license->product->name,
+            ], 403);
+        }
+        
+        // CRITICAL: Validate scope (installation vs journal)
+        if ($license->scope === 'journal') {
+            if (empty($validated['journal_path'])) {
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'This is a journal-specific license. Please provide journal_path.',
+                ], 400);
+            }
+            $identifier = $validated['domain'] . '/' . ltrim($validated['journal_path'], '/');
+        } else {
+            $identifier = $validated['domain'];
+        }
         
         $activation = $license->activations()
             ->where('full_identifier', $identifier)
             ->first();
         
         if (!$activation) {
-            return response()->json(['valid' => false, 'message' => 'License not activated on this site.'], 403);
+            $scopeMsg = $license->scope === 'journal' 
+                ? 'this journal' 
+                : 'this site';
+            return response()->json([
+                'valid' => false, 
+                'message' => "License not activated on {$scopeMsg}.",
+                'license_scope' => $license->scope,
+            ], 403);
         }
         
         // Check status and expiry
@@ -137,24 +206,51 @@ class LicenseController extends Controller
         return response()->json([
             'valid' => true,
             'license' => $this->formatLicenseResponse($license),
-        ]);
+            'cache_control' => [
+                'max_age' => 300, // 5 minutes - untuk real-time deactivation
+                'must_revalidate' => true,
+            ],
+            'validated_at' => now()->toIso8601String(),
+        ])->header('Cache-Control', 'no-cache, must-revalidate, max-age=300');
     }
     
     public function deactivate(Request $request)
     {
         $validated = $request->validate([
             'license_key' => 'required|string',
+            'product_slug' => 'required|string',
             'domain' => 'required|string',
             'journal_path' => 'nullable|string',
         ]);
         
-        $license = License::where('license_key', $validated['license_key'])->first();
+        $license = License::where('license_key', $validated['license_key'])
+            ->with('product')
+            ->first();
         
         if (!$license) {
             return response()->json(['success' => false, 'message' => 'Invalid license key.'], 404);
         }
         
-        $identifier = $validated['domain'] . ($validated['journal_path'] ?? '');
+        // Check if license is for the correct product
+        if ($license->product->slug !== $validated['product_slug']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This license key is not valid for this product.',
+            ], 403);
+        }
+        
+        // CRITICAL: Validate scope (installation vs journal)
+        if ($license->scope === 'journal') {
+            if (empty($validated['journal_path'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This is a journal-specific license. Please provide journal_path.',
+                ], 400);
+            }
+            $identifier = $validated['domain'] . '/' . ltrim($validated['journal_path'], '/');
+        } else {
+            $identifier = $validated['domain'];
+        }
         
         $activation = $license->activations()
             ->where('full_identifier', $identifier)
@@ -185,9 +281,68 @@ class LicenseController extends Controller
             'activations' => $license->activations,
         ]);
     }
+
+    public function suspend(Request $request, string $licenseKey)
+    {
+        $license = License::where('license_key', $licenseKey)->first();
+        
+        if (!$license) {
+            return response()->json(['error' => 'License not found.'], 404);
+        }
+        
+        if ($license->status === 'suspended') {
+            return response()->json([
+                'success' => false, 
+                'message' => 'License is already suspended.'
+            ], 400);
+        }
+        
+        $license->update(['status' => 'suspended']);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'License suspended successfully.',
+            'license' => $this->formatLicenseResponse($license),
+        ]);
+    }
+
+    public function unsuspend(Request $request, string $licenseKey)
+    {
+        $license = License::where('license_key', $licenseKey)->first();
+        
+        if (!$license) {
+            return response()->json(['error' => 'License not found.'], 404);
+        }
+        
+        if ($license->status !== 'suspended') {
+            return response()->json([
+                'success' => false, 
+                'message' => 'License is not suspended.',
+                'current_status' => $license->status
+            ], 400);
+        }
+        
+        $license->update(['status' => 'active']);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'License activated successfully.',
+            'license' => $this->formatLicenseResponse($license),
+        ]);
+    }
     
     private function formatLicenseResponse(License $license): array
     {
+        // Hitung days remaining dengan cara yang sama seperti frontend
+        $daysRemaining = null;
+        if ($license->expires_at) {
+            $now = now();
+            $daysRemaining = (int) ceil($license->expires_at->diffInDays($now, false));
+            if ($daysRemaining < 0) {
+                $daysRemaining = 0; // Expired
+            }
+        }
+        
         return [
             'license_key' => $license->license_key,
             'product' => [
@@ -195,11 +350,14 @@ class LicenseController extends Controller
                 'version' => $license->product->version,
             ],
             'type' => $license->type,
+            'scope' => $license->scope,
             'duration' => $license->duration,
             'status' => $license->status,
             'max_activations' => $license->max_activations,
             'activated_count' => $license->activated_count,
-            'expires_at' => $license->expires_at?->toDateString(),
+            'activated_at' => $license->activated_at ? $license->activated_at->toDateString() : null,
+            'expires_at' => $license->expires_at ? $license->expires_at->toDateString() : null,
+            'days_remaining' => $daysRemaining,
         ];
     }
 }

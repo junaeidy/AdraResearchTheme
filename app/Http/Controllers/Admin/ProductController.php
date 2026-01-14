@@ -122,17 +122,14 @@ class ProductController extends Controller
             $slug = \Illuminate\Support\Str::slug($validated['name']);
             $version = $validated['version'];
             
-            // Determine file extension
-            $extension = $file->getClientOriginalExtension();
-            if ($extension === 'gz' && str_ends_with($file->getClientOriginalName(), '.tar.gz')) {
-                $extension = 'tar.gz';
-            }
+            // Store original filename
+            $originalFilename = $file->getClientOriginalName();
+            $validated['original_filename'] = $originalFilename;
             
-            // Store file: products/{slug}/{version}/{slug}-{version}.{ext}
-            $fileName = "{$slug}-{$version}.{$extension}";
+            // Store file: products/{slug}/{version}/{original-filename}
             $path = "products/{$slug}/{$version}";
             
-            $validated['file_path'] = $file->storeAs($path, $fileName, 'private');
+            $validated['file_path'] = $file->storeAs($path, $originalFilename, 'private');
         }
 
         Product::create($validated);
@@ -240,17 +237,14 @@ class ProductController extends Controller
             $slug = \Illuminate\Support\Str::slug($validated['name']);
             $version = $validated['version'];
             
-            // Determine file extension
-            $extension = $file->getClientOriginalExtension();
-            if ($extension === 'gz' && str_ends_with($file->getClientOriginalName(), '.tar.gz')) {
-                $extension = 'tar.gz';
-            }
+            // Store original filename
+            $originalFilename = $file->getClientOriginalName();
+            $validated['original_filename'] = $originalFilename;
             
-            // Store file: products/{slug}/{version}/{slug}-{version}.{ext}
-            $fileName = "{$slug}-{$version}.{$extension}";
+            // Store file: products/{slug}/{version}/{original-filename}
             $path = "products/{$slug}/{$version}";
             
-            $validated['file_path'] = $file->storeAs($path, $fileName, 'private');
+            $validated['file_path'] = $file->storeAs($path, $originalFilename, 'private');
         }
 
         $product->update($validated);

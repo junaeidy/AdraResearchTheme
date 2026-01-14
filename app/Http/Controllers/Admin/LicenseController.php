@@ -35,7 +35,7 @@ class LicenseController extends Controller
         
         if ($license->expires_at) {
             $license->update([
-                'expires_at' => $license->expires_at->addMonths($validated['months']),
+                'expires_at' => $license->expires_at->addMonths((int) $validated['months']),
             ]);
         }
         
@@ -46,6 +46,16 @@ class LicenseController extends Controller
     {
         $license->update(['status' => 'suspended']);
         return back()->with('success', 'License suspended.');
+    }
+
+    public function unsuspend(License $license)
+    {
+        if ($license->status !== 'suspended') {
+            return back()->with('error', 'License is not suspended.');
+        }
+        
+        $license->update(['status' => 'active']);
+        return back()->with('success', 'License activated successfully.');
     }
     
     public function resetActivations(License $license)

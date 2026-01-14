@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Customer\LicenseController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\HomeController;
@@ -56,9 +55,6 @@ require __DIR__.'/auth.php';
 
 // Authenticated user routes
 Route::middleware('auth')->group(function () {
-    // Customer dashboard (new)
-    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
-
     // Account routes with /account prefix
     Route::prefix('account')->group(function () {
         Route::get('/', [AccountController::class, 'index'])->name('account');
@@ -162,6 +158,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{license}', [AdminLicenseController::class, 'show'])->name('show');
         Route::post('/{license}/extend', [AdminLicenseController::class, 'extend'])->name('extend');
         Route::post('/{license}/revoke', [AdminLicenseController::class, 'revoke'])->name('revoke');
+        Route::post('/{license}/unsuspend', [AdminLicenseController::class, 'unsuspend'])->name('unsuspend');
         Route::post('/{license}/reset', [AdminLicenseController::class, 'resetActivations'])->name('reset');
     });
 });

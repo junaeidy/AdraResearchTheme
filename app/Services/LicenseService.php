@@ -32,8 +32,9 @@ class LicenseService
                 'scope' => $item->product->license_scope,
                 'max_activations' => $this->getMaxActivations($item->license_type),
                 'status' => 'active',
-                'activated_at' => now(),
-                'expires_at' => $this->calculateExpiryDate($item->license_duration),
+                // activated_at dan expires_at akan di-set saat aktivasi pertama
+                'activated_at' => null,
+                'expires_at' => null,
             ]);
             
             $licenses->push($license);
@@ -83,7 +84,7 @@ class LicenseService
      * @param string $duration
      * @return Carbon|null
      */
-    private function calculateExpiryDate(string $duration): ?Carbon
+    public function calculateExpiryDate(string $duration): ?Carbon
     {
         return match($duration) {
             '1-year' => now()->addYear(),
