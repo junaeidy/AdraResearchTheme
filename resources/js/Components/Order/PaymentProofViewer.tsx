@@ -11,17 +11,17 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
     const [isZoomed, setIsZoomed] = useState(false);
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b border-gray-200">
-                <h3 className="font-semibold text-gray-900">Payment Proof</h3>
+        <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden">
+            <div className="p-3 sm:p-4 bg-gray-50 border-b border-gray-200">
+                <h3 className="font-semibold text-sm sm:text-base text-gray-900">Payment Proof</h3>
             </div>
             
-            <div className="p-6 space-y-4">
+            <div className="p-4 sm:p-5 lg:p-6 space-y-3 sm:space-y-4">
                 {/* Transfer Details */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                     <div>
                         <p className="text-gray-600">Transfer From</p>
-                        <p className="font-medium text-gray-900 mt-1">{paymentProof.bank_name}</p>
+                        <p className="font-medium text-gray-900 mt-1 truncate">{paymentProof.bank_name}</p>
                     </div>
                     
                     <div>
@@ -67,8 +67,8 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
 
                 {paymentProof.notes && (
                     <div>
-                        <p className="text-sm text-gray-600">Notes from Customer</p>
-                        <p className="text-sm text-gray-900 mt-1 p-3 bg-gray-50 rounded-lg">
+                        <p className="text-xs sm:text-sm text-gray-600">Notes from Customer</p>
+                        <p className="text-xs sm:text-sm text-gray-900 mt-1 p-2 sm:p-3 bg-gray-50 rounded-lg break-words">
                             {paymentProof.notes}
                         </p>
                     </div>
@@ -76,13 +76,13 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
 
                 {/* Payment Proof Image */}
                 <div>
-                    <p className="text-sm text-gray-600 mb-2">Proof Image</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-2">Proof Image</p>
                     <div className="relative">
                         <img
                             src={imageUrl}
                             alt="Payment proof"
                             className={`
-                                w-full rounded-lg border border-gray-300 cursor-pointer transition-transform
+                                w-full rounded-lg sm:rounded-xl border border-gray-300 cursor-pointer transition-transform
                                 ${isZoomed ? 'scale-150' : 'hover:scale-105'}
                             `}
                             onClick={() => setIsZoomed(!isZoomed)}
@@ -90,15 +90,15 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
                         
                         <button
                             onClick={() => setIsZoomed(!isZoomed)}
-                            className="absolute top-2 right-2 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
+                            className="absolute top-2 right-2 p-1.5 sm:p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
                             title={isZoomed ? 'Zoom out' : 'Zoom in'}
                         >
                             {isZoomed ? (
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
                                 </svg>
                             ) : (
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                                 </svg>
                             )}
@@ -107,10 +107,10 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
                         <a
                             href={imageUrl}
                             download
-                            className="absolute bottom-2 right-2 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
+                            className="absolute bottom-2 right-2 p-1.5 sm:p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-colors"
                             title="Download image"
                         >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
                         </a>

@@ -15,15 +15,15 @@ export default function ProductTabs({ product }: ProductTabsProps) {
     ];
 
     return (
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-12">
             {/* Tab Headers */}
-            <div className="bg-white rounded-t-2xl border-x border-t border-gray-200 shadow-sm">
-                <nav className="flex px-2 pt-2">
+            <div className="bg-white rounded-t-xl sm:rounded-t-2xl border-x border-t border-gray-200 shadow-sm">
+                <nav className="flex px-1 sm:px-2 pt-1.5 sm:pt-2 overflow-x-auto scrollbar-hide">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`relative px-6 py-3.5 text-[15px] font-semibold rounded-t-xl transition-all duration-200 ${
+                            className={`relative px-4 sm:px-6 py-2.5 sm:py-3.5 text-sm sm:text-[15px] font-semibold rounded-t-lg sm:rounded-t-xl transition-all duration-200 whitespace-nowrap ${
                                 activeTab === tab.id
                                     ? 'bg-white text-blue-600 shadow-sm'
                                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -39,22 +39,22 @@ export default function ProductTabs({ product }: ProductTabsProps) {
             </div>
 
             {/* Tab Content */}
-            <div className="bg-white rounded-b-2xl border border-gray-200 shadow-sm p-8">
+            <div className="bg-white rounded-b-xl sm:rounded-b-2xl border border-gray-200 shadow-sm p-4 sm:p-6 lg:p-8">
                 {activeTab === 'description' && (
-                    <div className="prose max-w-none">
+                    <div className="prose prose-sm sm:prose max-w-none">
                         <div dangerouslySetInnerHTML={{ __html: product.description }} />
                     </div>
                 )}
 
                 {activeTab === 'features' && (
-                    <div className="space-y-3">
+                    <div className="space-y-2 sm:space-y-3">
                         {product.features && Array.isArray(product.features) && product.features.length > 0 ? (
-                            <ul className="grid md:grid-cols-2 gap-3">
+                            <ul className="grid gap-2 sm:gap-3 md:grid-cols-2">
                                 {product.features.map((feature, index) => (
-                                    <li key={index} className="flex items-start gap-3 bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-xl border border-green-200">
-                                        <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <li key={index} className="flex items-start gap-2 sm:gap-3 bg-gradient-to-r from-green-50 to-emerald-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-green-200">
+                                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
                                             <svg
-                                                className="w-4 h-4 text-white"
+                                                className="w-3 h-3 sm:w-4 sm:h-4 text-white"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -67,34 +67,34 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                                                 />
                                             </svg>
                                         </div>
-                                        <span className="text-[15px] text-gray-700 font-medium">{feature}</span>
+                                        <span className="text-sm sm:text-[15px] text-gray-700 font-medium">{feature}</span>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
-                            <p className="text-gray-500 text-center py-8">No features listed.</p>
+                            <p className="text-gray-500 text-center py-6 sm:py-8 text-sm sm:text-base">No features listed.</p>
                         )}
                     </div>
                 )}
 
                 {activeTab === 'changelog' && (
-                    <div className="space-y-6">
+                    <div className="space-y-4 sm:space-y-6">
                         {product.changelog && product.changelog.length > 0 ? (
                             product.changelog.map((entry: ChangelogEntry, index) => (
-                                <div key={index} className="relative pl-8 pb-6 border-l-2 border-blue-200 last:border-l-0 last:pb-0">
-                                    <div className="absolute -left-2.5 top-0 w-5 h-5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full border-2 border-white shadow-md"></div>
-                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <h3 className="text-[17px] font-bold text-gray-900">
+                                <div key={index} className="relative pl-6 sm:pl-8 pb-4 sm:pb-6 border-l-2 border-blue-200 last:border-l-0 last:pb-0">
+                                    <div className="absolute -left-2 sm:-left-2.5 top-0 w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full border-2 border-white shadow-md"></div>
+                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-200">
+                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 mb-2 sm:mb-3">
+                                            <h3 className="text-base sm:text-[17px] font-bold text-gray-900">
                                                 Version {entry.version}
                                             </h3>
-                                            <span className="text-[13px] text-gray-600 font-medium bg-white px-3 py-1 rounded-full">
+                                            <span className="text-xs sm:text-[13px] text-gray-600 font-medium bg-white px-2.5 sm:px-3 py-1 rounded-full self-start">
                                                 {new Date(entry.date).toLocaleDateString()}
                                             </span>
                                         </div>
-                                        <ul className="space-y-2">
+                                        <ul className="space-y-1.5 sm:space-y-2">
                                             {entry.changes.map((change, changeIndex) => (
-                                                <li key={changeIndex} className="flex items-start gap-2 text-gray-700 text-[14px]">
+                                                <li key={changeIndex} className="flex items-start gap-1.5 sm:gap-2 text-gray-700 text-xs sm:text-[14px]">
                                                     <span className="text-blue-600 font-bold mt-0.5">•</span>
                                                     <span>{change}</span>
                                                 </li>
@@ -104,7 +104,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-gray-500 text-center py-8">No changelog available.</p>
+                            <p className="text-gray-500 text-center py-6 sm:py-8 text-sm sm:text-base">No changelog available.</p>
                         )}
                     </div>
                 )}

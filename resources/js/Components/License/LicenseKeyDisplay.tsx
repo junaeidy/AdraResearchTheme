@@ -39,33 +39,33 @@ export default function LicenseKeyDisplay({ licenseKey }: Props) {
     };
 
     return (
-        <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <code className="flex-1 font-mono text-sm text-gray-900">
+        <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 p-2 sm:p-3 lg:p-4 rounded-lg border border-gray-200">
+            <code className="flex-1 font-mono text-xs sm:text-sm text-gray-900 truncate">
                 {isRevealed ? licenseKey : maskLicenseKey(licenseKey)}
             </code>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                 <button
                     onClick={() => setIsRevealed(!isRevealed)}
-                    className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 sm:p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                     title={isRevealed ? 'Hide key' : 'Reveal key'}
                 >
                     {isRevealed ? (
-                        <EyeSlashIcon className="w-5 h-5" />
+                        <EyeSlashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     ) : (
-                        <EyeIcon className="w-5 h-5" />
+                        <EyeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     )}
                 </button>
                 
                 <button
                     onClick={handleCopy}
-                    className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-1.5 sm:p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                     title="Copy to clipboard"
                 >
                     {isCopied ? (
-                        <CheckIcon className="w-5 h-5 text-green-600" />
+                        <CheckIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                     ) : (
-                        <ClipboardIcon className="w-5 h-5" />
+                        <ClipboardIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                     )}
                 </button>
             </div>

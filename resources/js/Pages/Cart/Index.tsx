@@ -36,33 +36,33 @@ export default function Index({ auth, items, total, count }: Props) {
                 <Header user={auth?.user} />
 
             {/* Page Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-12">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 py-8 sm:py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-3">
-                        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                             </svg>
                         </div>
                         <div>
-                            <h1 className="text-[40px] font-bold text-white" style={{fontFamily: 'NexusSansWebPro'}}>
+                            <h1 className="text-2xl sm:text-3xl lg:text-[40px] font-bold text-white" style={{fontFamily: 'NexusSansWebPro'}}>
                                 Shopping Cart
                             </h1>
-                            <p className="text-[15px] text-blue-100 mt-1">Review your items and proceed to checkout</p>
+                            <p className="text-xs sm:text-sm lg:text-[15px] text-blue-100 mt-0.5 sm:mt-1">Review your items and proceed to checkout</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="py-12">
+            <div className="py-6 sm:py-8 lg:py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                     {items.length === 0 ? (
                         <CartEmpty />
                     ) : (
-                        <div className="grid lg:grid-cols-3 gap-8">
+                        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
                             {/* Cart Items */}
-                            <div className="lg:col-span-2 space-y-4">
+                            <div className="lg:col-span-2 space-y-3 sm:space-y-4">
                                 {items.map((item) => (
                                     <CartItem key={item.id} item={item} />
                                 ))}

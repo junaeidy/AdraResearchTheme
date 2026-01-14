@@ -17,7 +17,7 @@ export default function LicenseCard({ license }: Props) {
     const remainingActivations = license.max_activations - license.activated_count;
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+        <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
             {/* Product Image */}
             {license.product?.image && (
                 <div className="aspect-video bg-gray-100 overflow-hidden">
@@ -29,31 +29,31 @@ export default function LicenseCard({ license }: Props) {
                 </div>
             )}
             
-            <div className="p-6">
+            <div className="p-4 sm:p-5 lg:p-6">
                 {/* Product Name */}
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 truncate">
                     {license.product?.name || 'Product'}
                 </h3>
 
                 {/* License Key */}
-                <div className="mb-4">
+                <div className="mb-3 sm:mb-4">
                     <p className="text-xs text-gray-500 mb-1">License Key</p>
-                    <code className="text-sm font-mono text-gray-700">
+                    <code className="text-xs sm:text-sm font-mono text-gray-700 break-all">
                         {maskLicenseKey(license.license_key)}
                     </code>
                 </div>
 
                 {/* Status & Expiry */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                     <LicenseStatusBadge status={license.status} />
                     <ExpiryCountdown expiresAt={license.expires_at} />
                 </div>
 
                 {/* Activations */}
-                <div className="mb-4">
-                    <div className="flex items-center justify-between text-sm mb-1">
+                <div className="mb-3 sm:mb-4">
+                    <div className="flex items-center justify-between text-xs sm:text-sm mb-1">
                         <span className="text-gray-600">Activations</span>
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-gray-900 text-xs sm:text-sm">
                             {license.activated_count} / {license.max_activations}
                         </span>
                     </div>
@@ -75,23 +75,23 @@ export default function LicenseCard({ license }: Props) {
                 </div>
 
                 {/* Type & Duration */}
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                    <span className="capitalize">{license.type.replace(/-/g, ' ')}</span>
+                <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
+                    <span className="capitalize truncate">{license.type.replace(/-/g, ' ')}</span>
                     <span>•</span>
-                    <span className="capitalize">{license.duration.replace(/-/g, ' ')}</span>
+                    <span className="capitalize truncate">{license.duration.replace(/-/g, ' ')}</span>
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                     <Link
                         href={route('licenses.show', license.product?.slug || license.id)}
-                        className="flex-1 text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                        className="flex-1 text-center px-3 py-2 bg-blue-600 text-white text-xs sm:text-sm rounded-lg sm:rounded-lg hover:bg-blue-700 transition-colors font-medium"
                     >
                         View Details
                     </Link>
                     {license.status === 'expired' && (
                         <button
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                            className="px-3 py-2 bg-green-600 text-white text-xs sm:text-sm rounded-lg sm:rounded-lg hover:bg-green-700 transition-colors font-medium"
                         >
                             Renew
                         </button>

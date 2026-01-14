@@ -46,8 +46,12 @@ export interface Product {
     screenshots?: string[];
     documentation_url?: string;
     changelog?: any;
-    average_rating: number;
-    review_count: number;
+    // Database fields
+    rating_average: number;
+    rating_count: number;
+    // Laravel aggregate fields from withCount and withAvg
+    reviews_count?: number;
+    reviews_avg_rating?: number;
     created_at: string;
     updated_at: string;
 }

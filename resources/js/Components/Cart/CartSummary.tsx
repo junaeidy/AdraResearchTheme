@@ -18,20 +18,20 @@ export default function CartSummary({
     itemCount,
 }: CartSummaryProps) {
     return (
-        <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl border-2 border-blue-200 p-6 shadow-lg sticky top-24">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-blue-200">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-xl sm:rounded-2xl border-2 border-blue-200 p-4 sm:p-6 shadow-lg lg:sticky lg:top-24">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-blue-200">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>
                 </div>
-                <h2 className="text-[20px] font-bold text-gray-900" style={{fontFamily: 'NexusSansWebPro'}}>
+                <h2 className="text-lg sm:text-[20px] font-bold text-gray-900" style={{fontFamily: 'NexusSansWebPro'}}>
                     Order Summary
                 </h2>
             </div>
 
-            <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-[14px]">
+            <div className="space-y-2.5 sm:space-y-3 mb-5 sm:mb-6">
+                <div className="flex justify-between text-xs sm:text-[14px]">
                     <span className="text-gray-600 font-medium">
                         Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})
                     </span>
@@ -41,7 +41,7 @@ export default function CartSummary({
                 </div>
 
                 {discount > 0 && (
-                    <div className="flex justify-between text-[14px]">
+                    <div className="flex justify-between text-xs sm:text-[14px]">
                         <span className="text-gray-600 font-medium">Discount</span>
                         <span className="font-bold text-green-600">
                             -{formatRupiah(discount)}
@@ -50,7 +50,7 @@ export default function CartSummary({
                 )}
 
                 {tax > 0 && (
-                    <div className="flex justify-between text-[14px]">
+                    <div className="flex justify-between text-xs sm:text-[14px]">
                         <span className="text-gray-600 font-medium">Tax</span>
                         <span className="font-bold text-gray-900">
                             {formatRupiah(tax)}
@@ -58,12 +58,12 @@ export default function CartSummary({
                     </div>
                 )}
 
-                <div className="pt-4 border-t border-blue-200">
+                <div className="pt-3 sm:pt-4 border-t border-blue-200">
                     <div className="flex justify-between items-center">
-                        <span className="text-[16px] font-bold text-gray-900">
+                        <span className="text-sm sm:text-[16px] font-bold text-gray-900">
                             Total
                         </span>
-                        <span className="text-[32px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        <span className="text-2xl sm:text-3xl lg:text-[32px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                             {formatRupiah(total)}
                         </span>
                     </div>
@@ -72,11 +72,11 @@ export default function CartSummary({
 
             <Link href="/checkout">
                 <button
-                    className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[16px] font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                    className="w-full py-3 sm:py-4 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm sm:text-[16px] font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                     disabled={itemCount === 0}
                 >
                     <svg
-                        className="w-5 h-5"
+                        className="w-4 h-4 sm:w-5 sm:h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -94,17 +94,17 @@ export default function CartSummary({
 
             <Link
                 href="/shop"
-                className="mt-4 block text-center text-[15px] text-blue-600 hover:text-blue-700 font-bold transition-colors"
+                className="mt-3 sm:mt-4 block text-center text-sm sm:text-[15px] text-blue-600 hover:text-blue-700 active:text-blue-800 font-bold transition-colors"
             >
                 ← Continue Shopping
             </Link>
 
             {/* Security Info */}
-            <div className="mt-6 pt-6 border-t border-blue-200">
-                <div className="flex items-start gap-2.5 bg-green-50 p-3 rounded-xl border border-green-200">
-                    <div className="w-5 h-5 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-blue-200">
+                <div className="flex items-start gap-2 sm:gap-2.5 bg-green-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-green-200">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg
-                            className="w-3 h-3 text-white"
+                            className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -117,7 +117,7 @@ export default function CartSummary({
                             />
                         </svg>
                     </div>
-                    <span className="text-[12px] text-gray-700 font-medium leading-relaxed">
+                    <span className="text-[11px] sm:text-[12px] text-gray-700 font-medium leading-relaxed">
                         Your payment information is secure with SSL encryption
                     </span>
                 </div>

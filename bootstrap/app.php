@@ -27,5 +27,23 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->respond(function ($response, $exception, $request) {
+            if (in_array($response->getStatusCode(), [403, 404, 419, 500, 503])) {
+                $status = $response->getStatusCode();
+                
+                $errorPages = [
+                    403 => 'Errors/403',
+                    404 => 'Errors/404',
+                    419 => 'Errors/419',
+                    500 => 'Errors/500',
+                    503 => 'Errors/503',
+                ];
+
+                return inertia($errorPages[$status])
+                    ->toResponse($request)
+                    ->setStatusCode($status);
+            }
+
+            return $response;
+        });
     })->create();

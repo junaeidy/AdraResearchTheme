@@ -44,9 +44,9 @@ export default function ActivationList({ activations, productSlug }: Props) {
 
     if (activations.length === 0) {
         return (
-            <div className="text-center py-8 text-gray-500">
-                <p>No activations yet</p>
-                <p className="text-sm mt-1">This license hasn't been activated on any site</p>
+            <div className="text-center py-6 sm:py-8 text-gray-500">
+                <p className="text-sm sm:text-base">No activations yet</p>
+                <p className="text-xs sm:text-sm mt-1">This license hasn't been activated on any site</p>
             </div>
         );
     }
@@ -57,19 +57,19 @@ export default function ActivationList({ activations, productSlug }: Props) {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Domain / Journal
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                                 OJS Version
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                                 Activated
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden xl:table-cell">
                                 Last Check
                             </th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -77,37 +77,41 @@ export default function ActivationList({ activations, productSlug }: Props) {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {activations.map((activation) => (
                             <tr key={activation.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4">
-                                    <div>
-                                        <div className="font-medium text-gray-900">{activation.domain}</div>
+                                <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                                    <div className="min-w-0">
+                                        <div className="font-medium text-sm sm:text-base text-gray-900 truncate">{activation.domain}</div>
                                         {activation.journal_path && (
-                                            <div className="text-sm text-gray-500">{activation.journal_path}</div>
+                                            <div className="text-xs sm:text-sm text-gray-500 truncate">{activation.journal_path}</div>
                                         )}
+                                        <div className="text-xs text-gray-500 mt-1 md:hidden">
+                                            v{activation.ojs_version}
+                                        </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-900">
+                                <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-900 hidden md:table-cell">
                                     {activation.ojs_version}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+                                <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
                                     {new Date(activation.activated_at).toLocaleDateString('id-ID', {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric'
                                     })}
                                 </td>
-                                <td className="px-6 py-4 text-sm text-gray-500">
+                                <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 hidden xl:table-cell">
                                     {new Date(activation.last_check_at).toLocaleDateString('id-ID', {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric'
                                     })}
                                 </td>
-                                <td className="px-6 py-4 text-right">
+                                <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-right">
                                     <button
                                         onClick={() => handleDeactivate(activation)}
-                                        className="text-red-600 hover:text-red-900 text-sm font-medium"
+                                        className="text-red-600 hover:text-red-900 text-xs sm:text-sm font-medium px-2 py-1 hover:bg-red-50 rounded transition-colors"
                                     >
-                                        Deactivate
+                                        <span className="hidden sm:inline">Deactivate</span>
+                                        <span className="sm:hidden">Remove</span>
                                     </button>
                                 </td>
                             </tr>

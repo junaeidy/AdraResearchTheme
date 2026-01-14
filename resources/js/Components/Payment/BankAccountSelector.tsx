@@ -33,7 +33,7 @@ export default function BankAccountSelector({
                     <label
                         key={bank.id}
                         className={`
-                            relative flex items-start p-5 border-2 rounded-2xl cursor-pointer
+                            relative flex items-start p-4 sm:p-5 border-2 rounded-2xl cursor-pointer
                             transition-all duration-200
                             ${selectedId === bank.id 
                                 ? 'border-blue-600 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md scale-[1.02]' 
@@ -46,7 +46,7 @@ export default function BankAccountSelector({
                             value={bank.id}
                             checked={selectedId === bank.id}
                             onChange={() => onSelect(bank.id)}
-                            className="mt-1 h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500 border-2 border-gray-300"
+                            className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 focus:ring-2 focus:ring-blue-500 border-2 border-gray-300"
                         />
                         
                         <div className="ml-4 flex-1">
@@ -55,16 +55,16 @@ export default function BankAccountSelector({
                                     <img 
                                         src={`/storage/${bank.logo}`} 
                                         alt={bank.bank_name}
-                                        className="h-10 w-auto object-contain"
+                                        className="h-8 sm:h-10 w-auto object-contain"
                                     />
                                 )}
-                                <span className="font-bold text-[17px] text-gray-900">
+                                <span className="font-bold text-sm sm:text-[17px] text-gray-900">
                                     {bank.bank_name}
                                 </span>
                             </div>
                             
                             <div className="space-y-2 text-[14px]">
-                                <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-200">
+                                <div className="flex items-center justify-between bg-white p-2.5 sm:p-3 rounded-xl border border-gray-200 text-sm sm:text-[14px]">
                                     <span className="text-gray-600 font-medium">Account Number:</span>
                                     <div className="flex items-center gap-2">
                                         <span className="font-mono font-bold text-gray-900">
@@ -89,7 +89,7 @@ export default function BankAccountSelector({
                                     </div>
                                 </div>
                                 
-                                <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-200">
+                                <div className="flex items-center justify-between bg-white p-2.5 sm:p-3 rounded-xl border border-gray-200 text-sm sm:text-[14px]">
                                     <span className="text-gray-600 font-medium">Account Name:</span>
                                     <span className="font-bold text-gray-900">
                                         {bank.account_name}
@@ -97,7 +97,7 @@ export default function BankAccountSelector({
                                 </div>
                                 
                                 {bank.branch && (
-                                    <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-200">
+                                    <div className="flex items-center justify-between bg-white p-2.5 sm:p-3 rounded-xl border border-gray-200 text-sm sm:text-[14px]">
                                         <span className="text-gray-600 font-medium">Branch:</span>
                                         <span className="text-gray-900 font-medium">{bank.branch}</span>
                                     </div>

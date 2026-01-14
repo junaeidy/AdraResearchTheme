@@ -24,7 +24,10 @@ class ShopController extends Controller
             'sort' => 'nullable|in:newest,price_low,price_high,name',
         ]);
 
-        $query = Product::where('is_active', true)->with('category');
+        $query = Product::where('is_active', true)
+            ->with('category')
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating');
 
         // Apply filters
         if ($request->filled('category')) {
@@ -89,11 +92,15 @@ class ShopController extends Controller
             ->with(['category', 'reviews' => function ($query) {
                 $query->with('user')->latest();
             }])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->firstOrFail();
 
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->limit(4)
             ->get();
 

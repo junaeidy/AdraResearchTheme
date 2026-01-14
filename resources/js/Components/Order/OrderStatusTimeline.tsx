@@ -36,22 +36,22 @@ export default function OrderStatusTimeline({ order }: OrderStatusTimelineProps)
     const isRejected = order.status === 'payment_rejected';
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Timeline</h3>
+        <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 sm:mb-6">Order Timeline</h3>
             
             <div className="relative">
                 {steps.map((step, index) => (
-                    <div key={step.id} className="relative pb-8 last:pb-0">
+                    <div key={step.id} className="relative pb-6 sm:pb-8 last:pb-0">
                         {index < steps.length - 1 && (
                             <div className={`
-                                absolute left-4 top-8 bottom-0 w-0.5
+                                absolute left-3.5 sm:left-4 top-8 sm:top-9 bottom-0 w-0.5
                                 ${step.completed ? 'bg-blue-600' : 'bg-gray-300'}
                             `} />
                         )}
                         
-                        <div className="relative flex items-start gap-4">
+                        <div className="relative flex items-start gap-3 sm:gap-4">
                             <div className={`
-                                flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
+                                flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center
                                 ${step.completed 
                                     ? 'bg-blue-600 text-white' 
                                     : currentStepIndex === index && !isRejected
@@ -60,11 +60,11 @@ export default function OrderStatusTimeline({ order }: OrderStatusTimelineProps)
                                 }
                             `}>
                                 {step.completed ? (
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                     </svg>
                                 ) : currentStepIndex === index && !isRejected ? (
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                     </svg>
                                 ) : (
@@ -72,9 +72,9 @@ export default function OrderStatusTimeline({ order }: OrderStatusTimelineProps)
                                 )}
                             </div>
                             
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 pt-0.5">
                                 <p className={`
-                                    font-medium
+                                    font-medium text-sm sm:text-base
                                     ${step.completed 
                                         ? 'text-gray-900' 
                                         : currentStepIndex === index 
@@ -86,7 +86,7 @@ export default function OrderStatusTimeline({ order }: OrderStatusTimelineProps)
                                 </p>
                                 
                                 {step.timestamp && (
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
                                         {new Date(step.timestamp).toLocaleString('id-ID', {
                                             day: 'numeric',
                                             month: 'short',

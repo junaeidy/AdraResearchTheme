@@ -16,30 +16,30 @@ export default function PaymentPending({ auth, order }: Props) {
             <div className="min-h-screen bg-gray-50">
                 <Header user={auth?.user} />
 
-                <div className="py-12">
-                <div className="max-w-3xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden">
+                <div className="py-8 sm:py-12">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden">
                         {/* Success Header */}
-                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-10 text-center">
-                            <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl mb-5 shadow-xl">
-                                <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 sm:p-10 text-center">
+                            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-xl sm:rounded-2xl mb-4 sm:mb-5 shadow-xl">
+                                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            
-                            <h1 className="text-[32px] font-bold text-white mb-2">
+
+                            <h1 className="text-2xl sm:text-[32px] font-bold text-white mb-1 sm:mb-2">
                                 Payment Proof Submitted!
                             </h1>
-                            <p className="text-[16px] text-blue-100 font-medium">
+                            <p className="text-sm sm:text-[16px] text-blue-100 font-medium">
                                 Your payment proof has been successfully submitted for verification
                             </p>
                         </div>
 
                         {/* Content */}
-                        <div className="p-8 space-y-6">
+                        <div className="p-6 sm:p-8 space-y-6">
                             {/* Order Info */}
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-5 shadow-md">
-                                <div className="grid md:grid-cols-2 gap-5 text-[14px]">
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl sm:rounded-2xl p-4 sm:p-5 shadow-md">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 text-sm sm:text-[14px]">
                                     <div>
                                         <p className="text-gray-600 font-medium">Order Number</p>
                                         <p className="font-bold text-[16px] text-gray-900 mt-2">
@@ -48,7 +48,7 @@ export default function PaymentPending({ auth, order }: Props) {
                                     </div>
                                     <div>
                                         <p className="text-gray-600 font-medium">Total Amount</p>
-                                        <p className="font-bold text-[20px] bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text mt-2">
+                                        <p className="font-bold text-lg sm:text-[20px] bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text mt-2">
                                             {formatRupiah(order.total_amount)}
                                         </p>
                                     </div>
@@ -59,38 +59,38 @@ export default function PaymentPending({ auth, order }: Props) {
                             <div>
                                 <h3 className="font-bold text-[20px] text-gray-900 mb-5">What Happens Next?</h3>
                                 
-                                <div className="space-y-5">
-                                    <div className="flex gap-4">
-                                        <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-md">
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-3 sm:gap-4">
+                                        <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-sm shadow-md">
                                             1
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-[16px] text-gray-900">Verification in Progress</h4>
-                                            <p className="text-[14px] text-gray-600 mt-2 font-medium">
+                                            <h4 className="font-bold text-sm sm:text-[16px] text-gray-900">Verification in Progress</h4>
+                                            <p className="text-sm sm:text-[14px] text-gray-600 mt-1.5 sm:mt-2 font-medium">
                                                 Our team will verify your payment proof within 24 hours
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-4">
-                                        <div className="flex-shrink-0 w-10 h-10 bg-gray-200 text-gray-500 rounded-xl flex items-center justify-center font-bold">
+                                    <div className="flex items-start gap-3 sm:gap-4">
+                                        <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 bg-gray-200 text-gray-500 rounded-lg flex items-center justify-center font-bold text-sm">
                                             2
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-[16px] text-gray-900">License Generation</h4>
-                                            <p className="text-[14px] text-gray-600 mt-2 font-medium">
+                                            <h4 className="font-bold text-sm sm:text-[16px] text-gray-900">License Generation</h4>
+                                            <p className="text-sm sm:text-[14px] text-gray-600 mt-1.5 sm:mt-2 font-medium">
                                                 Once verified, we'll automatically generate your license keys
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-4">
-                                        <div className="flex-shrink-0 w-10 h-10 bg-gray-200 text-gray-500 rounded-xl flex items-center justify-center font-bold">
+                                    <div className="flex items-start gap-3 sm:gap-4">
+                                        <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 bg-gray-200 text-gray-500 rounded-lg flex items-center justify-center font-bold text-sm">
                                             3
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-[16px] text-gray-900">Email Notification</h4>
-                                            <p className="text-[14px] text-gray-600 mt-2 font-medium">
+                                            <h4 className="font-bold text-sm sm:text-[16px] text-gray-900">Email Notification</h4>
+                                            <p className="text-sm sm:text-[14px] text-gray-600 mt-1.5 sm:mt-2 font-medium">
                                                 You'll receive an email with your license keys and download links
                                             </p>
                                         </div>

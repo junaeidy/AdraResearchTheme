@@ -19,6 +19,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\StaticPageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,6 +27,15 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop.show');
+
+// Static pages
+Route::get('/about', [StaticPageController::class, 'aboutUs'])->name('about');
+Route::get('/contact', [StaticPageController::class, 'contact'])->name('contact');
+Route::post('/contact', [StaticPageController::class, 'submitContact'])->name('contact.submit')->middleware('throttle:5,1');
+Route::get('/privacy-policy', [StaticPageController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/terms-of-service', [StaticPageController::class, 'termsOfService'])->name('terms-of-service');
+Route::get('/cookie-policy', [StaticPageController::class, 'cookiePolicy'])->name('cookie-policy');
+Route::get('/faq', [StaticPageController::class, 'faq'])->name('faq');
 
 // Cart routes with rate limiting
 Route::prefix('cart')->name('cart.')->group(function () {
@@ -65,7 +75,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // 📝 Reviews
-    Route::post('/products/{product:slug}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/products/{product:slug}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('throttle:5,1');
     Route::patch('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 

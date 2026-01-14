@@ -89,15 +89,15 @@ const ReviewList: React.FC<ReviewListProps> = ({
 
             {/* Sort and Filter Controls */}
             {reviews.length > 0 && (
-                <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-600">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="text-xs sm:text-sm text-gray-600">
                         Showing {sortedReviews.length} of {reviews.length} reviews
                         {filterRating && ` (${filterRating} stars)`}
                     </div>
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as any)}
-                        className="text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full sm:w-auto text-xs sm:text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                     >
                         <option value="newest">Newest First</option>
                         <option value="highest">Highest Rating</option>

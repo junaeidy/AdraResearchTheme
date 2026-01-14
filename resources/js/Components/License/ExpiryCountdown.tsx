@@ -5,8 +5,8 @@ interface Props {
 export default function ExpiryCountdown({ expiresAt }: Props) {
     if (!expiresAt) {
         return (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
-                ♾️ Lifetime
+            <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200">
+                <span className="hidden sm:inline">♾️ </span>Lifetime
             </span>
         );
     }
@@ -17,8 +17,8 @@ export default function ExpiryCountdown({ expiresAt }: Props) {
 
     if (daysUntilExpiry < 0) {
         return (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
-                Expired {Math.abs(daysUntilExpiry)} days ago
+            <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200">
+                <span className="hidden sm:inline">Expired </span>{Math.abs(daysUntilExpiry)}d<span className="hidden sm:inline"> ago</span>
             </span>
         );
     }
@@ -31,8 +31,8 @@ export default function ExpiryCountdown({ expiresAt }: Props) {
     }
 
     return (
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}>
-            {daysUntilExpiry === 0 ? 'Expires today' : `${daysUntilExpiry} days left`}
+        <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}>
+            {daysUntilExpiry === 0 ? <><span className="hidden sm:inline">Expires </span>today</> : <>{daysUntilExpiry}d<span className="hidden sm:inline"> left</span></>}
         </span>
     );
 }

@@ -26,7 +26,7 @@ export default function PaymentStatusBadge({ status }: PaymentStatusBadgeProps) 
 
     return (
         <span className={`
-            inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border
+            inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border
             ${className}
         `}>
             {label}

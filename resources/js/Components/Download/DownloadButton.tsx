@@ -37,10 +37,11 @@ export default function DownloadButton({ product, license, version }: Props) {
         <button
             onClick={handleDownload}
             disabled={isDownloading}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+            className="inline-flex items-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 bg-blue-600 text-white text-sm sm:text-base rounded-lg sm:rounded-xl hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
         >
-            <ArrowDownTrayIcon className="w-5 h-5" />
-            {isDownloading ? 'Preparing Download...' : 'Download'}
+            <ArrowDownTrayIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">{isDownloading ? 'Preparing Download...' : 'Download'}</span>
+            <span className="sm:hidden">{isDownloading ? 'Preparing...' : 'Download'}</span>
         </button>
     );
 }

@@ -31,7 +31,7 @@ export default function ProductGrid({ products, isLoading = false }: ProductGrid
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
             {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
             ))}
@@ -42,7 +42,7 @@ export default function ProductGrid({ products, isLoading = false }: ProductGrid
 // Loading skeleton component
 export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
             {Array.from({ length: count }).map((_, index) => (
                 <div
                     key={index}

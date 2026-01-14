@@ -87,15 +87,15 @@ export default function LicensesIndex({ auth, licenses }: Props) {
     return (
         <AccountLayout title="My Licenses" auth={auth}>
             {/* Filters */}
-                    <div className="mb-6 bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl p-6 shadow-sm">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="mb-4 sm:mb-6 bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-xl sm:rounded-2xl p-4 sm:p-5 lg:p-6 shadow-sm">
+                        <div className="flex flex-col gap-4">
                             {/* Filter Buttons */}
                             <div className="flex flex-wrap gap-2">
                                 {filterButtons.map((btn) => (
                                     <button
                                         key={btn.value}
                                         onClick={() => setFilter(btn.value)}
-                                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                                        className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all ${
                                             filter === btn.value
                                                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
                                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -107,12 +107,12 @@ export default function LicensesIndex({ auth, licenses }: Props) {
                             </div>
 
                             {/* Sort Dropdown */}
-                            <div className="flex items-center gap-2">
-                                <label className="text-sm text-gray-600">Sort by:</label>
+                            <div className="flex items-center gap-2 justify-between sm:justify-start">
+                                <label className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">Sort by:</label>
                                 <select
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value as 'expiry' | 'product')}
-                                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+                                    className="px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:ring-blue-500 focus:border-blue-500"
                                 >
                                     <option value="expiry">Expiry Date</option>
                                     <option value="product">Product Name</option>
@@ -123,9 +123,9 @@ export default function LicensesIndex({ auth, licenses }: Props) {
 
                     {/* Licenses Grid */}
                     {filteredLicenses.length === 0 ? (
-                        <div className="bg-white rounded-2xl border-2 border-gray-100 p-12 text-center shadow-sm">
+                        <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-100 p-8 sm:p-10 lg:p-12 text-center shadow-sm">
                             <svg
-                                className="mx-auto h-12 w-12 text-gray-400"
+                                className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -137,8 +137,8 @@ export default function LicensesIndex({ auth, licenses }: Props) {
                                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 />
                             </svg>
-                            <h3 className="mt-2 text-sm font-medium text-gray-900">No licenses found</h3>
-                            <p className="mt-1 text-sm text-gray-500">
+                            <h3 className="mt-2 text-sm sm:text-base font-medium text-gray-900">No licenses found</h3>
+                            <p className="mt-1 text-xs sm:text-sm text-gray-500">
                                 {filter === 'all' 
                                     ? "You don't have any licenses yet. Purchase a product to get started."
                                     : `No licenses match the "${filter}" filter.`
@@ -146,7 +146,7 @@ export default function LicensesIndex({ auth, licenses }: Props) {
                             </p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                             {filteredLicenses.map((license) => (
                                 <LicenseCard key={license.id} license={license} />
                             ))}

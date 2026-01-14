@@ -39,23 +39,23 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
 
     return (
         <AccountLayout title="Downloads" auth={auth}>
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-gray-900">My Downloads</h1>
-                        <p className="text-gray-600 mt-2">
+                    <div className="mb-6 sm:mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Downloads</h1>
+                        <p className="text-sm sm:text-base text-gray-600 mt-2">
                             Download your licensed products
                         </p>
                     </div>
 
                     {/* Available Downloads */}
-                    <div className="mb-8">
-                        <h2 className="text-xl font-semibold text-gray-900 mb-4">Available Products</h2>
+                    <div className="mb-6 sm:mb-8">
+                        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Available Products</h2>
                         
                         {products.length === 0 ? (
-                            <div className="bg-white rounded-2xl border-2 border-gray-100 p-12 text-center shadow-sm">
+                            <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-100 p-8 sm:p-10 lg:p-12 text-center shadow-sm">
                                 <svg
-                                    className="mx-auto h-12 w-12 text-gray-400"
+                                    className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -67,26 +67,26 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
                                     />
                                 </svg>
-                                <h3 className="mt-2 text-sm font-medium text-gray-900">No products available</h3>
-                                <p className="mt-1 text-sm text-gray-500">
+                                <h3 className="mt-2 text-sm sm:text-base font-medium text-gray-900">No products available</h3>
+                                <p className="mt-1 text-xs sm:text-sm text-gray-500">
                                     You don't have any active licenses. Purchase a product to get started.
                                 </p>
-                                <div className="mt-6">
+                                <div className="mt-4 sm:mt-6">
                                     <Link
                                         href={route('shop.index')}
-                                        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
+                                        className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm sm:text-base rounded-lg sm:rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                                     >
                                         Browse Products
                                     </Link>
                                 </div>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                                 {products.map((product: any) => (
-                                    <div key={product.id} className="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
+                                    <div key={product.id} className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl overflow-hidden hover:shadow-lg transition-shadow">
                                         {/* Product Image */}
                                         {product.image && (
-                                            <div className="aspect-video bg-gray-100 overflow-hidden rounded-t-2xl">
+                                            <div className="aspect-video bg-gray-100 overflow-hidden rounded-t-xl sm:rounded-t-2xl">
                                                 <img
                                                     src={`/storage/${product.image}`}
                                                     alt={product.name}
@@ -96,9 +96,9 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                         )}
                                         
                                         {/* Product Info */}
-                                        <div className="p-5">
-                                            <div className="mb-3">
-                                                <h3 className="font-semibold text-gray-900 text-lg mb-1">
+                                        <div className="p-4 sm:p-5">
+                                            <div className="mb-2 sm:mb-3">
+                                                <h3 className="font-semibold text-gray-900 text-base sm:text-lg mb-1 truncate">
                                                     {product.name}
                                                 </h3>
                                                 <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -109,15 +109,15 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                             </div>
 
                                             {/* License Info */}
-                                            <div className="mb-4 space-y-2">
-                                                <div className="flex items-center gap-2 text-sm">
-                                                    <CheckCircleIcon className="w-4 h-4 text-green-500" />
-                                                    <span className="text-gray-600">License: {product.license_type}</span>
+                                            <div className="mb-3 sm:mb-4 space-y-1.5 sm:space-y-2">
+                                                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                                                    <CheckCircleIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 flex-shrink-0" />
+                                                    <span className="text-gray-600 truncate">License: {product.license_type}</span>
                                                 </div>
                                                 {product.license_expires_at && (
-                                                    <div className="flex items-center gap-2 text-sm">
-                                                        <ClockIcon className="w-4 h-4 text-gray-400" />
-                                                        <span className="text-gray-600">
+                                                    <div className="flex items-center gap-2 text-xs sm:text-sm">
+                                                        <ClockIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
+                                                        <span className="text-gray-600 truncate">
                                                             Expires: {new Date(product.license_expires_at).toLocaleDateString('id-ID')}
                                                         </span>
                                                     </div>
@@ -127,9 +127,9 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                             {/* Download Button */}
                                             <button
                                                 onClick={() => handleDownload(product.id)}
-                                                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
+                                                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 sm:py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm sm:text-base rounded-lg sm:rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
                                             >
-                                                <ArrowDownTrayIcon className="w-5 h-5" />
+                                                <ArrowDownTrayIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                                 Download
                                             </button>
                                         </div>
@@ -142,19 +142,19 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                     {/* Download History */}
                     {downloadHistory.length > 0 && (
                         <div>
-                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Downloads</h2>
-                            <div className="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Recent Downloads</h2>
+                            <div className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl overflow-hidden shadow-sm">
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead className="bg-gray-50">
                                             <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Product
                                                 </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                                                     Version
                                                 </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                                                     Downloaded At
                                                 </th>
                                             </tr>
@@ -162,26 +162,29 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                         <tbody className="bg-white divide-y divide-gray-200">
                                             {downloadHistory.map((download) => (
                                                 <tr key={download.id} className="hover:bg-gray-50">
-                                                    <td className="px-6 py-4">
-                                                        <div className="flex items-center">
+                                                    <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+                                                        <div className="flex items-center gap-2 sm:gap-3">
                                                             {download.product?.image && (
                                                                 <img
                                                                     src={`/storage/${download.product.image}`}
                                                                     alt={download.product.name}
-                                                                    className="w-10 h-10 rounded object-cover mr-3"
+                                                                    className="w-8 h-8 sm:w-10 sm:h-10 rounded object-cover mr-1 sm:mr-0 flex-shrink-0"
                                                                 />
                                                             )}
-                                                            <div>
-                                                                <div className="font-medium text-gray-900 text-sm">
+                                                            <div className="min-w-0">
+                                                                <div className="font-medium text-gray-900 text-xs sm:text-sm truncate">
                                                                     {download.product?.name || 'Product'}
+                                                                </div>
+                                                                <div className="text-xs text-gray-500 sm:hidden">
+                                                                    v{download.version}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                    <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-900 hidden sm:table-cell">
                                                         v{download.version}
                                                     </td>
-                                                    <td className="px-6 py-4 text-sm text-gray-500">
+                                                    <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 hidden md:table-cell">
                                                         {new Date(download.downloaded_at).toLocaleDateString('id-ID', {
                                                             day: 'numeric',
                                                             month: 'short',

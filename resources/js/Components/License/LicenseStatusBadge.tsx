@@ -27,7 +27,7 @@ export default function LicenseStatusBadge({ status }: Props) {
     const badge = badges[status] || badges.pending;
 
     return (
-        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${badge.color}`}>
+        <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${badge.color}`}>
             {badge.label}
         </span>
     );

@@ -84,7 +84,7 @@ export default function PaymentProofUploader({ value, onChange, error }: Payment
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
                     className={`
-                        relative border-2 border-dashed rounded-2xl p-10
+                        relative border-2 border-dashed rounded-2xl p-6 sm:p-10
                         transition-all duration-200
                         ${dragActive 
                             ? 'border-blue-600 bg-gradient-to-r from-blue-50 to-indigo-50 scale-[1.02]' 
@@ -101,9 +101,9 @@ export default function PaymentProofUploader({ value, onChange, error }: Payment
                     />
                     
                     <div className="text-center">
-                        <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+                        <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4">
                             <svg
-                                className="w-8 h-8 text-white"
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-white"
                                 stroke="currentColor"
                                 fill="none"
                                 viewBox="0 0 48 48"
@@ -116,13 +116,13 @@ export default function PaymentProofUploader({ value, onChange, error }: Payment
                                 />
                             </svg>
                         </div>
-                        <div className="mt-4 text-[15px] text-gray-700">
+                        <div className="mt-3 text-sm sm:text-[15px] text-gray-700">
                             <span className="font-bold text-blue-600 hover:text-blue-700">
                                 Click to upload
                             </span>
                             {' '}or drag and drop
                         </div>
-                        <p className="mt-2 text-[13px] text-gray-500 font-medium">
+                        <p className="mt-2 text-xs sm:text-[13px] text-gray-500 font-medium">
                             JPEG, JPG, PNG up to 5MB
                         </p>
                     </div>
@@ -132,7 +132,7 @@ export default function PaymentProofUploader({ value, onChange, error }: Payment
                     <img
                         src={preview}
                         alt="Payment proof preview"
-                        className="w-full max-h-96 object-contain rounded-2xl border-2 border-gray-300 shadow-md"
+                        className="w-full max-h-64 sm:max-h-96 object-contain rounded-2xl border-2 border-gray-300 shadow-md"
                     />
                     <button
                         type="button"
