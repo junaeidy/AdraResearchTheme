@@ -18,8 +18,29 @@ export default function ProductPricing({ product, licenseTypes }: ProductPricing
 
     const { addToCart, calculatePrice } = useCart();
 
-    const price = calculatePrice(product, selectedType, selectedDuration);
-    const basePrice = calculatePrice(product, selectedType, '1-year');
+    // Base product price
+    const baseProductPrice = product.sale_price ?? product.price;
+    
+    // License type multipliers (same as backend)
+    // Base price is for single license (single-site or single-journal)
+    const licenseTypeMultipliers: Record<LicenseType, number> = {
+        'single-site': 1.0,
+        'single-journal': 1.0,   // Same as single-site
+        'multi-site': 3.0,       // 3x for 5 sites
+        'multi-journal': 3.0,    // 3x for 5 journals
+        'unlimited': 5.0,        // 5x for unlimited
+    };
+    
+    const durationMultipliers: Record<LicenseDuration, number> = {
+        '1-year': 1.0,
+        '2-years': 1.8,
+        'lifetime': 2.5,
+    };
+    
+    // Calculate price with both license type and duration multipliers
+    const licenseTypeMultiplier = licenseTypeMultipliers[selectedType] || 1.0;
+    const price = baseProductPrice * licenseTypeMultiplier * durationMultipliers[selectedDuration];
+    const basePrice = baseProductPrice * licenseTypeMultiplier;
 
     const durationOptions = [
         { value: '1-year' as LicenseDuration, label: '1 Year', multiplier: 1.0 },

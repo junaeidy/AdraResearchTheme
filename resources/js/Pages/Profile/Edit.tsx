@@ -11,7 +11,7 @@ export default function Edit({
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
     return (
         <AccountLayout title="Profile" auth={auth}>
-            <div className="space-y-6">
+            <div className="max-w-4xl mx-auto space-y-6">
                 <div className="bg-gradient-to-r from-white to-blue-50 border-2 border-blue-100 rounded-2xl p-6 shadow-md">
                     <UpdateProfileInformationForm
                         mustVerifyEmail={mustVerifyEmail}

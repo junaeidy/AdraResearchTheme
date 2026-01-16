@@ -56,7 +56,7 @@ class LicenseController extends Controller
         
         $activation = LicenseActivation::findOrFail($validated['activation_id']);
         
-        if ($activation->license_id !== $license->id) {
+        if ($activation->license_id != $license->id) {
             abort(403);
         }
         

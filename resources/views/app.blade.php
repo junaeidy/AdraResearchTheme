@@ -9,6 +9,7 @@
         <meta http-equiv="X-XSS-Protection" content="1; mode=block">
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="icon" type="image/png" href="{{ asset('Logo-1.png') }}">
 
         <!-- Scripts -->
         @routes

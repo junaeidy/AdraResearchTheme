@@ -42,7 +42,7 @@ class CartController extends Controller
     {
         // 🔒 Validate input and prevent manipulation
         $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
+            'product_id' => 'required|integer|exists:products,id',
             'license_type' => 'required|in:single-site,single-journal,multi-site,multi-journal,unlimited',
             'license_duration' => 'required|in:1-year,2-years,lifetime',
             'quantity' => 'required|integer|min:1|max:10',

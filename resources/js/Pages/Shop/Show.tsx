@@ -81,7 +81,7 @@ export default function Show({ auth, product, relatedProducts, licenseTypes, can
                         {/* Left Column - Images & Info */}
                         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                             <ProductGallery
-                                images={product.screenshots}
+                                images={product.screenshot_urls || []}
                                 productName={product.name}
                             />
                             <ProductInfo product={product} />

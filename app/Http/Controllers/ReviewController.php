@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\User;
+use App\Rules\SafeString;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +37,7 @@ class ReviewController extends Controller
 
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000',
+            'comment' => ['nullable', 'string', 'max:1000', new SafeString(true)],
         ]);
 
         Review::create([
@@ -59,7 +60,7 @@ class ReviewController extends Controller
 
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|max:1000',
+            'comment' => ['nullable', 'string', 'max:1000', new SafeString(true)],
         ]);
 
         $review->update($validated);

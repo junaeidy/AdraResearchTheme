@@ -33,9 +33,9 @@ export default function OrderItemsList({ items, showLicenses = false }: OrderIte
             {items.map((item) => (
                 <div key={item.id} className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4">
                     <div className="flex gap-2 sm:gap-3 lg:gap-4">
-                        {item.product?.image && (
+                        {item.product?.image_url && (
                             <img
-                                src={`/storage/${item.product.image}`}
+                                src={item.product.image_url}
                                 alt={item.product_name}
                                 className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg sm:rounded-xl border border-gray-100 flex-shrink-0"
                             />

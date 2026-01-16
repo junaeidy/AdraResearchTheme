@@ -86,9 +86,9 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                         <div className="space-y-2 mb-3 sm:mb-4">
                                             {order.items?.slice(0, 2).map((item) => (
                                                 <div key={item.id} className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
-                                                    {item.product?.image && (
+                                                    {item.product?.image_url && (
                                                         <img
-                                                            src={`/storage/${item.product.image}`}
+                                                            src={item.product.image_url}
                                                             alt={item.product_name}
                                                             className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg sm:rounded-xl border border-gray-100 flex-shrink-0"
                                                         />

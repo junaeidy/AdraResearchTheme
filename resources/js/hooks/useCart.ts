@@ -116,10 +116,10 @@ export function useCart() {
 
         const typeMultipliers: Record<LicenseType, number> = {
             'single-site': 1.0,
-            'single-journal': 0.7,
-            'multi-site': 2.5,
-            'multi-journal': 2.0,
-            'unlimited': 4.0,
+            'single-journal': 1.0,   // Same as single-site
+            'multi-site': 3.0,       // 3x for 5 sites
+            'multi-journal': 3.0,    // 3x for 5 journals
+            'unlimited': 5.0,        // 5x for unlimited
         };
 
         const durationMultipliers: Record<LicenseDuration, number> = {

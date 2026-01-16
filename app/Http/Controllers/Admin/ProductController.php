@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Rules\NoSqlInjection;
+use App\Rules\SafeString;
+use App\Rules\SafeFilename;
 use App\Rules\ValidProductFile;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
@@ -77,14 +79,14 @@ class ProductController extends Controller
         ]);
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', new NoSqlInjection()],
+            'name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
             'product_type' => 'required|in:plugin,theme',
-            'category_id' => 'required|exists:product_categories,id',
+            'category_id' => 'required|integer|exists:product_categories,id',
             'license_scope' => 'required|in:installation,journal',
-            'description' => ['required', 'string', new NoSqlInjection()],
-            'short_description' => ['nullable', 'string', 'max:500', new NoSqlInjection()],
-            'version' => ['required', 'string', 'max:50', new NoSqlInjection()],
-            'compatibility' => ['nullable', 'string', 'max:100', new NoSqlInjection()],
+            'description' => ['required', 'string', new SafeString(true), new NoSqlInjection()],
+            'short_description' => ['nullable', 'string', 'max:500', new SafeString(true), new NoSqlInjection()],
+            'version' => ['required', 'string', 'max:50', new SafeString(), new NoSqlInjection()],
+            'compatibility' => ['nullable', 'string', 'max:100', new SafeString(), new SafeString(), new NoSqlInjection()],
             'price' => 'required|numeric|min:0|max:99999999.99',
             'sale_price' => 'nullable|numeric|min:0|max:99999999.99',
             'is_active' => 'boolean',

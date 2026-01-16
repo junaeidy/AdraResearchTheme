@@ -164,9 +164,9 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                                 <tr key={download.id} className="hover:bg-gray-50">
                                                     <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
                                                         <div className="flex items-center gap-2 sm:gap-3">
-                                                            {download.product?.image && (
+                                                            {download.product?.image_url && (
                                                                 <img
-                                                                    src={`/storage/${download.product.image}`}
+                                                                    src={download.product.image_url}
                                                                     alt={download.product.name}
                                                                     className="w-8 h-8 sm:w-10 sm:h-10 rounded object-cover mr-1 sm:mr-0 flex-shrink-0"
                                                                 />

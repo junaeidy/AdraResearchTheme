@@ -36,8 +36,8 @@ export default function AccountLayout({ children, title, auth }: AccountLayoutPr
                         </div>
 
                         {/* Tab Navigation */}
-                        <div className="border-b border-gray-200 mb-4 sm:mb-6 lg:mb-8 overflow-x-auto">
-                            <nav className="-mb-px flex space-x-4 sm:space-x-6 lg:space-x-8 min-w-max sm:min-w-0">
+                        <div className="border-b border-gray-200 mb-4 sm:mb-6 lg:mb-8">
+                            <nav className="-mb-px flex space-x-4 sm:space-x-6 lg:space-x-8">
                                 <Link
                                     href="/account"
                                     className={`${window.location.pathname === '/account' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'} whitespace-nowrap py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors`}

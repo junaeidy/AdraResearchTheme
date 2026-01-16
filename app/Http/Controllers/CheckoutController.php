@@ -6,6 +6,9 @@ use App\Models\Order;
 use App\Services\CartService;
 use App\Services\OrderService;
 use App\Rules\NoSqlInjection;
+use App\Rules\SafeString;
+use App\Rules\SecureEmail;
+use App\Rules\SecurePhone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,15 +59,15 @@ class CheckoutController extends Controller
     {
         // 🔒 Strong validation
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', new NoSqlInjection()],
-            'email' => 'required|email:rfc,dns',
-            'phone' => ['required', 'string', 'regex:/^[0-9\+\-\(\)\s]+$/', 'max:20'],
-            'organization' => ['nullable', 'string', 'max:255', new NoSqlInjection()],
+            'name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
+            'email' => ['required', new SecureEmail()],
+            'phone' => ['required', new SecurePhone()],
+            'organization' => ['nullable', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
             'country' => 'required|string|in:ID,US,GB,AU,CA,SG,MY,JP,KR,CN,TW,TH,VN,PH,IN',
-            'address' => ['required', 'string', 'max:500', new NoSqlInjection()],
-            'city' => ['required', 'string', 'max:100', new NoSqlInjection()],
+            'address' => ['required', 'string', 'max:500', new SafeString(), new NoSqlInjection()],
+            'city' => ['required', 'string', 'max:100', new SafeString(), new NoSqlInjection()],
             'postal_code' => ['nullable', 'string', 'max:10', 'regex:/^[a-zA-Z0-9\s\-]+$/'],
-            'notes' => ['nullable', 'string', 'max:1000', new NoSqlInjection()],
+            'notes' => ['nullable', 'string', 'max:1000', new SafeString(true), new NoSqlInjection()],
         ]);
         
         // Store in session (encrypted)

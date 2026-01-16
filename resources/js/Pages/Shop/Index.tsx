@@ -71,41 +71,43 @@ export default function ShopIndex({ auth, products, categories, filters }: ShopI
                         </aside>
 
                         {/* Mobile Filter Overlay */}
-                        {showMobileFilters && (
-                            <>
-                                {/* Backdrop */}
-                                <div 
-                                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-                                    onClick={() => setShowMobileFilters(false)}
-                                />
-                                
-                                {/* Drawer */}
-                                <div className="fixed inset-y-0 left-0 w-80 max-w-[85%] bg-white z-50 overflow-y-auto lg:hidden">
-                                    <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
-                                        <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-                                        <button
-                                            onClick={() => setShowMobileFilters(false)}
-                                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                                        >
-                                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <div className="p-4">
-                                        <ProductFilter 
-                                            categories={categories}
-                                            filters={{
-                                                ...filters,
-                                                min_price: filters.min_price,
-                                                max_price: filters.max_price,
-                                            }}
-                                            onApply={() => setShowMobileFilters(false)}
-                                        />
-                                    </div>
+                        <div className={`fixed inset-0 z-40 lg:hidden transition-opacity duration-300 ${
+                            showMobileFilters ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                        }`}>
+                            {/* Backdrop */}
+                            <div 
+                                className={`fixed inset-0 bg-black/50 lg:hidden transition-opacity duration-300`}
+                                onClick={() => setShowMobileFilters(false)}
+                            />
+                            
+                            {/* Drawer */}
+                            <div className={`fixed inset-y-0 left-0 w-80 max-w-[85%] bg-white z-50 overflow-y-auto lg:hidden transition-transform duration-300 ease-out ${
+                                showMobileFilters ? 'translate-x-0' : '-translate-x-full'
+                            }`}>
+                                <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between">
+                                    <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+                                    <button
+                                        onClick={() => setShowMobileFilters(false)}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
                                 </div>
-                            </>
-                        )}
+                                <div className="p-4">
+                                    <ProductFilter 
+                                        categories={categories}
+                                        filters={{
+                                            ...filters,
+                                            min_price: filters.min_price,
+                                            max_price: filters.max_price,
+                                        }}
+                                        onApply={() => setShowMobileFilters(false)}
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
                         {/* Products Grid */}
                         <main className="lg:col-span-9">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BankAccount;
 use App\Models\Order;
 use App\Models\PaymentProof;
+use App\Rules\SafeString;
 use App\Mail\PaymentProofReceived;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -77,14 +78,14 @@ class PaymentController extends Controller
         }
         
         $validated = $request->validate([
-            'bank_account_id' => 'required|exists:bank_accounts,id',
-            'bank_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255',
-            'account_name' => 'required|string|max:255',
+            'bank_account_id' => 'required|integer|exists:bank_accounts,id',
+            'bank_name' => ['required', 'string', 'max:255', new SafeString()],
+            'account_number' => ['required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9]{6,50}$/'],
+            'account_name' => ['required', 'string', 'max:255', new SafeString()],
             'transfer_amount' => 'required|numeric|min:0',
             'transfer_date' => 'required|date|before_or_equal:today',
             'proof_image' => 'required|image|mimes:jpeg,jpg,png|max:5120', // 5MB
-            'notes' => 'nullable|string|max:500',
+            'notes' => ['nullable', 'string', 'max:500', new SafeString(true)],
         ]);
         
         // Upload proof image to private storage

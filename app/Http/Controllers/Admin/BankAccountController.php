@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BankAccount;
+use App\Rules\NoSqlInjection;
+use App\Rules\SafeString;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -33,10 +35,10 @@ class BankAccountController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'bank_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255',
-            'account_name' => 'required|string|max:255',
-            'branch' => 'nullable|string|max:255',
+            'bank_name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
+            'account_number' => ['required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9]{6,50}$/'],
+            'account_name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
+            'branch' => ['nullable', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
             'logo' => 'nullable|image|mimes:jpeg,jpg,png,svg|max:1024', // 1MB
         ]);
         
@@ -63,10 +65,10 @@ class BankAccountController extends Controller
     public function update(Request $request, BankAccount $bankAccount)
     {
         $validated = $request->validate([
-            'bank_name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255',
-            'account_name' => 'required|string|max:255',
-            'branch' => 'nullable|string|max:255',
+            'bank_name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
+            'account_number' => ['required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9]{6,50}$/'],
+            'account_name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
+            'branch' => ['nullable', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
             'logo' => 'nullable|image|mimes:jpeg,jpg,png,svg|max:1024', // 1MB
         ]);
         

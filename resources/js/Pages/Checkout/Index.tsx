@@ -101,7 +101,7 @@ export default function Index({ auth, items, total }: Props) {
                                             <div className="flex gap-3 sm:gap-4">
                                                 <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
                                                     <img
-                                                        src={item.product?.image || placeholderImage}
+                                                        src={item.product?.image_url || placeholderImage}
                                                         alt={item.product?.name || 'Product'}
                                                         className="w-full h-full object-cover rounded-lg sm:rounded-xl shadow-md"
                                                     />

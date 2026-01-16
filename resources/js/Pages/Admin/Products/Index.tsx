@@ -128,7 +128,15 @@ export default function AdminProductsIndex({ auth, products, categories, filters
                                     <tr key={product.id}>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded"></div>
+                                                {product.image_url ? (
+                                                    <img
+                                                        src={product.image_url}
+                                                        alt={product.name}
+                                                        className="w-10 h-10 rounded object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded flex items-center justify-center text-white text-xs">📦</div>
+                                                )}
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-gray-900">
                                                         {product.name}

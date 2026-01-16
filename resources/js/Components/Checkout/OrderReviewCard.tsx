@@ -55,7 +55,7 @@ export default function OrderReviewCard({ items, total }: OrderReviewCardProps) 
                     <div key={item.id} className="flex gap-2.5 sm:gap-3 pb-3.5 sm:pb-4 border-b border-blue-200/60 last:border-0">
                         <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16">
                             <img
-                                src={item.product?.image || placeholderImage}
+                                src={item.product?.image_url || placeholderImage}
                                 alt={item.product?.name || 'Product'}
                                 className="w-full h-full object-cover rounded-lg sm:rounded-xl shadow-md"
                             />

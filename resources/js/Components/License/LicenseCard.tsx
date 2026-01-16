@@ -19,10 +19,10 @@ export default function LicenseCard({ license }: Props) {
     return (
         <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
             {/* Product Image */}
-            {license.product?.image && (
+            {license.product?.image_url && (
                 <div className="aspect-video bg-gray-100 overflow-hidden">
                     <img 
-                        src={`/storage/${license.product.image}`} 
+                        src={license.product.image_url} 
                         alt={license.product.name}
                         className="w-full h-full object-cover"
                     />

@@ -13,7 +13,7 @@ class OrderPolicy
     public function view(User $user, Order $order): bool
     {
         // User can view their own orders or admin can view all
-        return $user->id === $order->user_id || $user->is_admin;
+        return $user->id == $order->user_id || $user->is_admin;
     }
 
     /**
@@ -22,7 +22,7 @@ class OrderPolicy
     public function update(User $user, Order $order): bool
     {
         // User can update their own orders (e.g., submit payment)
-        return $user->id === $order->user_id;
+        return $user->id == $order->user_id;
     }
 
     /**

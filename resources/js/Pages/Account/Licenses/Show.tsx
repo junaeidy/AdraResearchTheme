@@ -55,10 +55,10 @@ export default function LicenseShow({ auth, license }: Props) {
                     {/* License Info Card */}
                     <div className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl overflow-hidden mb-4 sm:mb-6 shadow-md">
                         {/* Product Image */}
-                        {license.product?.image && (
+                        {license.product?.image_url && (
                             <div className="aspect-video bg-gray-100 overflow-hidden rounded-t-xl sm:rounded-t-2xl">
                                 <img 
-                                    src={`/storage/${license.product.image}`} 
+                                    src={license.product.image_url} 
                                     alt={license.product.name}
                                     className="w-full h-full object-cover"
                                 />

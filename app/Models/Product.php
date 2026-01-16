@@ -50,6 +50,8 @@ class Product extends Model
 
     protected $appends = [
         'effective_price',
+        'image_url',
+        'screenshot_urls',
     ];
 
     protected static function boot()
@@ -105,6 +107,33 @@ class Product extends Model
         return $this->sale_price ?? $this->price;
     }
 
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        return '/storage/' . $this->image;
+    }
+
+    public function getScreenshotUrlsAttribute()
+    {
+        $urls = [];
+        
+        // Add main image as first screenshot
+        if ($this->image) {
+            $urls[] = '/storage/' . $this->image;
+        }
+        
+        // Add additional screenshots
+        if ($this->screenshots && is_array($this->screenshots)) {
+            foreach ($this->screenshots as $screenshot) {
+                $urls[] = '/storage/' . $screenshot;
+            }
+        }
+        
+        return $urls;
+    }
+
     /**
      * Get the price for a specific license type and duration.
      * 
@@ -117,12 +146,13 @@ class Product extends Model
         $basePrice = $this->sale_price ?? $this->price;
 
         // License type multipliers
+        // Base price is for single license (single-site or single-journal)
         $typeMultipliers = [
             'single-site' => 1.0,
-            'single-journal' => 0.7,
-            'multi-site' => 2.5,
-            'multi-journal' => 2.0,
-            'unlimited' => 4.0,
+            'single-journal' => 1.0,  // Same as single-site
+            'multi-site' => 3.0,      // 3x for 5 sites
+            'multi-journal' => 3.0,   // 3x for 5 journals
+            'unlimited' => 5.0,       // 5x for unlimited
         ];
 
         // Duration multipliers

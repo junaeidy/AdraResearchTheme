@@ -140,9 +140,9 @@ export default function AccountDashboard({ auth, stats, recentOrders, activeLice
                                 className="flex items-center justify-between p-3 sm:p-4 bg-white rounded-lg sm:rounded-xl border border-gray-100 shadow-sm gap-3"
                             >
                                 <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 min-w-0 flex-1">
-                                    {license.product?.image && (
+                                    {license.product?.image_url && (
                                         <img
-                                            src={`/storage/${license.product.image}`}
+                                            src={license.product.image_url}
                                             alt={license.product.name}
                                             className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-lg sm:rounded-xl object-cover border border-gray-100 flex-shrink-0"
                                         />

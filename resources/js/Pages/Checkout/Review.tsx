@@ -122,7 +122,7 @@ export default function Review({ auth, items, billing, total }: Props) {
                                             >
                                                 <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20">
                                                     <img
-                                                        src={item.product?.image || placeholderImage}
+                                                        src={item.product?.image_url || placeholderImage}
                                                         alt={item.product?.name || 'Product'}
                                                         className="w-full h-full object-cover rounded-lg sm:rounded-xl shadow-md"
                                                     />

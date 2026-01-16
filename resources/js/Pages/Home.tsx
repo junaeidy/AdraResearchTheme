@@ -230,8 +230,24 @@ export default function Home({ auth, featuredProducts, categories }: HomeProps) 
                                     href={`/shop/${product.slug}`}
                                     className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-blue-300 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                                 >
-                                    <div className="relative h-40 sm:h-48 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 overflow-hidden">
-                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                                    <div className="relative h-40 sm:h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                                        {product.image_url ? (
+                                            <img
+                                                src={product.image_url}
+                                                alt={product.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600"></div>
+                                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                                                <div className="absolute inset-0 opacity-10">
+                                                    <div className="absolute inset-0" style={{
+                                                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                                                    }}></div>
+                                                </div>
+                                            </>
+                                        )}
                                         <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
                                             <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold text-blue-600 uppercase shadow-lg">
                                                 <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -239,11 +255,6 @@ export default function Home({ auth, featuredProducts, categories }: HomeProps) 
                                                 </svg>
                                                 {product.product_type}
                                             </span>
-                                        </div>
-                                        <div className="absolute inset-0 opacity-10">
-                                            <div className="absolute inset-0" style={{
-                                                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-                                            }}></div>
                                         </div>
                                     </div>
                                     <div className="p-4 sm:p-5">

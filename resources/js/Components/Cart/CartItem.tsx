@@ -75,7 +75,7 @@ export default function CartItem({ item }: CartItemProps) {
                     className="flex-shrink-0 w-full sm:w-32 lg:w-36 h-32 sm:h-32 lg:h-36 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl sm:rounded-2xl overflow-hidden hover:scale-105 active:scale-95 transition-transform duration-300 shadow-md"
                 >
                     <img
-                        src={item.product.image || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%23e2e8f0" width="400" height="400"/%3E%3Ctext fill="%2364748b" font-family="Arial" font-size="20" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EProduct%3C/text%3E%3C/svg%3E'}
+                        src={item.product.image_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%23e2e8f0" width="400" height="400"/%3E%3Ctext fill="%2364748b" font-family="Arial" font-size="20" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EProduct%3C/text%3E%3C/svg%3E'}
                         alt={item.product.name}
                         className="w-full h-full object-cover"
                     />

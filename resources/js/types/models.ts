@@ -27,7 +27,9 @@ export interface Product {
     is_active: boolean;
     is_featured: boolean;
     image: string;
+    image_url: string | null;
     screenshots: string[];
+    screenshot_urls: string[];
     demo_url?: string;
     documentation_url?: string;
     changelog: ChangelogEntry[];

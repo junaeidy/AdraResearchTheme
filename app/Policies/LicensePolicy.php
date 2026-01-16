@@ -12,7 +12,7 @@ class LicensePolicy
      */
     public function view(User $user, License $license): bool
     {
-        return $user->id === $license->user_id || $user->is_admin;
+        return $user->id == $license->user_id || $user->is_admin;
     }
 
     /**
@@ -20,7 +20,7 @@ class LicensePolicy
      */
     public function update(User $user, License $license): bool
     {
-        return $user->id === $license->user_id || $user->is_admin;
+        return $user->id == $license->user_id || $user->is_admin;
     }
 
     /**

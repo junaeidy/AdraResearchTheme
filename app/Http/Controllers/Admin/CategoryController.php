@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
 use App\Rules\NoSqlInjection;
+use App\Rules\SafeString;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -45,12 +46,12 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', new NoSqlInjection()],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:product_categories,slug', new NoSqlInjection()],
-            'description' => ['nullable', 'string', new NoSqlInjection()],
-            'icon' => ['nullable', 'string', 'max:50'],
-            'parent_id' => 'nullable|exists:product_categories,id',
-            'sort_order' => 'nullable|integer|min:0',
+            'name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection(false)],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:product_categories,slug', new SafeString(), new NoSqlInjection(false)],
+            'description' => ['nullable', 'string', new SafeString(true), new NoSqlInjection(false)],
+            'icon' => ['nullable', 'string', 'max:50', new SafeString()],
+            'parent_id' => 'nullable|integer|exists:product_categories,id',
+            'sort_order' => 'nullable|integer|min:0|max:1000',
         ]);
 
         ProductCategory::create($validated);
@@ -93,12 +94,12 @@ class CategoryController extends Controller
     public function update(Request $request, ProductCategory $category)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', new NoSqlInjection()],
-            'slug' => ['nullable', 'string', 'max:255', 'unique:product_categories,slug,' . $category->id, new NoSqlInjection()],
-            'description' => ['nullable', 'string', new NoSqlInjection()],
-            'icon' => ['nullable', 'string', 'max:50'],
-            'parent_id' => 'nullable|exists:product_categories,id',
-            'sort_order' => 'nullable|integer|min:0',
+            'name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection(false)],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:product_categories,slug,' . $category->id, new SafeString(), new NoSqlInjection(false)],
+            'description' => ['nullable', 'string', new SafeString(true), new NoSqlInjection(false)],
+            'icon' => ['nullable', 'string', 'max:50', new SafeString()],
+            'parent_id' => 'nullable|integer|exists:product_categories,id',
+            'sort_order' => 'nullable|integer|min:0|max:1000',
         ]);
 
         $category->update($validated);

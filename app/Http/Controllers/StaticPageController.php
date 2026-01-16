@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\SafeString;
+use App\Rules\SecureEmail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,10 +32,10 @@ class StaticPageController extends Controller
     public function submitContact(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:5000',
+            'name' => ['required', 'string', 'max:255', new SafeString()],
+            'email' => ['required', new SecureEmail()],
+            'subject' => ['required', 'string', 'max:255', new SafeString()],
+            'message' => ['required', 'string', 'max:5000', new SafeString(true)],
         ]);
 
         // TODO: Implement email sending or save to database

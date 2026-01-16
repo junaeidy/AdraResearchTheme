@@ -41,9 +41,11 @@ export interface Product {
     is_active: boolean;
     is_featured: boolean;
     image?: string;
+    image_url?: string | null;
     file_path?: string;
     demo_url?: string;
     screenshots?: string[];
+    screenshot_urls?: string[];
     documentation_url?: string;
     changelog?: any;
     // Database fields

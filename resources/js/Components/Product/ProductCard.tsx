@@ -10,10 +10,8 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
     const hasDiscount = product.sale_price && product.sale_price < product.price;
     
-    // Calculate starting price with lowest license multiplier (single-journal = 0.7)
-    const basePrice = product.sale_price || product.price;
-    const lowestMultiplier = product.license_scope === 'journal' ? 0.7 : 1.0; // single-journal or single-site
-    const startingPrice = basePrice * lowestMultiplier;
+    // Use actual product price, not calculated with multiplier
+    const displayPrice = product.sale_price || product.price;
 
     return (
         <Link
@@ -23,9 +21,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="relative">
                 {/* Product Image */}
                 <div className="aspect-video bg-gray-200 flex items-center justify-center overflow-hidden">
-                    {product.image ? (
+                    {product.image_url ? (
                         <img
-                            src={`/storage/${product.image}`}
+                            src={product.image_url}
                             alt={product.name}
                             className="w-full h-full object-cover"
                         />
@@ -106,19 +104,18 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {/* Price */}
                 <div className="flex items-end justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                        <div className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Starting from</div>
                         {hasDiscount ? (
                             <>
                                 <div className="text-base sm:text-lg lg:text-xl font-bold text-blue-600 truncate">
-                                    {formatRupiah(startingPrice)}
+                                    {formatRupiah(displayPrice)}
                                 </div>
                                 <div className="text-[10px] sm:text-sm text-gray-500 line-through truncate">
-                                    {formatRupiah(product.price * lowestMultiplier)}
+                                    {formatRupiah(product.price)}
                                 </div>
                             </>
                         ) : (
                             <div className="text-base sm:text-lg lg:text-xl font-bold text-blue-600 truncate">
-                                {formatRupiah(startingPrice)}
+                                {formatRupiah(displayPrice)}
                             </div>
                         )}
                     </div>
