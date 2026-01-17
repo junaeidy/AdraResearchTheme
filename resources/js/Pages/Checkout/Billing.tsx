@@ -71,7 +71,7 @@ export default function Billing({ auth }: Props) {
                                     Your information is secure
                                 </h3>
                                 <p className="text-xs sm:text-[14px] text-gray-700 mt-1 sm:mt-1.5 leading-relaxed">
-                                    We use industry-standard encryption to protect your personal data.
+                                    We use industry standard encryption to protect your personal data.
                                     Your information will only be used for order processing and communication.
                                 </p>
                             </div>

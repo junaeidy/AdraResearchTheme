@@ -89,4 +89,22 @@ class User extends Authenticatable
     {
         return $this->isAdmin();
     }
+
+    /**
+     * Generate new API token
+     */
+    public function generateApiToken(): string
+    {
+        $token = \Illuminate\Support\Str::random(80);
+        $this->update(['api_token' => $token]);
+        return $token;
+    }
+
+    /**
+     * Revoke API token
+     */
+    public function revokeApiToken(): void
+    {
+        $this->update(['api_token' => null]);
+    }
 }

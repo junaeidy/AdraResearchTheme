@@ -13,9 +13,10 @@ interface Props extends PageProps {
     items: CartItem[];
     billing: BillingFormData;
     total: number;
+    taxPercentage: number;
 }
 
-export default function Review({ auth, items, billing, total }: Props) {
+export default function Review({ auth, items, billing, total, taxPercentage }: Props) {
     const calculatedTotal = items.reduce((sum, item) => {
         const itemPrice = Number(item.price) || 0;
         const itemQty = Number(item.quantity) || 1;
@@ -29,6 +30,17 @@ export default function Review({ auth, items, billing, total }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState<any>({});
     
+    // Discount code state
+    const [discountCode, setDiscountCode] = useState('');
+    const [isValidatingDiscount, setIsValidatingDiscount] = useState(false);
+    const [discountApplied, setDiscountApplied] = useState<{
+        code_id: number;
+        amount: number;
+        type: string;
+        value: number;
+    } | null>(null);
+    const [discountError, setDiscountError] = useState('');
+    
     // 🔒 Generate idempotency key once and reuse it
     const [idempotencyKey] = useState(() => {
         // Create a unique key based on user ID, session, and timestamp
@@ -37,6 +49,59 @@ export default function Review({ auth, items, billing, total }: Props) {
         const random = Math.random().toString(36).substring(7);
         return `${userId}-${timestamp}-${random}`;
     });
+
+    const handleApplyDiscount = async () => {
+        if (!discountCode.trim()) {
+            setDiscountError('Masukkan kode diskon');
+            return;
+        }
+
+        setIsValidatingDiscount(true);
+        setDiscountError('');
+
+        try {
+            const response = await fetch(route('api.discount-codes.validate'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Accept': 'application/json',
+                },
+                credentials: 'same-origin', // Include cookies for authentication
+                body: JSON.stringify({
+                    code: discountCode,
+                    subtotal: finalTotal,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.valid) {
+                setDiscountApplied({
+                    code_id: data.discount_code_id,
+                    amount: data.discount_amount,
+                    type: data.discount_type,
+                    value: data.discount_value,
+                });
+                setDiscountError('');
+            } else {
+                setDiscountError(data.message || 'Kode diskon tidak valid');
+                setDiscountApplied(null);
+            }
+        } catch (error) {
+            console.error('Discount validation error:', error);
+            setDiscountError('Gagal memvalidasi kode diskon. Silakan coba lagi.');
+            setDiscountApplied(null);
+        } finally {
+            setIsValidatingDiscount(false);
+        }
+    };
+
+    const handleRemoveDiscount = () => {
+        setDiscountApplied(null);
+        setDiscountCode('');
+        setDiscountError('');
+    };
 
     const handlePlaceOrder = (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,6 +116,7 @@ export default function Review({ auth, items, billing, total }: Props) {
         router.post(route('checkout.order.store'), {
             terms_accepted: 1,
             idempotency_key: idempotencyKey,
+            discount_code_id: discountApplied?.code_id || null,
         }, {
             onSuccess: () => {
                 // Will redirect to payment page
@@ -229,7 +295,59 @@ export default function Review({ auth, items, billing, total }: Props) {
                             {/* Right Column - Order Summary (Sticky) */}
                             <div className="lg:col-span-1">
                                 <div className="lg:sticky lg:top-6">
-                                    <OrderReviewCard items={items} total={finalTotal} />
+                                    <OrderReviewCard 
+                                        items={items} 
+                                        total={finalTotal} 
+                                        taxPercentage={taxPercentage}
+                                        discount={discountApplied?.amount || 0}
+                                        discountInput={
+                                            <div className="border-t-2 border-blue-200 pt-4">
+                                                <label className="block text-sm font-bold text-gray-900 mb-2">Kode Diskon</label>
+                                                {!discountApplied ? (
+                                                    <div className="flex gap-2">
+                                                        <input
+                                                            type="text"
+                                                            value={discountCode}
+                                                            onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                                                            placeholder="MASUKKAN KODE"
+                                                            className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                            disabled={isValidatingDiscount}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={handleApplyDiscount}
+                                                            disabled={isValidatingDiscount || !discountCode.trim()}
+                                                            className="px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                                        >
+                                                            {isValidatingDiscount ? 'Cek...' : 'Terapkan'}
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                                                        <div className="flex items-center gap-2">
+                                                            <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                                                            </svg>
+                                                            <div>
+                                                                <p className="text-sm font-bold text-green-900">{discountCode}</p>
+                                                                <p className="text-xs text-green-700">Diskon diterapkan!</p>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={handleRemoveDiscount}
+                                                            className="text-red-600 hover:text-red-700 font-bold text-sm"
+                                                        >
+                                                            Hapus
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                {discountError && (
+                                                    <p className="mt-2 text-xs text-red-600 font-medium">{discountError}</p>
+                                                )}
+                                            </div>
+                                        }
+                                    />
 
                                     {/* Place Order Button */}
                                     <button

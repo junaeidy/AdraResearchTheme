@@ -13,11 +13,13 @@ interface Props {
         user: any;
     };
     items: CartItemType[];
+    subtotal: number;
     total: number;
     count: number;
+    taxPercentage?: number;
 }
 
-export default function Index({ auth, items, total, count }: Props) {
+export default function Index({ auth, items, subtotal, total, count, taxPercentage = 0 }: Props) {
     const setItems = useCartStore((state) => state.setItems);
 
     // Sync cart items from backend to store
@@ -25,7 +27,6 @@ export default function Index({ auth, items, total, count }: Props) {
         setItems(items);
     }, [items, setItems]);
 
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
@@ -72,6 +73,7 @@ export default function Index({ auth, items, total, count }: Props) {
                             <div className="lg:col-span-1">
                                 <CartSummary
                                     subtotal={subtotal}
+                                    taxPercentage={taxPercentage}
                                     total={total}
                                     itemCount={itemCount}
                                 />

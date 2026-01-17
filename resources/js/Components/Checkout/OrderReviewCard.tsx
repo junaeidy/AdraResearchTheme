@@ -5,18 +5,21 @@ import { formatCurrency } from '@/utils/currency';
 interface OrderReviewCardProps {
     items: CartItem[];
     total: number;
+    taxPercentage?: number;
+    discount?: number;
+    discountInput?: React.ReactNode;
 }
 
-export default function OrderReviewCard({ items, total }: OrderReviewCardProps) {
+export default function OrderReviewCard({ items, total, taxPercentage = 0, discount = 0, discountInput }: OrderReviewCardProps) {
     const subtotal = items.reduce((sum, item) => {
         const itemPrice = Number(item.price) || 0;
         const itemQty = Number(item.quantity) || 1;
         const itemTotal = Number(item.total) || (itemPrice * itemQty);
         return sum + itemTotal;
     }, 0);
-    const tax = 0; // No tax for now
-    const discount = 0; // No discount for now
-    const finalTotal = Number(total) || subtotal;
+    // Tax calculated from subtotal after discount
+    const tax = Math.round(((subtotal - discount) * (taxPercentage || 0)) / 100);
+    const finalTotal = subtotal - discount + tax;
     
     const placeholderImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%2393c5fd" width="400" height="400"/%3E%3Ctext fill="%231e40af" font-family="Arial" font-size="24" font-weight="bold" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
 
@@ -80,6 +83,13 @@ export default function OrderReviewCard({ items, total }: OrderReviewCardProps) 
                 ))}
             </div>
 
+            {/* Discount Code Input */}
+            {discountInput && (
+                <div className="mb-5 sm:mb-6">
+                    {discountInput}
+                </div>
+            )}
+
             {/* Totals */}
             <div className="space-y-2.5 sm:space-y-3 border-t-2 border-blue-200 pt-3.5 sm:pt-4">
                 <div className="flex justify-between text-xs sm:text-[14px]">
@@ -87,17 +97,17 @@ export default function OrderReviewCard({ items, total }: OrderReviewCardProps) 
                     <span className="text-gray-900 font-bold">{formatCurrency(subtotal)}</span>
                 </div>
                 
-                {tax > 0 && (
-                    <div className="flex justify-between text-xs sm:text-[14px]">
-                        <span className="text-gray-600 font-medium">Tax</span>
-                        <span className="text-gray-900 font-bold">{formatCurrency(tax)}</span>
-                    </div>
-                )}
-                
                 {discount > 0 && (
                     <div className="flex justify-between text-xs sm:text-[14px]">
                         <span className="text-gray-600 font-medium">Discount</span>
                         <span className="text-green-600 font-bold">-{formatCurrency(discount)}</span>
+                    </div>
+                )}
+                
+                {tax > 0 && (
+                    <div className="flex justify-between text-xs sm:text-[14px]">
+                        <span className="text-gray-600 font-medium">Tax ({taxPercentage}%)</span>
+                        <span className="text-gray-900 font-bold">{formatCurrency(tax)}</span>
                     </div>
                 )}
                 
@@ -108,14 +118,16 @@ export default function OrderReviewCard({ items, total }: OrderReviewCardProps) 
             </div>
 
             {/* Info Box */}
-            <div className="mt-5 sm:mt-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl border border-blue-200">
-                <div className="flex items-start gap-2">
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
-                    </svg>
-                    <p className="text-[11px] sm:text-[13px] text-blue-900 font-bold leading-relaxed">
-                        Payment Deadline: Your order must be paid within 3 days.
-                    </p>
+            <div className="mt-5 sm:mt-6 space-y-3">
+                <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl border border-blue-200">
+                    <div className="flex items-start gap-2">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+                        </svg>
+                        <p className="text-[11px] sm:text-[13px] text-blue-900 font-bold leading-relaxed">
+                            Payment Deadline: Your order must be paid within 3 days.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

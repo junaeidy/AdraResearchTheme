@@ -13,6 +13,7 @@ import {
     XMarkIcon,
     KeyIcon,
     ChatBubbleLeftRightIcon,
+    TicketIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -37,10 +38,12 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
         { name: 'Categories', href: '/admin/categories', icon: TagIcon },
         { name: 'Orders & Payments', href: '/admin/payment-verification', icon: BanknotesIcon },
         { name: 'Licenses', href: '/admin/licenses', icon: KeyIcon },
+        { name: 'Discount Codes', href: '/admin/discount-codes', icon: TicketIcon },
         { name: 'Bank Accounts', href: '/admin/bank-accounts', icon: BanknotesIcon },
         { name: 'Users', href: '/admin/users', icon: UserGroupIcon },
         { name: 'Reviews', href: '/admin/reviews', icon: ChatBubbleLeftRightIcon },
         { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
+        { name: 'API Tokens', href: '/admin/api-tokens', icon: KeyIcon },
     ];
 
     const handleLogout = () => {
@@ -91,7 +94,7 @@ export default function AdminLayout({ user, header, children }: AdminLayoutProps
                         </div>
 
                         {/* Navigation */}
-                        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+                        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                             {navigation.map((item) => {
                                 const isActive = window.location.pathname.startsWith(item.href);
                                 return (

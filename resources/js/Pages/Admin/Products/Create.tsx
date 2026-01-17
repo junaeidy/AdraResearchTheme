@@ -7,16 +7,29 @@ import Input from '@/Components/Shared/Input';
 import Button from '@/Components/Shared/Button';
 import Alert from '@/Components/Shared/Alert';
 import ImageUploader, { MultipleImageUploader } from '@/Components/Admin/ImageUploader';
+import { Editor } from '@tinymce/tinymce-react';
 import toast from 'react-hot-toast';
 
 interface AdminProductsCreateProps extends PageProps {
     categories: ProductCategory[];
 }
 
+interface ChangelogEntry {
+    version: string;
+    date: string;
+    changes: string[];
+}
+
 export default function AdminProductsCreate({ auth, categories }: AdminProductsCreateProps) {
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [screenshots, setScreenshots] = useState<File[]>([]);
     const [productFile, setProductFile] = useState<File | null>(null);
+    const [features, setFeatures] = useState<string[]>([]);
+    const [newFeature, setNewFeature] = useState('');
+    const [changelog, setChangelog] = useState<ChangelogEntry[]>([]);
+    const [showChangelogForm, setShowChangelogForm] = useState(false);
+    const [newChangelogVersion, setNewChangelogVersion] = useState('');
+    const [newChangelogChanges, setNewChangelogChanges] = useState('');
 
     const { data, setData, post, processing, errors, transform } = useForm({
         name: '',
@@ -38,6 +51,12 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
+        // Validate required fields
+        if (!data.name || !data.product_type || !data.category_id || !data.license_scope || !data.description || !data.version || !data.price || !productFile) {
+            toast.error('Please fill all required fields');
+            return;
+        }
+
         transform((data) => {
             const formData = new FormData();
             
@@ -47,6 +66,20 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                     formData.append(key, value.toString());
                 }
             });
+
+            // Append features as JSON string (only if not empty)
+            if (features.length > 0) {
+                formData.append('features', JSON.stringify(features));
+            } else {
+                formData.append('features', '[]');
+            }
+
+            // Append changelog as JSON string (only if not empty)
+            if (changelog.length > 0) {
+                formData.append('changelog', JSON.stringify(changelog));
+            } else {
+                formData.append('changelog', '[]');
+            }
 
             // Append main image
             if (mainImage) {
@@ -84,6 +117,40 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                 }
             },
         });
+    };
+
+    const addFeature = () => {
+        if (newFeature.trim()) {
+            setFeatures([...features, newFeature.trim()]);
+            setNewFeature('');
+        }
+    };
+
+    const removeFeature = (index: number) => {
+        setFeatures(features.filter((_, i) => i !== index));
+    };
+
+    const addChangelogEntry = () => {
+        if (newChangelogVersion.trim() && newChangelogChanges.trim()) {
+            const changes = newChangelogChanges
+                .split('\n')
+                .map((c) => c.trim())
+                .filter((c) => c.length > 0);
+
+            const entry: ChangelogEntry = {
+                version: newChangelogVersion.trim(),
+                date: new Date().toISOString().split('T')[0],
+                changes: changes,
+            };
+
+            setChangelog([...changelog, entry]);
+            setNewChangelogVersion('');
+            setNewChangelogChanges('');
+        }
+    };
+
+    const removeChangelogEntry = (index: number) => {
+        setChangelog(changelog.filter((_, i) => i !== index));
     };
 
     return (
@@ -196,13 +263,37 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Description <span className="text-red-500">*</span>
                                 </label>
-                                <textarea
-                                    value={data.description}
-                                    onChange={(e) => setData('description', e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    rows={6}
-                                    required
-                                />
+                                <div className="border border-gray-300 rounded-lg overflow-hidden">
+                                    <Editor
+                                        apiKey="9h8xi1w7cxnn3iss2hdjiiuxah4bcpj2a0fi07w9dx0i1ksk"
+                                        value={data.description}
+                                        onEditorChange={(content) => {
+                                            // Clean up data attributes added by TinyMCE more thoroughly
+                                            const cleanedContent = content
+                                                .replace(/\s*data-[\w-]*="[^"]*"/g, '')
+                                                .replace(/\s*data-[\w-]*='[^']*'/g, '')
+                                                .replace(/\s+>/g, '>')  // Remove extra spaces before closing tags
+                                                .replace(/<([^>]+)\s+>/g, '<$1>');  // Remove trailing spaces in tags
+                                            setData('description', cleanedContent);
+                                        }}
+                                        init={{
+                                            height: 400,
+                                            menubar: false,
+                                            plugins: [
+                                                'advlist', 'autolink', 'lists', 'link', 'charmap',
+                                                'anchor', 'searchreplace', 'visualblocks', 'code',
+                                                'insertdatetime', 'table', 'wordcount', 'help'
+                                            ],
+                                            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link table | code | removeformat help',
+                                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                                            verify_html: false,
+                                            cleanup: false,
+                                            convert_urls: false,
+                                            forced_root_block: '',
+                                            force_p_newlines: false
+                                        }}
+                                    />
+                                </div>
                                 {errors.description && (
                                     <p className="mt-1 text-sm text-red-500">{errors.description}</p>
                                 )}
@@ -283,6 +374,175 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
                                     setScreenshots(screenshots.filter((_, i) => i !== index));
                                 }}
                             />
+                        </div>
+                    </Card>
+
+                    {/* Features */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Features</CardTitle>
+                        </CardHeader>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Add Feature
+                                </label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={newFeature}
+                                        onChange={(e) => setNewFeature(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                addFeature();
+                                            }
+                                        }}
+                                        placeholder="Enter a feature (e.g., 'Support for OJS 3.3+')"
+                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={addFeature}
+                                        className="whitespace-nowrap"
+                                    >
+                                        Add Feature
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {features.length > 0 && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Features List ({features.length})
+                                    </label>
+                                    <ul className="space-y-2">
+                                        {features.map((feature, index) => (
+                                            <li
+                                                key={index}
+                                                className="flex items-center justify-between bg-green-50 p-3 rounded-lg border border-green-200"
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <svg
+                                                        className="w-5 h-5 text-green-600"
+                                                        fill="currentColor"
+                                                        viewBox="0 0 20 20"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                    <span className="text-gray-700">{feature}</span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFeature(index)}
+                                                    className="text-red-600 hover:text-red-800 font-semibold"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    </Card>
+
+                    {/* Changelog */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Changelog</CardTitle>
+                        </CardHeader>
+
+                        <div className="space-y-4">
+                            <button
+                                type="button"
+                                onClick={() => setShowChangelogForm(!showChangelogForm)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                {showChangelogForm ? 'Cancel' : 'Add Changelog Entry'}
+                            </button>
+
+                            {showChangelogForm && (
+                                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Version
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={newChangelogVersion}
+                                            onChange={(e) => setNewChangelogVersion(e.target.value)}
+                                            placeholder="e.g., 1.0.1"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Changes (one per line)
+                                        </label>
+                                        <textarea
+                                            value={newChangelogChanges}
+                                            onChange={(e) => setNewChangelogChanges(e.target.value)}
+                                            placeholder="Fixed bug in module&#10;Added new feature&#10;Improved performance"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                            rows={4}
+                                        />
+                                    </div>
+
+                                    <Button
+                                        type="button"
+                                        onClick={addChangelogEntry}
+                                        className="w-full"
+                                    >
+                                        Add Entry
+                                    </Button>
+                                </div>
+                            )}
+
+                            {changelog.length > 0 && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Changelog Entries ({changelog.length})
+                                    </label>
+                                    <div className="space-y-3">
+                                        {changelog.map((entry, index) => (
+                                            <div
+                                                key={index}
+                                                className="bg-blue-50 p-4 rounded-lg border border-blue-200"
+                                            >
+                                                <div className="flex items-start justify-between mb-2">
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-900">
+                                                            Version {entry.version}
+                                                        </h4>
+                                                        <p className="text-xs text-gray-600">
+                                                            {new Date(entry.date).toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeChangelogEntry(index)}
+                                                        className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                                <ul className="text-sm text-gray-700 space-y-1 ml-4">
+                                                    {entry.changes.map((change, changeIndex) => (
+                                                        <li key={changeIndex}>• {change}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </Card>
 

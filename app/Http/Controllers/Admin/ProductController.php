@@ -96,6 +96,8 @@ class ProductController extends Controller
             'product_file' => ['required', 'file', new ValidProductFile()],
             'demo_url' => 'nullable|url|max:500',
             'documentation_url' => 'nullable|url|max:500',
+            'features' => 'nullable|json',
+            'changelog' => 'nullable|json',
         ]);
 
         // Upload image
@@ -194,6 +196,8 @@ class ProductController extends Controller
             'product_file' => ['nullable', 'file', new ValidProductFile()],
             'demo_url' => 'nullable|url|max:500',
             'documentation_url' => 'nullable|url|max:500',
+            'features' => 'nullable|json',
+            'changelog' => 'nullable|json',
         ]);
 
         // Upload new image if provided

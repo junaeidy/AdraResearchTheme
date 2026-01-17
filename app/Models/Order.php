@@ -16,6 +16,7 @@ class Order extends Model
         'subtotal',
         'tax',
         'discount',
+        'discount_code_id',
         'total_amount',
         'status',
         'payment_status',
@@ -78,6 +79,11 @@ class Order extends Model
     public function paymentProof()
     {
         return $this->hasOne(PaymentProof::class);
+    }
+
+    public function discountCode()
+    {
+        return $this->belongsTo(DiscountCode::class);
     }
 
     public function licenses()

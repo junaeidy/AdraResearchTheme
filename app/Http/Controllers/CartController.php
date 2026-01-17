@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\WebsiteSetting;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,13 +26,21 @@ class CartController extends Controller
     public function index()
     {
         $items = $this->cartService->getCartItems();
-        $total = $this->cartService->getCartTotal();
+        $subtotal = $this->cartService->getCartTotal();
         $count = $this->cartService->getCartCount();
+        $taxPercentage = (float) WebsiteSetting::getSetting('tax_percentage', 0);
+        
+        // Calculate tax and total
+        $tax = $taxPercentage > 0 ? round($subtotal * ($taxPercentage / 100), 0) : 0;
+        $total = $subtotal + $tax;
 
         return Inertia::render('Cart/Index', [
             'items' => $items,
+            'subtotal' => $subtotal,
+            'tax' => $tax,
             'total' => $total,
             'count' => $count,
+            'taxPercentage' => $taxPercentage,
         ]);
     }
 

@@ -29,9 +29,9 @@ class SecurityHeaders
         // Content Security Policy - Only in production
         if (!$isDev) {
             $csp = "default-src 'self'; ";
-            $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com; ";
-            $csp .= "connect-src 'self'; ";
-            $csp .= "style-src 'self' 'unsafe-inline'; ";
+            $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com https://cdn.tiny.cloud; ";
+            $csp .= "connect-src 'self' https://cdn.tiny.cloud; ";
+            $csp .= "style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud; ";
             $csp .= "img-src 'self' data: https:; ";
             $csp .= "font-src 'self' data:; ";
             $csp .= "frame-src https://www.google.com;";

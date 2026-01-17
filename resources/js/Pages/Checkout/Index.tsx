@@ -9,17 +9,21 @@ import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 
 interface Props extends PageProps {
     items: CartItem[];
+    subtotal: number;
     total: number;
+    taxPercentage?: number;
 }
 
-export default function Index({ auth, items, total }: Props) {
-    const calculatedTotal = items.reduce((sum, item) => {
+export default function Index({ auth, items, subtotal, total, taxPercentage = 0 }: Props) {
+    const itemCount = items.reduce((sum, item) => sum + Number(item.quantity || 1), 0);
+    const calculatedSubtotal = items.reduce((sum, item) => {
         const itemPrice = Number(item.price) || 0;
         const itemQty = Number(item.quantity) || 1;
         const itemTotal = Number(item.total) || (itemPrice * itemQty);
         return sum + itemTotal;
     }, 0);
-    const finalTotal = Number(total) || calculatedTotal;
+    const finalSubtotal = Number(subtotal) || calculatedSubtotal;
+    const finalTotal = Number(total) || finalSubtotal;
     
     const placeholderImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400"%3E%3Crect fill="%2393c5fd" width="400" height="400"/%3E%3Ctext fill="%231e40af" font-family="Arial" font-size="24" font-weight="bold" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
     
@@ -142,9 +146,17 @@ export default function Index({ auth, items, total }: Props) {
                                 </div>
                                 <div className="space-y-2.5 sm:space-y-3">
                                     <div className="flex justify-between text-sm sm:text-[15px]">
-                                        <span className="text-gray-600 font-medium">Subtotal</span>
-                                        <span className="text-gray-900 font-bold">{formatCurrency(finalTotal)}</span>
+                                        <span className="text-gray-600 font-medium">Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</span>
+                                        <span className="text-gray-900 font-bold">{formatCurrency(finalSubtotal)}</span>
                                     </div>
+                                    
+                                    {taxPercentage > 0 && (
+                                        <div className="flex justify-between text-sm sm:text-[15px]">
+                                            <span className="text-gray-600 font-medium">Tax ({taxPercentage}%)</span>
+                                            <span className="text-gray-900 font-bold">{formatCurrency(Math.round((finalSubtotal * taxPercentage) / 100))}</span>
+                                        </div>
+                                    )}
+                                    
                                     <div className="flex justify-between text-base sm:text-[18px] font-bold pt-3 sm:pt-4 border-t border-blue-200">
                                         <span className="text-gray-900">Total</span>
                                         <span className="text-2xl sm:text-[28px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{formatCurrency(finalTotal)}</span>

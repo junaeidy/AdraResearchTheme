@@ -33,10 +33,16 @@ class CheckoutController extends Controller
     public function index(): Response
     {
         $cartItems = $this->cartService->getCartItems();
+        $subtotal = $this->cartService->getCartTotal();
+        $taxPercentage = (float) \App\Models\WebsiteSetting::getSetting('tax_percentage', '0');
+        $tax = $taxPercentage > 0 ? round($subtotal * ($taxPercentage / 100), 0) : 0;
+        $total = $subtotal + $tax;
         
         return Inertia::render('Checkout/Index', [
             'items' => $cartItems,
-            'total' => $this->cartService->getCartTotal(),
+            'subtotal' => $subtotal,
+            'total' => $total,
+            'taxPercentage' => $taxPercentage,
         ]);
     }
 
@@ -94,11 +100,15 @@ class CheckoutController extends Controller
         if (!$billingInfo) {
             return redirect()->route('checkout.billing');
         }
+
+        // Get tax percentage from settings
+        $taxPercentage = (float) \App\Models\WebsiteSetting::getSetting('tax_percentage', '0');
         
         return Inertia::render('Checkout/Review', [
             'items' => $cartItems,
             'billing' => $billingInfo,
             'total' => $this->cartService->getCartTotal(),
+            'taxPercentage' => $taxPercentage,
         ]);
     }
 
@@ -113,6 +123,7 @@ class CheckoutController extends Controller
         $validated = $request->validate([
             'terms_accepted' => 'required|accepted',
             'idempotency_key' => 'nullable|string|max:64',
+            'discount_code_id' => 'nullable|integer|exists:discount_codes,id',
         ]);
         
         // 🔒 Generate or use provided idempotency key
@@ -142,11 +153,12 @@ class CheckoutController extends Controller
         
         DB::beginTransaction();
         try {
-            // Create order with idempotency key
+            // Create order with idempotency key and discount code
             $order = $this->orderService->createFromCart(
                 auth()->user(),
                 session('billing_info'),
-                $idempotencyKey
+                $idempotencyKey,
+                $validated['discount_code_id'] ?? null
             );
             
             // Clear cart

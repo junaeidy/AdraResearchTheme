@@ -42,8 +42,8 @@ class Product extends Model
         'changelog' => 'array',
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
-        'price' => 'decimal:0',
-        'sale_price' => 'decimal:0',
+        'price' => 'integer',
+        'sale_price' => 'integer',
         'rating_average' => 'decimal:1',
         'rating_count' => 'integer',
     ];

@@ -4,16 +4,14 @@ import PrimaryButton from '../PrimaryButton';
 
 interface CartSummaryProps {
     subtotal: number;
-    discount?: number;
-    tax?: number;
     total: number;
     itemCount: number;
+    taxPercentage?: number;
 }
 
 export default function CartSummary({
     subtotal,
-    discount = 0,
-    tax = 0,
+    taxPercentage = 0,
     total,
     itemCount,
 }: CartSummaryProps) {
@@ -40,20 +38,13 @@ export default function CartSummary({
                     </span>
                 </div>
 
-                {discount > 0 && (
+                {taxPercentage > 0 && (
                     <div className="flex justify-between text-xs sm:text-[14px]">
-                        <span className="text-gray-600 font-medium">Discount</span>
-                        <span className="font-bold text-green-600">
-                            -{formatRupiah(discount)}
+                        <span className="text-gray-600 font-medium">
+                            Tax ({taxPercentage}%)
                         </span>
-                    </div>
-                )}
-
-                {tax > 0 && (
-                    <div className="flex justify-between text-xs sm:text-[14px]">
-                        <span className="text-gray-600 font-medium">Tax</span>
                         <span className="font-bold text-gray-900">
-                            {formatRupiah(tax)}
+                            {formatRupiah(Math.round((subtotal * taxPercentage) / 100))}
                         </span>
                     </div>
                 )}

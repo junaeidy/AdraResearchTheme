@@ -51,34 +51,33 @@ class SafeString implements ValidationRule
             }
         }
         
-        // 3. XSS/Script injection patterns
+        // 3. XSS/Script injection patterns (only dangerous scripts, allow safe HTML)
         $xssPatterns = [
-            // Script tags and event handlers
-            '/<(script|iframe|object|embed|link|style|meta|form|frame|frameset|body|head|html|input|img|source)\b/iu',
-            '/(javascript:|onerror=|onload=|onclick=|onmouseover=|onkeydown=|onfocus=)/iu',
+            // Dangerous script tags and handlers
+            '/<(script|iframe|object|embed|form|frame|frameset|meta)\b/iu',
+            '/(javascript:|onerror=|onload=|onclick=|onmouseover=|onkeydown=|onfocus=|onblur=|onchange=|onsubmit=)/iu',
             // Data URIs
             '/data:(text\/html|application\/javascript|image\/svg\+xml)/i',
             // Protocol handlers
-            '/(vbscript|data|file|javascript):/i',
+            '/(vbscript|javascript|file):/i',
         ];
         
-        if (!$this->allowHtml) {
-            foreach ($xssPatterns as $pattern) {
-                if (preg_match($pattern, $value)) {
-                    $fail("The field contains invalid HTML or script patterns.", null);
-                    return;
-                }
+        // Always check for dangerous XSS patterns regardless of allowHtml setting
+        foreach ($xssPatterns as $pattern) {
+            if (preg_match($pattern, $value)) {
+                $fail("The field contains invalid script patterns.", null);
+                return;
             }
         }
         
-        // 4. Command injection patterns
+        // 4. Command injection patterns (much more specific for TinyMCE compatibility)
         $cmdPatterns = [
-            // Shell metacharacters
-            '/([\$`][\(\{]|\||&&|;|<|>|\\\\n)/i',
-            // Command substitution
-            '/\$\(.*\)/u',
-            // Backtick execution
-            '/`.*`/u',
+            // Only detect actual command injection attempts
+            '/[\$`]\s*\(/', // Variable expansion like $(command)
+            '/`[^`]*`/', // Backtick execution
+            '/\|\s*\|/', // Double pipes
+            '/&&\s*(rm|curl|wget|exec|eval|system|sh|bash)/', // Logical AND with dangerous commands
+            '/;\s*(rm|curl|wget|exec|eval|system|sh|bash)/', // Semicolon with dangerous commands
         ];
         
         foreach ($cmdPatterns as $pattern) {

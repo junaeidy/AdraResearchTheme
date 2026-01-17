@@ -30,7 +30,8 @@ class SecureEmail implements ValidationRule
         }
         
         // 3. Check for encoded characters (homograph attack prevention)
-        if (preg_match('/[%@\x80-\xff]/u', $value)) {
+        // Only check for % (URL encoding) and non-ASCII characters, @ is valid in email
+        if (preg_match('/[%\x80-\xff]/u', $value)) {
             $fail("The field contains suspicious characters.", null);
             return;
         }

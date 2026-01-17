@@ -8,6 +8,34 @@ interface ProductTabsProps {
 export default function ProductTabs({ product }: ProductTabsProps) {
     const [activeTab, setActiveTab] = useState<'description' | 'features' | 'changelog'>('description');
 
+    // Parse changelog if it's a string
+    let changelogData: ChangelogEntry[] = [];
+    if (product.changelog) {
+        if (typeof product.changelog === 'string') {
+            try {
+                changelogData = JSON.parse(product.changelog);
+            } catch (e) {
+                changelogData = [];
+            }
+        } else if (Array.isArray(product.changelog)) {
+            changelogData = product.changelog;
+        }
+    }
+
+    // Parse features if it's a string
+    let featuresData: string[] = [];
+    if (product.features) {
+        if (typeof product.features === 'string') {
+            try {
+                featuresData = JSON.parse(product.features);
+            } catch (e) {
+                featuresData = [];
+            }
+        } else if (Array.isArray(product.features)) {
+            featuresData = product.features;
+        }
+    }
+
     const tabs = [
         { id: 'description' as const, label: 'Description' },
         { id: 'features' as const, label: 'Features' },
@@ -42,15 +70,53 @@ export default function ProductTabs({ product }: ProductTabsProps) {
             <div className="bg-white rounded-b-xl sm:rounded-b-2xl border border-gray-200 shadow-sm p-4 sm:p-6 lg:p-8">
                 {activeTab === 'description' && (
                     <div className="prose prose-sm sm:prose max-w-none">
-                        <div dangerouslySetInnerHTML={{ __html: product.description }} />
+                        <div 
+                            style={{
+                                color: '#374151',
+                                lineHeight: '1.6'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: product.description }}
+                        />
+                        <style dangerouslySetInnerHTML={{
+                            __html: `
+                                .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+                                    font-weight: 700 !important;
+                                    color: #1f2937 !important;
+                                    margin-top: 1.5rem !important;
+                                    margin-bottom: 0.75rem !important;
+                                }
+                                .prose h1 { font-size: 1.875rem !important; }
+                                .prose h2 { font-size: 1.5rem !important; }
+                                .prose h3 { font-size: 1.25rem !important; }
+                                .prose p {
+                                    margin-bottom: 1rem !important;
+                                    color: #374151 !important;
+                                }
+                                .prose strong {
+                                    font-weight: 600 !important;
+                                    color: #1f2937 !important;
+                                }
+                                .prose em {
+                                    font-style: italic !important;
+                                    color: #6b7280 !important;
+                                }
+                                .prose ul, .prose ol {
+                                    margin: 1rem 0 !important;
+                                    padding-left: 1.5rem !important;
+                                }
+                                .prose li {
+                                    margin: 0.25rem 0 !important;
+                                }
+                            `
+                        }} />
                     </div>
                 )}
 
                 {activeTab === 'features' && (
                     <div className="space-y-2 sm:space-y-3">
-                        {product.features && Array.isArray(product.features) && product.features.length > 0 ? (
+                        {featuresData && Array.isArray(featuresData) && featuresData.length > 0 ? (
                             <ul className="grid gap-2 sm:gap-3 md:grid-cols-2">
-                                {product.features.map((feature, index) => (
+                                {featuresData.map((feature, index) => (
                                     <li key={index} className="flex items-start gap-2 sm:gap-3 bg-gradient-to-r from-green-50 to-emerald-50 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-green-200">
                                         <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
                                             <svg
@@ -79,8 +145,8 @@ export default function ProductTabs({ product }: ProductTabsProps) {
 
                 {activeTab === 'changelog' && (
                     <div className="space-y-4 sm:space-y-6">
-                        {product.changelog && product.changelog.length > 0 ? (
-                            product.changelog.map((entry: ChangelogEntry, index) => (
+                        {changelogData && Array.isArray(changelogData) && changelogData.length > 0 ? (
+                            changelogData.map((entry: ChangelogEntry, index) => (
                                 <div key={index} className="relative pl-6 sm:pl-8 pb-4 sm:pb-6 border-l-2 border-blue-200 last:border-l-0 last:pb-0">
                                     <div className="absolute -left-2 sm:-left-2.5 top-0 w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full border-2 border-white shadow-md"></div>
                                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-200">

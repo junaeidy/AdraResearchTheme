@@ -3,10 +3,13 @@
 use App\Http\Controllers\Admin\BankAccountController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DiscountCodeController;
+use App\Http\Controllers\Admin\ApiTokenController;
 use App\Http\Controllers\Admin\LicenseController as AdminLicenseController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
@@ -65,6 +68,11 @@ require __DIR__.'/auth.php';
 
 // Authenticated user routes
 Route::middleware('auth')->group(function () {
+    // 🎟️ Discount Code Validation
+    Route::post('/api/discount-codes/validate', [\App\Http\Controllers\Api\DiscountCodeController::class, 'validateCode'])
+        ->middleware('throttle:20,1')
+        ->name('api.discount-codes.validate');
+
     // Account routes with /account prefix
     Route::prefix('account')->group(function () {
         Route::get('/', [AccountController::class, 'index'])->name('account');
@@ -171,4 +179,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/{license}/unsuspend', [AdminLicenseController::class, 'unsuspend'])->name('unsuspend');
         Route::post('/{license}/reset', [AdminLicenseController::class, 'resetActivations'])->name('reset');
     });
+
+    // ⚙️ Settings management
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+
+    // 🎟️ Discount Code management
+    Route::resource('discount-codes', DiscountCodeController::class);
+    Route::post('discount-codes/{discountCode}/toggle-status', [DiscountCodeController::class, 'toggleStatus'])
+        ->name('discount-codes.toggle-status');
+    Route::get('discount-codes-generate', [DiscountCodeController::class, 'generateCode'])
+        ->name('discount-codes.generate');
+
+    // 🔑 API Token management
+    Route::get('/api-tokens', [ApiTokenController::class, 'index'])->name('api-tokens.index');
+    Route::post('/api-tokens/generate', [ApiTokenController::class, 'generate'])->name('api-tokens.generate');
+    Route::post('/api-tokens/revoke', [ApiTokenController::class, 'revoke'])->name('api-tokens.revoke');
 });

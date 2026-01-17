@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\DiscountCode;
+use App\Models\DiscountUsage;
 use Illuminate\Support\Str;
 
 class OrderService
@@ -15,9 +17,10 @@ class OrderService
      * @param User $user
      * @param array $billingInfo
      * @param string|null $idempotencyKey
+     * @param int|null $discountCodeId
      * @return Order
      */
-    public function createFromCart(User $user, array $billingInfo, ?string $idempotencyKey = null): Order
+    public function createFromCart(User $user, array $billingInfo, ?string $idempotencyKey = null, ?int $discountCodeId = null): Order
     {
         $cartService = app(CartService::class);
         $cartItems = $cartService->getCartItems();
@@ -29,15 +32,39 @@ class OrderService
             return $price * $quantity;
         });
         
+        // Calculate discount
+        $discount = 0;
+        $discountCode = null;
+        
+        if ($discountCodeId) {
+            $discountCode = DiscountCode::find($discountCodeId);
+            
+            // Validate discount code one more time before creating order
+            if ($discountCode && $discountCode->isValid() && !$discountCode->isUsedByUser($user->id)) {
+                if (!$discountCode->minimum_purchase || $subtotal >= $discountCode->minimum_purchase) {
+                    $discount = $discountCode->calculateDiscount($subtotal);
+                }
+            } else {
+                $discountCode = null; // Invalid, don't apply
+            }
+        }
+        
+        // Get tax percentage from settings
+        $taxPercentage = (float) \App\Models\WebsiteSetting::getSetting('tax_percentage', '0');
+        // Tax calculated from subtotal after discount
+        $tax = (int) (($subtotal - $discount) * ($taxPercentage / 100));
+        $totalAmount = $subtotal - $discount + $tax;
+        
         // Create order
         $order = Order::create([
             'user_id' => $user->id,
             'order_number' => $this->generateOrderNumber(),
             'idempotency_key' => $idempotencyKey,
             'subtotal' => $subtotal,
-            'tax' => 0,
-            'discount' => 0,
-            'total_amount' => $subtotal,
+            'tax' => $tax,
+            'discount' => $discount,
+            'discount_code_id' => $discountCode ? $discountCode->id : null,
+            'total_amount' => $totalAmount,
             'status' => 'pending',
             'payment_status' => 'unpaid',
             'payment_deadline' => now()->addDays(3),
@@ -60,6 +87,19 @@ class OrderService
                 'quantity' => $itemQuantity,
                 'subtotal' => $itemPrice * $itemQuantity,
             ]);
+        }
+        
+        // Record discount usage if applied
+        if ($discountCode && $discount > 0) {
+            DiscountUsage::create([
+                'discount_code_id' => $discountCode->id,
+                'user_id' => $user->id,
+                'order_id' => $order->id,
+                'discount_amount' => $discount,
+            ]);
+            
+            // Increment usage count
+            $discountCode->incrementUsage();
         }
         
         return $order->fresh('items.product');
