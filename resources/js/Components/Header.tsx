@@ -5,7 +5,7 @@ import { useCartStore } from '@/stores/cartStore';
 
 interface HeaderProps {
     user?: User;
-    currentPage?: 'home' | 'shop' | 'checkout' | 'about' | 'contact';
+    currentPage?: 'home' | 'shop' | 'checkout' | 'services' | 'about' | 'contact';
 }
 
 export default function Header({ user, currentPage = 'home' }: HeaderProps) {
@@ -35,11 +35,11 @@ export default function Header({ user, currentPage = 'home' }: HeaderProps) {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
                             </div>
-                            <div className="hidden sm:block">
-                                <div className="text-lg sm:text-xl lg:text-[23px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
+                            <div className="block">
+                                <div className="text-sm sm:text-lg lg:text-[23px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
                                     Adra Research Theme
                                 </div>
-                                <div className="text-[10px] sm:text-[12px] text-gray-500 font-medium -mt-0.5">
+                                <div className="text-[8px]  sm:text-[12px] text-gray-500 font-medium -mt-0.5">
                                     Academic Publishing Solutions
                                 </div>
                             </div>
@@ -77,6 +77,16 @@ export default function Header({ user, currentPage = 'home' }: HeaderProps) {
                             }`}
                         >
                             About Us
+                        </Link>
+                        <Link 
+                            href="/services" 
+                            className={`px-4 xl:px-5 py-2 xl:py-2.5 rounded-lg text-sm xl:text-base font-medium transition-all duration-200 ${
+                                currentPage === 'services' 
+                                    ? 'text-blue-600 bg-blue-50' 
+                                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                            }`}
+                        >
+                            Services
                         </Link>
                         <Link 
                             href="/contact" 
@@ -287,6 +297,16 @@ export default function Header({ user, currentPage = 'home' }: HeaderProps) {
                             }`}
                         >
                             About Us
+                        </Link>
+                        <Link 
+                            href="/services" 
+                            className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                                currentPage === 'services' 
+                                    ? 'text-blue-600 bg-blue-50' 
+                                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                            }`}
+                        >
+                            Services
                         </Link>
                         <Link 
                             href="/contact" 

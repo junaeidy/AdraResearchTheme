@@ -87,6 +87,14 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/services" className="text-sm sm:text-base text-blue-100/80 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
+                                    <svg className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                    Services
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/contact" className="text-sm sm:text-base text-blue-100/80 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
                                     <svg className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

@@ -76,4 +76,12 @@ class StaticPageController extends Controller
     {
         return Inertia::render('Static/FAQ');
     }
+
+    /**
+     * Display the Services page.
+     */
+    public function services(): Response
+    {
+        return Inertia::render('Static/Services');
+    }
 }

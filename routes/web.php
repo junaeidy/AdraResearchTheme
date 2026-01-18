@@ -33,6 +33,7 @@ Route::get('/shop/{slug}', [ShopController::class, 'show'])->name('shop.show');
 
 // Static pages
 Route::get('/about', [StaticPageController::class, 'aboutUs'])->name('about');
+Route::get('/services', [StaticPageController::class, 'services'])->name('services');
 Route::get('/contact', [StaticPageController::class, 'contact'])->name('contact');
 Route::post('/contact', [StaticPageController::class, 'submitContact'])->name('contact.submit')->middleware('throttle:5,1');
 Route::get('/privacy-policy', [StaticPageController::class, 'privacyPolicy'])->name('privacy-policy');
