@@ -52,7 +52,7 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
 
     const handleApplyDiscount = async () => {
         if (!discountCode.trim()) {
-            setDiscountError('Masukkan kode diskon');
+            setDiscountError('Enter discount code');
             return;
         }
 
@@ -85,12 +85,12 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
                 });
                 setDiscountError('');
             } else {
-                setDiscountError(data.message || 'Kode diskon tidak valid');
+                setDiscountError(data.message || 'Invalid discount code');
                 setDiscountApplied(null);
             }
         } catch (error) {
             console.error('Discount validation error:', error);
-            setDiscountError('Gagal memvalidasi kode diskon. Silakan coba lagi.');
+            setDiscountError('Failed to validate discount code. Please try again.');
             setDiscountApplied(null);
         } finally {
             setIsValidatingDiscount(false);
@@ -274,11 +274,11 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
                                         />
                                         <label htmlFor="terms" className="text-xs sm:text-[14px] text-gray-700 font-medium leading-relaxed">
                                             I have read and agree to the{' '}
-                                            <a href="#" className="text-blue-600 hover:text-blue-700 active:text-blue-800 font-bold">
+                                            <a href="/terms-and-conditions" className="text-blue-600 hover:text-blue-700 active:text-blue-800 font-bold">
                                                 Terms and Conditions
                                             </a>{' '}
                                             and{' '}
-                                            <a href="privacy-policy" className="text-blue-600 hover:text-blue-700 active:text-blue-800 font-bold">
+                                            <a href="/privacy-policy" className="text-blue-600 hover:text-blue-700 active:text-blue-800 font-bold">
                                                 Privacy Policy
                                             </a>
                                             <span className="text-red-500 font-bold"> *</span>
@@ -302,14 +302,14 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
                                         discount={discountApplied?.amount || 0}
                                         discountInput={
                                             <div className="border-t-2 border-blue-200 pt-4">
-                                                <label className="block text-sm font-bold text-gray-900 mb-2">Kode Diskon</label>
+                                                <label className="block text-sm font-bold text-gray-900 mb-2">Discount Code</label>
                                                 {!discountApplied ? (
                                                     <div className="flex gap-2">
                                                         <input
                                                             type="text"
                                                             value={discountCode}
                                                             onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
-                                                            placeholder="MASUKKAN KODE"
+                                                            placeholder="Enter Code"
                                                             className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                                             disabled={isValidatingDiscount}
                                                         />
@@ -319,7 +319,7 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
                                                             disabled={isValidatingDiscount || !discountCode.trim()}
                                                             className="px-4 py-2 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                                                         >
-                                                            {isValidatingDiscount ? 'Cek...' : 'Terapkan'}
+                                                            {isValidatingDiscount ? 'Checking...' : 'Apply'}
                                                         </button>
                                                     </div>
                                                 ) : (
@@ -330,7 +330,7 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
                                                             </svg>
                                                             <div>
                                                                 <p className="text-sm font-bold text-green-900">{discountCode}</p>
-                                                                <p className="text-xs text-green-700">Diskon diterapkan!</p>
+                                                                <p className="text-xs text-green-700">Discount applied!</p>
                                                             </div>
                                                         </div>
                                                         <button
@@ -338,7 +338,7 @@ export default function Review({ auth, items, billing, total, taxPercentage }: P
                                                             onClick={handleRemoveDiscount}
                                                             className="text-red-600 hover:text-red-700 font-bold text-sm"
                                                         >
-                                                            Hapus
+                                                            Remove
                                                         </button>
                                                     </div>
                                                 )}

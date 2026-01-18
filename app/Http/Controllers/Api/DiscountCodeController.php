@@ -36,22 +36,22 @@ class DiscountCodeController extends Controller
             if (!$discountCode) {
                 return response()->json([
                     'valid' => false,
-                    'message' => 'Kode diskon tidak ditemukan.',
+                    'message' => 'Discount code not found.',
                 ], 404);
             }
 
         // Check if code is valid
         if (!$discountCode->isValid()) {
-            $message = 'Kode diskon tidak valid.';
+            $message = 'Discount code is not valid.';
             
             if (!$discountCode->is_active) {
-                $message = 'Kode diskon tidak aktif.';
+                $message = 'Discount code is not active.';
             } elseif ($discountCode->used_count >= $discountCode->usage_limit) {
-                $message = 'Kode diskon sudah mencapai batas penggunaan.';
+                $message = 'Discount code has reached its usage limit.';
             } elseif ($discountCode->valid_from && now()->lt($discountCode->valid_from)) {
-                $message = 'Kode diskon belum dapat digunakan.';
+                $message = 'Discount code is not yet valid.';
             } elseif ($discountCode->valid_until && now()->gt($discountCode->valid_until)) {
-                $message = 'Kode diskon sudah kadaluarsa.';
+                $message = 'Discount code has expired.';
             }
 
             return response()->json([
@@ -64,7 +64,7 @@ class DiscountCodeController extends Controller
         if ($discountCode->isUsedByUser(Auth::id())) {
             return response()->json([
                 'valid' => false,
-                'message' => 'Anda sudah menggunakan kode diskon ini sebelumnya.',
+                'message' => 'You have already used this discount code before.',
             ], 400);
         }
 
@@ -72,7 +72,7 @@ class DiscountCodeController extends Controller
         if ($discountCode->minimum_purchase && $subtotal < $discountCode->minimum_purchase) {
             return response()->json([
                 'valid' => false,
-                'message' => 'Minimum pembelian untuk kode ini adalah Rp ' . number_format($discountCode->minimum_purchase, 0, ',', '.'),
+                'message' => 'Minimum purchase for this code is Rp ' . number_format($discountCode->minimum_purchase, 0, ',', '.'),
             ], 400);
         }
 
@@ -81,7 +81,7 @@ class DiscountCodeController extends Controller
 
         return response()->json([
             'valid' => true,
-            'message' => 'Kode diskon berhasil diterapkan!',
+            'message' => 'Discount code successfully applied!',
             'discount_code_id' => $discountCode->id,
             'discount_amount' => $discountAmount,
             'discount_type' => $discountCode->discount_type,
@@ -94,7 +94,7 @@ class DiscountCodeController extends Controller
             
             return response()->json([
                 'valid' => false,
-                'message' => 'Terjadi kesalahan saat memvalidasi kode diskon.',
+                'message' => 'An error occurred while validating the discount code.',
             ], 500);
         }
     }

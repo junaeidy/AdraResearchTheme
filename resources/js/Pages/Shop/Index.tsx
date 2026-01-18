@@ -34,25 +34,32 @@ export default function ShopIndex({ auth, products, categories, filters }: ShopI
             <div className="min-h-screen bg-gray-50">
                 <Header user={auth?.user} currentPage="shop" />
 
-                {/* Page Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-8 sm:py-12">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Hero Section */}
+                <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white overflow-hidden py-16 sm:py-20">
+                    {/* Animated Background Pattern */}
+                    <div className="absolute inset-0 opacity-10">
+                        <div className="absolute inset-0" style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+                        }}></div>
+                    </div>
+
+                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center">
-                            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-3 sm:mb-4">
-                                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <div className="inline-flex items-center gap-2 sm:gap-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-4 sm:mb-6">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
                                 </svg>
-                                <span className="text-xs sm:text-[14px] font-semibold">Product Marketplace</span>
+                                <span className="text-xs sm:text-sm font-semibold">Product Marketplace</span>
                             </div>
-                            <h1 className="text-2xl sm:text-3xl lg:text-[40px] font-bold mb-2 sm:mb-3 px-4">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
                                 {filters.search ? `Search: "${filters.search}"` : 'Browse Our Products'}
                             </h1>
-                            <p className="text-sm sm:text-base lg:text-[17px] text-blue-100">
+                            <p className="text-base sm:text-lg md:text-xl text-blue-100">
                                 {products.data.length} premium {products.data.length === 1 ? 'product' : 'products'} available
                             </p>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
                     <div className="lg:grid lg:grid-cols-12 lg:gap-8">

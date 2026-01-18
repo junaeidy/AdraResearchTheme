@@ -200,7 +200,7 @@ class ProductController extends Controller
             'changelog' => 'nullable|json',
         ]);
 
-        // Upload new image if provided
+        // Handle main image upload or removal
         if ($request->hasFile('image')) {
             // Delete old image
             if ($product->image) {
@@ -211,11 +211,26 @@ class ProductController extends Controller
                 $request->file('image'),
                 'products'
             );
+        } elseif ($request->input('remove_image')) {
+            // Delete image if user explicitly removed it
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $validated['image'] = null;
         }
 
-        // Upload new screenshots if provided
+        // Handle screenshots upload or removal
+        $removedScreenshots = [];
+        if ($request->has('removed_screenshots')) {
+            try {
+                $removedScreenshots = json_decode($request->input('removed_screenshots'), true) ?? [];
+            } catch (\Exception $e) {
+                $removedScreenshots = [];
+            }
+        }
+
         if ($request->hasFile('screenshots')) {
-            // Delete old screenshots
+            // Delete all old screenshots that exist
             if ($product->screenshots) {
                 foreach ($product->screenshots as $screenshot) {
                     Storage::disk('public')->delete($screenshot);
@@ -230,6 +245,25 @@ class ProductController extends Controller
                 );
             }
             $validated['screenshots'] = $screenshots;
+        } elseif (!empty($removedScreenshots)) {
+            // If no new screenshots but some were removed, update the screenshots array
+            $currentScreenshots = $product->screenshots ?? [];
+            if (is_array($currentScreenshots)) {
+                // Delete removed screenshots from storage
+                foreach ($removedScreenshots as $index) {
+                    if (isset($currentScreenshots[$index])) {
+                        Storage::disk('public')->delete($currentScreenshots[$index]);
+                    }
+                }
+                // Keep only non-removed screenshots
+                $screenshots = [];
+                foreach ($currentScreenshots as $index => $screenshot) {
+                    if (!in_array($index, $removedScreenshots)) {
+                        $screenshots[] = $screenshot;
+                    }
+                }
+                $validated['screenshots'] = $screenshots;
+            }
         }
 
         // Upload new product file if provided

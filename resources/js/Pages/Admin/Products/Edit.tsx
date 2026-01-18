@@ -24,6 +24,8 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
     const [mainImage, setMainImage] = useState<File | null>(null);
     const [screenshots, setScreenshots] = useState<File[]>([]);
     const [productFile, setProductFile] = useState<File | null>(null);
+    const [removeMainImage, setRemoveMainImage] = useState(false);
+    const [removedScreenshots, setRemovedScreenshots] = useState<number[]>([]);
     
     // Parse features - handle both string and array
     const parseFeatures = (): string[] => {
@@ -112,6 +114,11 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
                 formData.append('image', mainImage);
             }
 
+            // Signal to delete main image if removed and no new image
+            if (removeMainImage && !mainImage) {
+                formData.append('remove_image', '1');
+            }
+
             // Append product file if changed
             if (productFile) {
                 formData.append('product_file', productFile);
@@ -121,6 +128,11 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
             screenshots.forEach((file, index) => {
                 formData.append(`screenshots[${index}]`, file);
             });
+
+            // Signal which screenshots to remove
+            if (removedScreenshots.length > 0) {
+                formData.append('removed_screenshots', JSON.stringify(removedScreenshots));
+            }
 
             return formData;
         });
@@ -389,7 +401,10 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
                             <ImageUploader
                                 label="Main Product Image"
                                 onImageSelect={setMainImage}
-                                onImageRemove={() => setMainImage(null)}
+                                onImageRemove={() => {
+                                    setMainImage(null);
+                                    setRemoveMainImage(true);
+                                }}
                                 currentImage={product.image || undefined}
                                 error={(errors as any).image}
                             />
@@ -398,11 +413,20 @@ export default function AdminProductsEdit({ auth, product, categories }: AdminPr
                                 label="Screenshots"
                                 onImagesSelect={(files) => setScreenshots([...screenshots, ...files])}
                                 onImageRemove={(index) => {
-                                    setScreenshots(screenshots.filter((_, i) => i !== index));
+                                    const currentImages = Array.isArray(product.screenshots) ? product.screenshots : [];
+                                    if (index < currentImages.length) {
+                                        // Removing an existing screenshot
+                                        setRemovedScreenshots([...removedScreenshots, index]);
+                                    } else {
+                                        // Removing a newly added screenshot
+                                        const newIndex = index - currentImages.length;
+                                        setScreenshots(screenshots.filter((_, i) => i !== newIndex));
+                                    }
                                 }}
                                 currentImages={
                                     Array.isArray(product.screenshots) ? product.screenshots : []
                                 }
+                                removedIndices={removedScreenshots}
                             />
                         </div>
                     </Card>

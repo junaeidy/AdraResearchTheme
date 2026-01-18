@@ -38,6 +38,7 @@ Route::get('/contact', [StaticPageController::class, 'contact'])->name('contact'
 Route::post('/contact', [StaticPageController::class, 'submitContact'])->name('contact.submit')->middleware('throttle:5,1');
 Route::get('/privacy-policy', [StaticPageController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/terms-of-service', [StaticPageController::class, 'termsOfService'])->name('terms-of-service');
+Route::get('/terms-and-conditions', [StaticPageController::class, 'termsAndConditions'])->name('terms-and-conditions');
 Route::get('/cookie-policy', [StaticPageController::class, 'cookiePolicy'])->name('cookie-policy');
 Route::get('/faq', [StaticPageController::class, 'faq'])->name('faq');
 

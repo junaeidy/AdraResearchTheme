@@ -62,6 +62,14 @@ class StaticPageController extends Controller
     }
 
     /**
+     * Display the Terms and Conditions page.
+     */
+    public function termsAndConditions(): Response
+    {
+        return Inertia::render('Static/TermsAndConditions');
+    }
+
+    /**
      * Display the Cookie Policy page.
      */
     public function cookiePolicy(): Response

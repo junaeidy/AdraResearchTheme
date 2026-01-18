@@ -30,6 +30,7 @@ export default function ImageUploader({
 }: ImageUploaderProps) {
     const [preview, setPreview] = useState<string | null>(null);
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [isRemoved, setIsRemoved] = useState(false);
 
     const onDrop = useCallback(
         (acceptedFiles: File[], rejectedFiles: any[]) => {
@@ -74,12 +75,13 @@ export default function ImageUploader({
     const handleRemove = () => {
         setPreview(null);
         setUploadError(null);
+        setIsRemoved(true);
         if (onImageRemove) {
             onImageRemove();
         }
     };
 
-    const displayImage = preview || (currentImage ? `/storage/${currentImage}` : null);
+    const displayImage = preview || (!isRemoved && currentImage ? `/storage/${currentImage}` : null);
 
     return (
         <div className="w-full">
@@ -153,6 +155,7 @@ interface MultipleImageUploaderProps {
     onImagesSelect: (files: File[]) => void;
     onImageRemove?: (index: number) => void;
     currentImages?: string[];
+    removedIndices?: number[];
     maxSize?: number;
     maxFiles?: number;
     label?: string;
@@ -162,6 +165,7 @@ export function MultipleImageUploader({
     onImagesSelect,
     onImageRemove,
     currentImages = [],
+    removedIndices = [],
     maxSize = 5,
     maxFiles = 5,
     label = 'Screenshots',
@@ -178,7 +182,8 @@ export function MultipleImageUploader({
                 return;
             }
 
-            const totalFiles = currentImages.length + previews.length + acceptedFiles.length;
+            const activeCurrentImages = currentImages.filter((_, i) => !removedIndices.includes(i));
+            const totalFiles = activeCurrentImages.length + previews.length + acceptedFiles.length;
             if (totalFiles > maxFiles) {
                 setError(`Maximum ${maxFiles} images allowed`);
                 return;
@@ -199,7 +204,7 @@ export function MultipleImageUploader({
 
             onImagesSelect(acceptedFiles);
         },
-        [currentImages.length, previews, maxFiles, onImagesSelect]
+        [currentImages.length, previews, removedIndices, maxFiles, onImagesSelect]
     );
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -221,10 +226,27 @@ export function MultipleImageUploader({
         }
     };
 
+    const activeCurrentImages = currentImages.filter((_, i) => !removedIndices.includes(i));
     const allImages = [
-        ...currentImages.map((img) => `/storage/${img}`),
+        ...activeCurrentImages.map((img) => `/storage/${img}`),
         ...previews,
     ];
+
+    const getImageIndex = (displayIndex: number): { isExisting: boolean; originalIndex?: number } => {
+        if (displayIndex < activeCurrentImages.length) {
+            // Find the original index in currentImages
+            let count = 0;
+            for (let i = 0; i < currentImages.length; i++) {
+                if (!removedIndices.includes(i)) {
+                    if (count === displayIndex) {
+                        return { isExisting: true, originalIndex: i };
+                    }
+                    count++;
+                }
+            }
+        }
+        return { isExisting: false };
+    };
 
     return (
         <div className="w-full">
@@ -237,24 +259,32 @@ export function MultipleImageUploader({
             {/* Image grid */}
             {allImages.length > 0 && (
                 <div className="grid grid-cols-3 gap-4 mb-4">
-                    {allImages.map((img, index) => (
-                        <div key={index} className="relative aspect-video">
-                            <img
-                                src={img}
-                                alt={`Screenshot ${index + 1}`}
-                                className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
-                            />
-                            <button
-                                type="button"
-                                onClick={() =>
-                                    handleRemove(index, index < currentImages.length)
-                                }
-                                className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
-                            >
-                                <XMarkIcon className="w-4 h-4" />
-                            </button>
-                        </div>
-                    ))}
+                    {allImages.map((img, displayIndex) => {
+                        const imageInfo = getImageIndex(displayIndex);
+                        return (
+                            <div key={displayIndex} className="relative aspect-video">
+                                <img
+                                    src={img}
+                                    alt={`Screenshot ${displayIndex + 1}`}
+                                    className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (imageInfo.isExisting && imageInfo.originalIndex !== undefined) {
+                                            handleRemove(imageInfo.originalIndex, true);
+                                        } else {
+                                            const newIndex = displayIndex - activeCurrentImages.length;
+                                            handleRemove(newIndex, false);
+                                        }
+                                    }}
+                                    className="absolute top-1 right-1 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                                >
+                                    <XMarkIcon className="w-4 h-4" />
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
 
