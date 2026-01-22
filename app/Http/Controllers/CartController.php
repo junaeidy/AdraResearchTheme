@@ -164,12 +164,12 @@ class CartController extends Controller
     {
         if ($item->user_id) {
             // Cart item belongs to a user
-            if (!Auth::check() || $item->user_id !== Auth::id()) {
+            if (!Auth::check() || $item->user_id != Auth::id()) {
                 abort(403, 'Unauthorized access to cart item');
             }
         } else {
             // Cart item belongs to a session
-            if ($item->session_id !== Session::getId()) {
+            if ($item->session_id != Session::getId()) {
                 abort(403, 'Unauthorized access to cart item');
             }
         }

@@ -18,6 +18,7 @@ class License extends Model
         'type',
         'duration',
         'scope',
+        'licensed_journal_path',
         'max_activations',
         'activated_count',
         'status',

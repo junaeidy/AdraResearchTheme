@@ -68,6 +68,28 @@ class LicenseController extends Controller
                     'license_scope' => 'journal',
                 ], 400);
             }
+            
+            // CRITICAL: For single-journal licenses, validate journal path matches
+            if ($license->type === 'single-journal') {
+                // First activation - store the licensed journal path
+                if ($license->licensed_journal_path === null) {
+                    $license->update([
+                        'licensed_journal_path' => ltrim($validated['journal_path'], '/'),
+                    ]);
+                } else {
+                    // Subsequent activations - must use the same journal
+                    $normalizedRequestJournal = ltrim($validated['journal_path'], '/');
+                    if ($license->licensed_journal_path !== $normalizedRequestJournal) {
+                        return response()->json([
+                            'valid' => false,
+                            'message' => "This single-journal license is restricted to '{$license->licensed_journal_path}'. You cannot use it on '{$normalizedRequestJournal}'.",
+                            'licensed_journal' => $license->licensed_journal_path,
+                            'requested_journal' => $normalizedRequestJournal,
+                        ], 403);
+                    }
+                }
+            }
+            
             // Generate identifier with journal path
             $identifier = $validated['domain'] . '/' . ltrim($validated['journal_path'], '/');
         } else {
@@ -171,6 +193,21 @@ class LicenseController extends Controller
                     'message' => 'This is a journal-specific license. Please provide journal_path.',
                 ], 400);
             }
+            
+            // CRITICAL: For single-journal licenses, validate journal path matches
+            if ($license->type === 'single-journal') {
+                $normalizedRequestJournal = ltrim($validated['journal_path'], '/');
+                if ($license->licensed_journal_path !== null && 
+                    $license->licensed_journal_path !== $normalizedRequestJournal) {
+                    return response()->json([
+                        'valid' => false,
+                        'message' => "This single-journal license is restricted to '{$license->licensed_journal_path}'. You cannot use it on '{$normalizedRequestJournal}'.",
+                        'licensed_journal' => $license->licensed_journal_path,
+                        'requested_journal' => $normalizedRequestJournal,
+                    ], 403);
+                }
+            }
+            
             $identifier = $validated['domain'] . '/' . ltrim($validated['journal_path'], '/');
         } else {
             $identifier = $validated['domain'];
@@ -247,6 +284,19 @@ class LicenseController extends Controller
                     'message' => 'This is a journal-specific license. Please provide journal_path.',
                 ], 400);
             }
+            
+            // CRITICAL: For single-journal licenses, validate journal path matches
+            if ($license->type === 'single-journal') {
+                $normalizedRequestJournal = ltrim($validated['journal_path'], '/');
+                if ($license->licensed_journal_path !== null && 
+                    $license->licensed_journal_path !== $normalizedRequestJournal) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "This single-journal license is restricted to '{$license->licensed_journal_path}'. You cannot use it on '{$normalizedRequestJournal}'.",
+                    ], 403);
+                }
+            }
+            
             $identifier = $validated['domain'] . '/' . ltrim($validated['journal_path'], '/');
         } else {
             $identifier = $validated['domain'];

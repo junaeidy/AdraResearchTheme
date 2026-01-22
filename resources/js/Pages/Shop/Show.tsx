@@ -59,7 +59,7 @@ export default function Show({ auth, product, relatedProducts, licenseTypes, can
                                     </li>
                                     <li>
                                         <Link
-                                            href={`/shop?category=${product.category.id}`}
+                                            href={`/shop?category=${product.category.slug}`}
                                             className="text-gray-600 hover:text-blue-600 transition-colors font-medium"
                                         >
                                             {product.category.name}

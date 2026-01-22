@@ -11,7 +11,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             {/* Category Badge */}
             {product.category && (
                 <Link
-                    href={`/shop?category=${product.category.id}`}
+                    href={`/shop?category=${product.category.slug}`}
                     className="inline-flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 text-xs sm:text-[13px] font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-blue-200 hover:from-blue-100 hover:to-indigo-100 active:scale-95 transition-all duration-200"
                 >
                     <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="currentColor" viewBox="0 0 20 20">
