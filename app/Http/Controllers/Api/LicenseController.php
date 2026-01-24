@@ -310,10 +310,26 @@ class LicenseController extends Controller
             return response()->json(['success' => false, 'message' => 'Activation not found.'], 404);
         }
         
+        // Check if this is the last activation before deleting
+        $remainingActivations = $license->activations()->count() - 1;
+        
         $activation->delete();
         $license->decrement('activated_count');
         
-        return response()->json(['success' => true, 'message' => 'License deactivated.']);
+        // CRITICAL: Reset licensed_journal_path when all activations are removed
+        // This applies to all journal-scoped licenses with licensed_journal_path set
+        if ($license->licensed_journal_path !== null && $remainingActivations === 0) {
+            $license->update(['licensed_journal_path' => null]);
+        }
+        
+        return response()->json([
+            'success' => true, 
+            'message' => 'License deactivated.',
+            'debug' => [
+                'remaining_activations' => $remainingActivations,
+                'licensed_journal_path_reset' => ($license->licensed_journal_path === null && $remainingActivations === 0),
+            ]
+        ]);
     }
     
     public function info(Request $request, string $licenseKey)
