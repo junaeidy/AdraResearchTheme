@@ -26,6 +26,12 @@ class PaymentController extends Controller
         // Only order owner can view payment page
         $this->authorize('view', $order);
         
+        // 🔒 Check if order is cancelled - cannot submit payment
+        if ($order->status === 'cancelled') {
+            return redirect()->route('orders.show', $order->order_number)
+                ->with('error', 'This order has been cancelled and cannot accept payment. Please place a new order.');
+        }
+        
         // Check if order has expired
         if ($order->payment_deadline && $order->payment_deadline < now()) {
             return redirect()->route('orders.show', $order->order_number)
@@ -58,6 +64,12 @@ class PaymentController extends Controller
     public function submit(Request $request, Order $order)
     {
         $this->authorize('update', $order);
+        
+        // 🔒 Check if order is cancelled - cannot submit payment
+        if ($order->status === 'cancelled') {
+            return redirect()->route('orders.show', $order->order_number)
+                ->with('error', 'This order has been cancelled and cannot accept payment. Please place a new order.');
+        }
         
         // 🔒 Prevent double submission - check if payment proof already exists
         if ($order->paymentProof()->exists()) {

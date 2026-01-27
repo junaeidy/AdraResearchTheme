@@ -17,7 +17,8 @@ interface Props extends PageProps {
 export default function OrderShow({ auth, order }: Props) {
     const { flash } = usePage().props as any;
     
-    const canResubmitPayment = order.payment_status === 'rejected' || order.payment_status === 'unpaid';
+    const canResubmitPayment = (order.payment_status === 'rejected' || order.payment_status === 'unpaid') 
+        && order.status !== 'cancelled';
     const showLicenses = order.status === 'completed';
     const paymentProofImageUrl = order.payment_proof 
         ? route('orders.payment-proof', order.order_number)
@@ -115,6 +116,28 @@ export default function OrderShow({ auth, order }: Props) {
                                         <h3 className="font-semibold text-sm sm:text-base text-green-900">Order Completed!</h3>
                                         <p className="text-xs sm:text-sm text-green-800 mt-1">
                                             Your license keys have been generated and sent to your email. You can also view them below.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Cancelled Order Message */}
+                    {order.status === 'cancelled' && (
+                        <div className="mb-4 sm:mb-6">
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    </svg>
+                                    <div>
+                                        <h3 className="font-semibold text-sm sm:text-base text-red-900">Order Cancelled</h3>
+                                        <p className="text-xs sm:text-sm text-red-800 mt-1">
+                                            This order has been cancelled. {order.admin_notes || 'Payment deadline has been exceeded.'}
+                                        </p>
+                                        <p className="text-xs sm:text-sm text-red-700 mt-2">
+                                            Please place a new order if you still want to purchase these items.
                                         </p>
                                     </div>
                                 </div>

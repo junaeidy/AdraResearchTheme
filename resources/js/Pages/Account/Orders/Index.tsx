@@ -121,7 +121,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                             </div>
                                             
                                             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-                                                {order.payment_status === 'unpaid' && (
+                                                {order.payment_status === 'unpaid' && order.status !== 'cancelled' && (
                                                     <Link
                                                         href={route('payment.index', order.order_number)}
                                                         className="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm sm:text-base rounded-lg sm:rounded-xl hover:scale-105 transition-transform font-medium shadow-md"
@@ -130,7 +130,7 @@ export default function OrdersIndex({ auth, orders }: Props) {
                                                     </Link>
                                                 )}
                                                 
-                                                {order.payment_status === 'rejected' && (
+                                                {order.payment_status === 'rejected' && order.status !== 'cancelled' && (
                                                     <Link
                                                         href={route('payment.index', order.order_number)}
                                                         className="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-500 text-white text-sm sm:text-base rounded-lg sm:rounded-xl hover:scale-105 transition-transform font-medium shadow-md"

@@ -44,11 +44,17 @@ class License extends Model
 
     /**
      * Generate unique license key
+     * Format: XXXX-XXXX-XXXXXXXX-XXXX
      */
     public static function generateLicenseKey(): string
     {
         do {
-            $key = strtoupper(Str::random(8) . '-' . Str::random(8) . '-' . Str::random(8) . '-' . Str::random(8));
+            $part1 = strtoupper(Str::random(4));
+            $part2 = strtoupper(Str::random(4));
+            $part3 = strtoupper(Str::random(8));
+            $part4 = strtoupper(Str::random(4));
+            
+            $key = "{$part1}-{$part2}-{$part3}-{$part4}";
         } while (self::where('license_key', $key)->exists());
 
         return $key;

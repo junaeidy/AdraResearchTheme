@@ -52,11 +52,12 @@ class LicenseService
     private function generateLicenseKey(Product $product): string
     {
         do {
-            $productCode = strtoupper(substr($product->slug, 0, 4));
-            $randomString = strtoupper(Str::random(8));
-            $checksum = strtoupper(substr(md5($productCode . $randomString), 0, 4));
+            $part1 = strtoupper(Str::random(4));
+            $part2 = strtoupper(Str::random(4));
+            $part3 = strtoupper(Str::random(8));
+            $part4 = strtoupper(Str::random(4));
             
-            $licenseKey = "PROD-{$productCode}-{$randomString}-{$checksum}";
+            $licenseKey = "{$part1}-{$part2}-{$part3}-{$part4}";
         } while (License::where('license_key', $licenseKey)->exists());
         
         return $licenseKey;
