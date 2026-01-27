@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\OrderCancelled;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CancelExpiredOrders extends Command
 {
@@ -47,7 +49,7 @@ class CancelExpiredOrders extends Command
             try {
                 $order->update([
                     'status' => 'cancelled',
-                    'payment_status' => 'expired',
+                    'payment_status' => 'rejected',
                     'admin_notes' => 'Automatically cancelled due to payment deadline exceeded at ' . now()->toDateTimeString(),
                 ]);
 
@@ -59,8 +61,12 @@ class CancelExpiredOrders extends Command
                     'payment_deadline' => $order->payment_deadline,
                 ]);
 
-                // Optional: Send notification email to customer
-                // Mail::to($order->user->email)->send(new OrderCancelledDueToExpiry($order));
+                try {
+                    Mail::to($order->user->email)->send(new OrderCancelled($order));
+                    Log::info("Cancellation email sent to {$order->user->email} for order {$order->order_number}");
+                } catch (\Exception $mailException) {
+                    Log::error("Failed to send cancellation email for order {$order->order_number}: " . $mailException->getMessage());
+                }
             } catch (\Exception $e) {
                 Log::error("Failed to cancel order {$order->order_number}: " . $e->getMessage());
                 $this->error("Failed to cancel order {$order->order_number}");
