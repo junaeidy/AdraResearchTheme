@@ -6,6 +6,7 @@ import Footer from '@/Components/Footer';
 import CartItem from '@/Components/Cart/CartItem';
 import CartSummary from '@/Components/Cart/CartSummary';
 import CartEmpty from '@/Components/Cart/CartEmpty';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 import { useCartStore } from '@/stores/cartStore';
 
 interface Props {
@@ -84,6 +85,12 @@ export default function Index({ auth, items, subtotal, total, count, taxPercenta
             </div>
             
             <Footer />
+            
+            {/* WhatsApp Floating Button */}
+            <WhatsAppButton 
+                phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                message="Hi! I need help with my shopping cart."
+            />
         </div>
         </>
     );

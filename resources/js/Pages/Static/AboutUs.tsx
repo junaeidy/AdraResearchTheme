@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 
 export default function AboutUs({ auth }: PageProps) {
     return (
@@ -139,6 +140,12 @@ export default function AboutUs({ auth }: PageProps) {
                 </div>
 
                 <Footer />
+                
+                {/* WhatsApp Floating Button */}
+                <WhatsAppButton 
+                    phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                    message="Hi! I'd like to know more about your services."
+                />
             </div>
         </>
     );

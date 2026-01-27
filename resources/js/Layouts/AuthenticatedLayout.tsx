@@ -2,6 +2,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
 
@@ -194,6 +195,12 @@ export default function Authenticated({
             )}
 
             <main>{children}</main>
+            
+            {/* WhatsApp Floating Button */}
+            <WhatsAppButton 
+                phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                message="Hi! I need help with my account or order."
+            />
         </div>
     );
 }

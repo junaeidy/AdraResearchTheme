@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { Product, ProductCategory, PageProps } from '@/types';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 import { formatRupiah } from '@/utils/currency';
 
 interface HomeProps extends PageProps {
@@ -300,6 +301,12 @@ export default function Home({ auth, featuredProducts, categories }: HomeProps) 
                 </section>
 
                 <Footer />
+                
+                {/* WhatsApp Floating Button */}
+                <WhatsAppButton 
+                    phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                    message="Hello! I'm interested in your products and would like to know more."
+                />
             </div>
         </>
     );

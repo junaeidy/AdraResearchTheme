@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 
 export default function Services({ auth }: PageProps) {
     const testimonials = [
@@ -405,6 +406,12 @@ export default function Services({ auth }: PageProps) {
                 </div>
 
                 <Footer />
+                
+                {/* WhatsApp Floating Button */}
+                <WhatsAppButton 
+                    phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                    message="Hi! I'm interested in your services and would like to discuss my needs."
+                />
             </div>
         </>
     );

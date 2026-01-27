@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import CheckoutSteps from '@/Components/Checkout/CheckoutSteps';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 import { CartItem } from '@/types/models';
 import { PageProps } from '@/types';
 import { formatCurrency } from '@/utils/currency';
@@ -191,6 +192,12 @@ export default function Index({ auth, items, subtotal, total, taxPercentage = 0 
             </div>
             
             <Footer />
+            
+            {/* WhatsApp Floating Button */}
+            <WhatsAppButton 
+                phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                message="Hi! I need assistance with my checkout process."
+            />
         </>
     );
 }

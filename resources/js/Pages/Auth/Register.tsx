@@ -222,6 +222,15 @@ export default function Register() {
                                 {errors.password_confirmation && <p className="mt-2 text-sm text-red-600">{errors.password_confirmation}</p>}
                             </div>
 
+                            {/* reCAPTCHA Notice */}
+                            <div className="text-xs text-gray-500 text-center mt-4">
+                                This site is protected by reCAPTCHA and the Google{' '}
+                                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</a>{' '}
+                                and{' '}
+                                <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline">Terms of Service</a>{' '}
+                                apply.
+                            </div>
+
                             {/* Submit Button */}
                             <button
                                 type="submit"

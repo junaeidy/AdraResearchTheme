@@ -8,6 +8,7 @@ import ProductPricing from '@/Components/Product/ProductPricing';
 import ProductTabs from '@/Components/Product/ProductTabs';
 import ProductCard from '@/Components/Product/ProductCard';
 import ReviewList from '@/Components/Review/ReviewList';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 
 interface Props {
     auth: {
@@ -162,6 +163,12 @@ export default function Show({ auth, product, relatedProducts, licenseTypes, can
             </div>
             
             <Footer />
+            
+            {/* WhatsApp Floating Button */}
+            <WhatsAppButton 
+                phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                message={`Hi! I'm interested in ${product.name} and would like more information.`}
+            />
         </div>
         </>
     );

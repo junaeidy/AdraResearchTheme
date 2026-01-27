@@ -5,6 +5,7 @@ import Header from '@/Components/Header';
 import Footer from '@/Components/Footer';
 import ProductGrid from '@/Components/Product/ProductGrid';
 import ProductFilter from '@/Components/Product/ProductFilter';
+import WhatsAppButton from '@/Components/Shared/WhatsAppButton';
 
 interface ShopIndexProps extends PageProps {
     products: {
@@ -194,6 +195,12 @@ export default function ShopIndex({ auth, products, categories, filters }: ShopI
                 </div>
 
                 <Footer />
+                
+                {/* WhatsApp Floating Button */}
+                <WhatsAppButton 
+                    phoneNumber={import.meta.env.VITE_WHATSAPP_NUMBER || '+6281234567890'}
+                    message="Hi! I have a question about your products."
+                />
             </div>
         </>
     );
