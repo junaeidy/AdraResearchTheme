@@ -118,7 +118,7 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                                     <div className="flex items-center gap-2 text-xs sm:text-sm">
                                                         <ClockIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                                                         <span className="text-gray-600 truncate">
-                                                            Expires: {new Date(product.license_expires_at).toLocaleDateString('id-ID')}
+                                                            Expires: {new Date(product.license_expires_at).toLocaleDateString('en-US')}
                                                         </span>
                                                     </div>
                                                 )}
@@ -185,7 +185,7 @@ export default function Downloads({ auth, products, downloadHistory }: Props) {
                                                         v{download.version}
                                                     </td>
                                                     <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 hidden md:table-cell">
-                                                        {new Date(download.downloaded_at).toLocaleDateString('id-ID', {
+                                                        {new Date(download.downloaded_at).toLocaleDateString('en-US', {
                                                             day: 'numeric',
                                                             month: 'short',
                                                             year: 'numeric',

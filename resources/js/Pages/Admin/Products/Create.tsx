@@ -60,9 +60,17 @@ export default function AdminProductsCreate({ auth, categories }: AdminProductsC
         transform((data) => {
             const formData = new FormData();
             
+            // Nullable fields that should always be sent (even if empty)
+            const nullableFields = ['demo_url', 'documentation_url', 'short_description', 'compatibility', 'sale_price'];
+            
             // Append all text fields
             Object.entries(data).forEach(([key, value]) => {
-                if (value !== null && value !== undefined && value !== '') {
+                // For nullable fields, always append them (even if empty)
+                if (nullableFields.includes(key)) {
+                    formData.append(key, value?.toString() || '');
+                } 
+                // For required fields, only append if they have a value
+                else if (value !== null && value !== undefined && value !== '') {
                     formData.append(key, value.toString());
                 }
             });

@@ -10,7 +10,7 @@ export default function Footer() {
                 <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
                     <path 
                         d="M0,40 C320,10 320,70 640,50 C960,30 960,80 1280,55 C1440,45 1440,60 1440,50 L1440,0 L0,0 Z" 
-                        fill="#F9FAFB"
+                        fill="#FFFFFF"
                     />
                 </svg>
             </div>

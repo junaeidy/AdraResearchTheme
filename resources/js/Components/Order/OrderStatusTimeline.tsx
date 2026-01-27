@@ -87,7 +87,7 @@ export default function OrderStatusTimeline({ order }: OrderStatusTimelineProps)
                                 
                                 {step.timestamp && (
                                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                                        {new Date(step.timestamp).toLocaleString('id-ID', {
+                                        {new Date(step.timestamp).toLocaleString('en-US', {
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric',

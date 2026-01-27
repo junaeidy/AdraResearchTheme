@@ -176,7 +176,7 @@ export default function PaymentVerificationIndex({ auth, orders, stats }: Props)
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {new Date(order.created_at).toLocaleDateString('id-ID', {
+                                                {new Date(order.created_at).toLocaleDateString('en-US', {
                                                     day: 'numeric',
                                                     month: 'short',
                                                     year: 'numeric',

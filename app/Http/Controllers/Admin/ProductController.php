@@ -78,6 +78,14 @@ class ProductController extends Controller
             'is_featured' => filter_var($request->input('is_featured', false), FILTER_VALIDATE_BOOLEAN),
         ]);
 
+        // Convert empty strings to null for nullable fields
+        $nullableFields = ['demo_url', 'documentation_url', 'short_description', 'compatibility', 'sale_price'];
+        foreach ($nullableFields as $field) {
+            if ($request->has($field) && $request->input($field) === '') {
+                $request->merge([$field => null]);
+            }
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', new SafeString(), new NoSqlInjection()],
             'product_type' => 'required|in:plugin,theme',
@@ -177,6 +185,14 @@ class ProductController extends Controller
             'is_active' => filter_var($request->input('is_active', $product->is_active), FILTER_VALIDATE_BOOLEAN),
             'is_featured' => filter_var($request->input('is_featured', $product->is_featured), FILTER_VALIDATE_BOOLEAN),
         ]);
+
+        // Convert empty strings to null for nullable fields
+        $nullableFields = ['demo_url', 'documentation_url', 'short_description', 'compatibility', 'sale_price'];
+        foreach ($nullableFields as $field) {
+            if ($request->has($field) && $request->input($field) === '') {
+                $request->merge([$field => null]);
+            }
+        }
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', new NoSqlInjection()],

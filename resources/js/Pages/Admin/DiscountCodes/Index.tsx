@@ -64,7 +64,7 @@ export default function Index({ auth, discountCodes }: DiscountCodesPageProps) {
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return '-';
-        return new Date(dateString).toLocaleDateString('id-ID', {
+        return new Date(dateString).toLocaleDateString('en-US', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',

@@ -53,7 +53,7 @@ export default function OrderShow({ auth, order }: Props) {
                                     Order #{order.order_number}
                                 </h1>
                                 <p className="text-sm sm:text-base text-gray-600 mt-2">
-                                    Placed on {new Date(order.created_at).toLocaleDateString('id-ID', {
+                                    Placed on {new Date(order.created_at).toLocaleDateString('en-US', {
                                         day: 'numeric',
                                         month: 'long',
                                         year: 'numeric',

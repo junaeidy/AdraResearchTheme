@@ -44,7 +44,7 @@ export default function PaymentProofViewer({ paymentProof, imageUrl }: PaymentPr
                     <div>
                         <p className="text-gray-600">Transfer Date</p>
                         <p className="font-medium text-gray-900 mt-1">
-                            {new Date(paymentProof.transfer_date).toLocaleDateString('id-ID', {
+                            {new Date(paymentProof.transfer_date).toLocaleDateString('en-US', {
                                 day: 'numeric',
                                 month: 'long',
                                 year: 'numeric',

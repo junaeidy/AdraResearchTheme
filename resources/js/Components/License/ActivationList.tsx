@@ -92,14 +92,14 @@ export default function ActivationList({ activations, productSlug }: Props) {
                                     {activation.ojs_version}
                                 </td>
                                 <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
-                                    {new Date(activation.activated_at).toLocaleDateString('id-ID', {
+                                    {new Date(activation.activated_at).toLocaleDateString('en-US', {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric'
                                     })}
                                 </td>
                                 <td className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 text-xs sm:text-sm text-gray-500 hidden xl:table-cell">
-                                    {new Date(activation.last_check_at).toLocaleDateString('id-ID', {
+                                    {new Date(activation.last_check_at).toLocaleDateString('en-US', {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric'

@@ -144,7 +144,7 @@ export default function AdminLicenseShow({ auth, license }: Props) {
                             <div>
                                 <div className="text-sm text-gray-600 mb-1">Created</div>
                                 <div className="font-medium text-gray-900">
-                                    {new Date(license.created_at).toLocaleDateString('id-ID')}
+                                    {new Date(license.created_at).toLocaleDateString('en-US')}
                                 </div>
                             </div>
                         </div>
@@ -229,7 +229,7 @@ export default function AdminLicenseShow({ auth, license }: Props) {
                                 <div>
                                     <div className="text-sm text-gray-600 mb-1">Order Date</div>
                                     <div className="font-medium text-gray-900">
-                                        {new Date(license.order.created_at).toLocaleDateString('id-ID', {
+                                        {new Date(license.order.created_at).toLocaleDateString('en-US', {
                                             day: 'numeric',
                                             month: 'long',
                                             year: 'numeric'
@@ -278,10 +278,10 @@ export default function AdminLicenseShow({ auth, license }: Props) {
                                                 <td className="px-6 py-4 text-sm text-gray-900">{activation.ojs_version}</td>
                                                 <td className="px-6 py-4 text-sm text-gray-500">{activation.ip_address}</td>
                                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                                    {new Date(activation.activated_at).toLocaleDateString('id-ID')}
+                                                    {new Date(activation.activated_at).toLocaleDateString('en-US')}
                                                 </td>
                                                 <td className="px-6 py-4 text-sm text-gray-500">
-                                                    {new Date(activation.last_check_at).toLocaleDateString('id-ID')}
+                                                    {new Date(activation.last_check_at).toLocaleDateString('en-US')}
                                                 </td>
                                             </tr>
                                         ))}
@@ -304,7 +304,7 @@ export default function AdminLicenseShow({ auth, license }: Props) {
                     <p className="text-sm text-gray-600 mb-4">
                         Add months to the license expiry date. Current expiry: {' '}
                         <span className="font-medium">
-                            {license.expires_at ? new Date(license.expires_at).toLocaleDateString('id-ID') : 'N/A'}
+                            {license.expires_at ? new Date(license.expires_at).toLocaleDateString('en-US') : 'N/A'}
                         </span>
                     </p>
                     <div className="mb-6">

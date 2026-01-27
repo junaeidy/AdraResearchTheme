@@ -102,7 +102,7 @@ export default function PaymentVerificationShow({ auth, payment }: Props) {
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Order Date</span>
                                         <span className="font-medium text-gray-900">
-                                            {new Date(payment.order.created_at).toLocaleDateString('id-ID', {
+                                            {new Date(payment.order.created_at).toLocaleDateString('en-US', {
                                                 day: 'numeric',
                                                 month: 'long',
                                                 year: 'numeric',

@@ -136,7 +136,7 @@ export default function PaymentPending({ auth, order }: Props) {
                                         <div className="bg-blue-50 p-4 rounded-xl border border-blue-200">
                                             <p className="text-gray-600 font-medium">Transfer Date</p>
                                             <p className="font-bold text-[15px] text-gray-900 mt-2">
-                                                {new Date(order.payment_proof.transfer_date).toLocaleDateString('id-ID', {
+                                                {new Date(order.payment_proof.transfer_date).toLocaleDateString('en-US', {
                                                     day: 'numeric',
                                                     month: 'long',
                                                     year: 'numeric',

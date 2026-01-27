@@ -115,7 +115,7 @@ export default function LicenseShow({ auth, license }: Props) {
                                 <div>
                                     <div className="text-xs text-gray-600 mb-1">Purchased</div>
                                     <div className="font-medium text-sm sm:text-base text-gray-900 truncate">
-                                        {new Date(license.created_at).toLocaleDateString('id-ID', {
+                                        {new Date(license.created_at).toLocaleDateString('en-US', {
                                             day: 'numeric',
                                             month: 'short',
                                             year: 'numeric'
